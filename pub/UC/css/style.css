@@ -1,0 +1,161 @@
+* 	{
+	margin:0;
+	}
+	
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+    margin:0;
+    padding:0;
+	border:none;
+	}
+html {
+    
+	margin:0px;
+	padding:0px;
+	width:100%;
+	height:100%;
+	}
+	
+body {
+	
+	color: #333;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:normal;
+	font-size:12px;
+	margin:0px;
+	padding:0px;
+	}	
+		
+* html #wrapper {
+	height:100%;
+	} 
+	
+table {
+    border-collapse:collapse;
+    border-spacing:0;
+	}
+	
+fieldset, img {
+    border:0 none;
+	}
+	
+address, caption, cite, code, dfn, em, strong, th, var {
+    font-style:normal;
+    font-weight:normal;
+	}
+	
+ol, ul {
+	list-style-type:none;
+	}
+	
+caption, th {
+    text-align:left;
+	}
+	
+h1, h2, h3, h4, h5, h6 {
+    font-size:100%;
+	color:#000;
+	}
+br{
+	margin-top:-5px;
+}
+	
+q:before, q:after {
+    content:"";
+	}
+	
+abbr, acronym {
+    border:0 none;
+	}
+	
+strong {
+	font-weight:bold;
+	}
+	
+em {
+    font-style:italic;
+	}
+
+a {
+	
+	text-decoration:none;
+	outline:none;
+	}
+	
+a:hover {
+	
+	text-decoration:none;
+	}
+
+a:focus {
+	outline:none;
+	}
+	
+/* ClearFix */
+.clear {
+	clear:both;
+	height:1px;
+	overflow:hidden;
+	}
+
+/*#container:after {
+	content:" ";
+	display:block;
+	clear:both;
+	}*/
+	
+.clearfix:after {
+    content:"."; 
+    display:block; 
+    height:0px; 
+    clear:both; 
+    visibility:hidden;
+	}
+	
+.clearfix {
+	display:inline-table;
+	}
+	
+/* Hides from IE-mac \*/
+.clearfix {height:1%;}
+.clearfix {display:block;}
+/* End hide from IE-mac */
+
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display:block; 	}
+audio, canvas, video { display:inline-block; *display:inline; *zoom:1; 	}
+audio:not([controls]) { display:none; 	}
+[hidden] { display:none; 	}
+
+
+#main-wrapper{
+	width:1200px;
+	height:auto;
+	margin:0px auto;
+}
+.logo{
+	width:500px;
+	margin: 30px auto 15px auto;
+	text-align: center;
+}
+.main-content{
+	width:1106px;
+	margin: 0px auto;
+	height:500px;
+	background:url(../images/body.jpg) no-repeat top center;
+}
+.txt{
+	color: #0c0c0c;
+    font-family:"Myriad Pro";
+    line-height: 20px;
+    padding-left: 52px;
+    padding-top: 281px;
+    text-align: left;
+    width: 470px;
+}
+.txt a{
+	color:#005ead;
+	text-decoration:underline;
+}
+.head{
+	color:#005ead;
+}

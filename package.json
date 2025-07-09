@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "description": "Webkul Magento 2 Buyer Seller Chat System",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Webkul Software Pvt Ltd",
+  "license": "ISC",
+  "dependencies": {
+    "clean-css-cli": "^5.6.2",
+    "file-system": "^1.2.2",
+    "minify": "^10.3.0",
+    "socket.io": "^4.7.2",
+    "socketio-file-upload": "~0.6.0",
+    "yuicompressor": "^2.4.8"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-jshint": "^2.1.0",
+    "gulp-livereload": "^4.0.2",
+    "gulp-minify": "^3.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-uglify": "^3.0.2",
+    "jshint": "^2.13.6"
+  },
+  "name": "public_html",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": []
+}
