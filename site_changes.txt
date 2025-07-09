@@ -1,0 +1,14 @@
+*************************************** Zooming issue ******************************
+/public_html/uat/lib/web/magnifier/magnifier.js
+changed code
+https://github.com/magento/magento2/pull/36820/commits/09d8c152d064b98b4c3762d43a67ac1a63065f79
+*************************************** Zooming issue ******************************
+*************************************** Seller Filter for Category ******************************
+/public_html/app/code/Webkul/Marketplace/Model/Layer/Filter/Seller.php
+changed code for get seeler without elasticsearch
+/public_html/app/code/Webkul/Marketplace/Plugin/Catalog/Model/Layer/FilterList.php
+show Seller filter after price otherwise showing first
+*************************************** Seller Filter for Category ******************************
+/var/www/meetarts/public_html/app/code/Webkul/Marketplace/Model/Layer/Filter/Seller.php
+Changed code for Sidebar filter show Seller name instead of Salller url and Shop title
+*************************************** Seller Filter for Category ******************************
