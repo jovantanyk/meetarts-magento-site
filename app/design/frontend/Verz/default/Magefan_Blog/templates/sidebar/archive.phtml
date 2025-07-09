@@ -1,0 +1,115 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ *
+ * Glory to Ukraine! Glory to the heroes!
+ */
+?>
+<?php
+/**
+ * Blog sidebar archive template
+ *
+ * @var $block \Magefan\Blog\Block\Sidebar\Archive
+ */
+?>
+
+<?php
+    $_months = $block->getMonths();
+?>
+<?php if (count($_months)) { ?>
+<div class="widget block sidebar-blog-archive justify-content-center-sm ">
+    <div class="block-title">
+        <strong><?= $block->escapeHtml(__('Archive')) ?></strong>
+    </div>
+    <div class="block-content ">
+        <?php 
+        $date = $this->getRequest()->getParams();
+        //echo "<pre>";print_r($date);
+        if(!empty($date['date']))
+        {
+            $year_month = $date['date'];            
+            $current_year_month = $_months[$year_month];
+        }
+        else
+        {
+            $current_year_month = "";
+        }   
+        
+        //~ echo "current_year_month===>".$current_year_month."<br>";
+        
+        $years=array();
+        $months=array();
+        $current_year = "";
+        $current_month = "";
+        foreach ($_months as $time) {
+            //~ echo "time===>".$time."<br>";
+            $years[] = $block->getYear($time);
+            $y = $block->getYear($time);
+            $months[] = $block->getMonth($time);
+            if($time == $current_year_month)
+            {
+                $current_year = $block->getYear($time);
+                $current_month = $block->getMonth($time);
+            }
+            $years = array_unique($years);
+        } ?>    
+        <div class="month-search">  
+            <label for="">Month</label>
+            <select class="months default" id="months"> 
+            <option value="default">Default</option>  
+            </select>
+            <?php $i=1;foreach ($years as $year) { ?>
+            <select class="months <?=$year?>" onchange="javascript:location.href = this.value;" style="display:none;" >
+            <option value="">Select Month</option>
+            <?php foreach ($_months as $time) { 
+                                
+                        if( $year == $block->getYear($time) ):              
+                            $title = __($block->getMonth($time));
+                            $title = $block->escapeHtml($title, null, true);                    
+                        ?>
+                            <option value="<?php echo $block->getTimeUrl($time) ?>" <?php if($current_year_month == $time){?> selected <?php } ?> >
+                                <?php echo $title; ?>                       
+                            </option>
+                        <?php endif; ?>                                
+
+                <?php } ?>
+            </select>
+            <?php $i++;} ?>   
+        </div>  
+        <div class="yeras-search">
+            <label for="">Year</label>
+            <select class="years" id="years"> 
+            <option value="default">Default</option>      
+            <?php 
+                $years = array_unique($years);
+                foreach ($years as $year) { ?>
+                    <option value="<?=$year?>" <?php if($current_year == $year){?> selected <?php } ?> ><?=$year?></option>
+                <?php } ?>
+            </select>
+        </div> 
+    </div>
+</div>
+<script type="text/javascript">
+require(["jquery"],function(e){
+    jQuery(document).ready(function($){
+        var current_selectedVal = $('#years :selected').val();
+        $('.sidebar-blog-archive .months').hide();
+        $('.sidebar-blog-archive .months.'+current_selectedVal).show();
+        
+        $("#years").change(function() {
+            // Pure JS
+            var selectedVal = this.value;
+            if(selectedVal=="default")
+            {
+                window.location.href = "<?= $block->escapeUrl($block->getUrl('')) ?>blog";
+            }
+            
+            $('.sidebar-blog-archive .months').hide();
+            $('.sidebar-blog-archive .months.'+selectedVal).show();
+
+        });
+    });
+});
+</script>
+<?php } ?>

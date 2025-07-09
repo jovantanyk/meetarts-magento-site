@@ -1,0 +1,193 @@
+<!-- /**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ -->
+<div class="reply-container" data-bind="event: {onload: loadHistoryOnLoad()}">
+    <!-- ko if: isBlocked() === true -->
+    <div class="disable-layer"></div>
+    <!-- /ko -->
+    <!-- ko if: isServerRunning() === false -->
+    <span class="server-error" data-bind="i18n: 'Chat server is not working.'"></span>
+    <!-- /ko -->
+    <!-- ko if: isChatError() === true -->
+    <span class="chat-error" data-bind="text: chatErrorData()"></span>
+    <!-- /ko -->
+    <!-- ko if: customerLoggedIn() === true -->
+    <!-- ko if: chatStarted() === true -->
+    <ol class="discussion">
+    </ol>
+    <div class="file-uploader">
+        <!-- ko if: showFileLoader() == true -->
+        <div class="chat-loading-mask" data-role="chat-loader">
+            <div class="chat-loader">
+                <img alt="Loading..." data-bind="attr: {'src': window.chatboxCoreConfig.loaderImage}">
+                <span class="upload-info" data-bind="text: uploadPercentage"></span>
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- ko if: chatStarted() === false && isBlocked() === false -->
+    <div class="start-chat-container">
+        <form id="start_chat" method="post" data-bind="submit: startChat">
+            <div class="fieldset" data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+                <div class="field required">
+                    <div class="control">
+                        <textarea class="start_message" name="message" value="" data-bind="attr :{placeholder: $t('Type your message...')}" data-validate="{required:true}"></textarea>
+                    </div>
+                </div>
+                <div class="actions-toolbar">
+                    <div class="primary" style="width: 100%">
+                        <button type="submit" class="action primary action-start-chat secondary" style="width: 100%; height: 50px;">
+                            <span data-bind="i18n: 'Start Chat'"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /ko -->
+
+    <!-- /ko -->
+    <!-- ko if: customerLoggedIn() === false -->
+    <div class="login-register-container">
+        <div class="login-container1">
+            <!-- ko if: isRegistration() === false -->
+            <form id="login" method="post" data-bind="submit: login">
+                <div class="fieldset" data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+                    <div class="field field-email required">
+                        <label class="label" for="login-email">
+                            <span data-bind="i18n: 'Email Address'"></span>
+                        </label>
+                        <div class="control">
+                            <input type="email" class="input-text" id="login-email" name="username" data-validate="{required:true, 'validate-email':true}"
+                                autocomplete="off"></input>
+                        </div>
+                    </div>
+                    <div class="field field-password required">
+                        <label for="login-password" class="label">
+                            <span data-bind="i18n: 'Password'"></span>
+                        </label>
+                        <div class="control">
+                            <input type="password" class="input-text" id="login-password" name="password" data-validate="{required:true}" autocomplete="off"></input>
+                        </div>
+                    </div>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <button type="submit" class="action primary action-start-chat secondary">
+                                <span data-bind="i18n: 'Login'"></span>
+                            </button>
+                        </div>
+                        <span class="register-text" data-bind="i18n: 'New User?', click: enableRegiserForm"></span>
+                    </div>
+                </div>
+            </form>
+            <!-- /ko -->
+            <!-- ko if: isRegistration() === true -->
+            <form id="register" method="post" data-bind="submit: register">
+                <div class="fieldset" data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+                    <div class="field field-firstname required">
+                        <label class="label" for="firstname">
+                            <span data-bind="i18n: 'First Name'"></span>
+                        </label>
+                        <div class="control">
+                            <input type="text" class="input-text" id="first_name" name="firstname" data-validate="{required:true}" autocomplete="off"></input>
+                        </div>
+                    </div>
+                    <div class="field field-lastname required">
+                        <label class="label" for="lastname">
+                            <span data-bind="i18n: 'Last Name'"></span>
+                        </label>
+                        <div class="control">
+                            <input type="text" class="input-text" id="last_name" name="lastname" data-validate="{required:true}"
+                                autocomplete="off"></input>
+                        </div>
+                    </div>
+                    <div class="field field-email required">
+                        <label class="label" for="register-email">
+                            <span data-bind="i18n: 'Email Address'"></span>
+                        </label>
+                        <div class="control">
+                            <input type="email" class="input-text" id="register-email" name="email" data-validate="{required:true, 'validate-email':true}"
+                                autocomplete="off"></input>
+                        </div>
+                    </div>
+                    <div class="field field-password required">
+                        <label class="label">
+                            <span data-bind="i18n: 'Password'"></span>
+                        </label>
+                        <div class="control">
+                            <input type="password" class="input-text" id="signup-password" data-password-min-length="8" data-password-min-character-sets="3" name="password" data-validate="{required:true, 'validate-customer-password':true}"></input>
+                        </div>
+                    </div>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <button type="submit" class="action primary action-start-chat secondary">
+                                <span data-bind="i18n: 'Submit'"></span>
+                            </button>
+                        </div>
+                        <span class="register-text" data-bind="i18n: 'Login', click: enableLoginForm"></span>
+                    </div>
+                </div>
+            </form>
+            <!-- /ko -->
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+<!-- ko if: customerLoggedIn() === true &&  chatStarted() === true -->
+<!-- ko if: isBlocked() === false -->
+<div id="bottom-controls">
+    <form method="post" data-bind="submit: sendCustomerMessage, attr: {id: 'reply_form_'+customerData().customerUniqueId}">
+        <input type="hidden" name="class" value="other"></input>
+        <input type="hidden" name="receiverUniqueId" data-bind="value: chatConfig.sellerData.receiverUniqueId"></input>
+        <input type="hidden" name="senderUniqueId" data-bind="value: customerData().customerUniqueId"></input>
+        <input type="hidden" name="customerName" data-bind="value: customerData().customerName"></input>
+        <div class="left message-box">
+            <textarea name="message" id="" rows="1" data-bind="event:{keypress: replyByEnter}"></textarea>
+            <div class="dropup" data-bind="click:openEmojiBox">
+                <img class="attachment-img" width="23" height="23" data-bind="attr: {src: attachmentImg}, click: addAttachment, clickBubble:false"></img>
+                <span class="emoticons_div" title="Emojis" data-toggle="dropdown" role="button" aria-expanded="false"></span>
+                <div class="dropdown-menu dropdown-menu-right" role="menu">
+                    <div class="smiley_pad">
+                        :smiley: :smile: :wink: :blush: :angry:
+                    </div>
+                    <div class="smiley_pad">
+                        :laughing: :smirk: :disappointed: :sleeping: :coffee:
+                    </div>
+                    <div class="smiley_pad">
+                        :rage: :cry: :yum: :neutral_face: :sunglasses:
+                    </div>
+                    <div class="smiley_pad">
+                        :astonished: :stuck_out_tongue_winking_eye: :sob: :flushed: :mask:
+                    </div>
+                    <div class="smiley_pad">
+                        :smiling_imp: :confused: :scream: :stuck_out_tongue: :fearful:
+                    </div>
+                    <div class="smiley_pad">
+                        :punch: :ok_hand: :clap: :thumbsup: :thumbsdown:
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="dropup" data-bind="click:openEmojiBox"></div> -->
+        </div>
+        <div class="added-attachment" style="display: none" id="attachment-file">
+            <div class="wk-attachment">
+                <input type="file" name="attachments" class="msg-attachment" data-bind="event:{ change: selectFile.bind()}">
+            </div>
+        </div>
+    </form>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+<!-- ko if: isBlocked() === true -->
+<div class="bottom-controls">
+    <span class="chat-error" data-bind="i18n: 'You have been blocked by this seller.'" style="position:inherit;width:91%;"></span>
+</div>
+<!-- /ko -->

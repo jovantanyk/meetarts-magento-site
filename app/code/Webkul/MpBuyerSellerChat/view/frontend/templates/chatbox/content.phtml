@@ -1,0 +1,65 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+?>
+<?php
+    $product = $block->getProduct();
+    $helper = $block->getHelperObject();
+    $seller_id = '';
+    $marketplaceProduct = $helper->getSellerProductDataByProductId($product['entity_id']);
+    $mediaUrl = $block->getUrl('mpchatsystem/index/viewfile?image=');
+    $mediaUrl = str_replace("image=/", "image=", $mediaUrl);
+foreach ($marketplaceProduct as $value) {
+    $seller_id = $value['seller_id'];
+}
+?>
+<?php if ($block->canChatEnable() && $seller_id!=''): ?>
+<script>
+    window.mpChatboxConfig = <?= /* @noEscape */ \Zend_Json::encode($block->getChatBoxConfig()); ?>;
+</script>
+    <?= /* @noEscape */ $block->getChildHtml('style_template'); ?>
+<!-- <div id="chat" class="animated-chat"><?php //echo __('Live Chat'); ?></div> -->
+<div data-block="mpbuyerchat" id="mpchatbox-component" data-bind="scope:'mpchatbox-content'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+    {
+        "#mpchatbox-component": {
+            "Magento_Ui/js/core/app":  <?= /* @noEscape */ $block->getJsLayout();?>
+        }
+    }
+    </script>
+</div>
+    <script id="customer_reply_template" type="text/x-magento-template">
+        <li class="<%- data.class %>">
+            <div class="avatar">
+                <img src="<%- data.image %>" />
+            </div>
+            <div class="messages">
+            <% if(data.message_type == 'image') { %>
+                <p><a target="_blank" href="<?= /* @noEscape */
+                $mediaUrl ?><%- data.message %>">
+                <img src="<?= /* @noEscape */
+                $mediaUrl ?><%- data.message %>"
+                style="widht:100%;" class="message-image">
+                </a></p>
+            <% } if(data.message_type == 'file'){ %>
+                <p><a href="<?= /* @noEscape */ $mediaUrl ?><%- data.message %>" >
+                <img width="30" height="20" src="">
+                <span><?= /* @noEscape */ __('Download File'); ?></span>
+                </a></p>
+                <% } if(data.message_type != 'file' && data.message_type != 'image') { %>    
+                 <p><%- data.message %></p>
+            <% } %>
+                <time datetime="2009-11-13T20:14"><%- data.dateTime %></time>
+            </div>
+        </li>
+    </script>
+<?php endif; ?>

@@ -1,0 +1,34 @@
+<?php
+$params = $block->getTemplateParams();
+if ($params) {
+?>
+<script>
+    let hitpay_payment_id = '<?php echo $params['payment_id']?>';
+    let hitpay_order_id = '<?php echo $params['order_id']?>';
+    let status_ajax_url = '<?php echo $params['status_url']?>';
+</script>
+<div class="hitpay_status">
+    <div class="payment_pending" style="width: 100%; text-align: center; display: ">
+        <img class="hitpay_success_loader" src="<?php echo $this->getViewFileUrl('SoftBuild_HitPay::images/loader.gif'); ?>" />
+        <h3><?php echo __('We are retrieving your HitPay payment status, please wait...')?></h3>
+    </div>
+    <div class="payment_error" style="width: 100%; text-align: center; display: none">
+        <img src="<?php echo $this->getViewFileUrl('SoftBuild_HitPay::images/disabled.gif'); ?>" />
+        <span><?php echo __('Payment Error: Something went wrong, please contact the merchant')?></span>
+    </div>
+    <div class="payment_status_complete" style="width: 100%; text-align: center; display: none">
+        <img src="<?php echo $this->getViewFileUrl('SoftBuild_HitPay::images/check.png'); ?>" style="width:200px" />
+        <h3><?php echo __('Your payment has been confirmed!')?></h3>
+    </div>
+    <div class="payment_status_failed" style="width: 100%; text-align: center; display: none">
+        <img src="<?php echo $this->getViewFileUrl('SoftBuild_HitPay::images/disabled.gif'); ?>" />
+        <span><?php echo __('Your payment has been failed. ')?></span>
+    </div>
+    <div class="payment_status_pending" style="width: 100%; text-align: center; display: none">
+        <img src="<?php echo $this->getViewFileUrl('SoftBuild_HitPay::images/warning.gif'); ?>" />
+        <span><?php echo __('Your payment status is in pending.')?></span>
+    </div>
+</div>
+<?php
+}
+?>

@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * MarketplaceEventManager System configuration.
+ * @category Webkul
+ * @package Webkul_MarketplaceEventManager
+ * @author Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label" sortOrder="10">
+            <label>Webkul</label>
+        </tab>
+        <section id="marketplaceeventmanager" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Marketplace Event Ticket System</label>
+            <tab>webkul</tab>
+            <resource>Webkul_MarketplaceEventManager::config_marketplaceeventmanager</resource>
+            <group id="settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Marketplace Event Ticket System Settings</label>
+                <field id="enable" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Enable Ticket System</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="allowed_category" translate="label comment" sortOrder="19" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Allowed Categories for Seller To Add Events</label>
+                    <validate>validate-no-html-tags</validate>
+                    <comment>e.g Please enter category ids by comma(,) separated</comment>
+                </field>
+                <field id="from_date" translate="label comment" sortOrder="19" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Set Upcoming Event From Date</label>
+                    <validate>validate-no-html-tags validate-date</validate>
+                    <frontend_model>Webkul\MarketplaceEventManager\Block\DatePicker</frontend_model>
+                </field>
+                <field id="to_date" translate="label comment" sortOrder="19" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Set Upcoming Event To Date</label>
+                    <validate>validate-no-html-tags validate-date</validate>
+                    <frontend_model>Webkul\MarketplaceEventManager\Block\DatePicker</frontend_model>
+                </field>
+                <field id="enable_terms" translate="label comment" sortOrder="21" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable Terms At Frontend</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="caption">1</field>
+                    </depends>
+                </field>
+                <field id="show_expired_produt" translate="label comment" sortOrder="22" type="select" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Show Expired Products on Frontend</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="event_prefix" translate="label comment" sortOrder="15" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Set Global Event Prefix</label>
+                    <validate>validate-no-html-tags</validate>
+                    <comment>This prefix will be added to ticket's QR code</comment>
+                </field>
+                <field id="add_to_cart_label" translate="label comment" sortOrder="15" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Set Add To Cart Label for Expired Event</label>
+                    <validate>validate-no-html-tags </validate>
+                </field>
+                <field id="order_notification_mail" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" >
+                    <label>Order Notification Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="reminder_mail" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" >
+                    <label>Reminder Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

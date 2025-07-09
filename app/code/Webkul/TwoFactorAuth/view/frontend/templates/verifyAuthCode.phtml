@@ -1,0 +1,42 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $viewModel \Webkul\TwoFactorAuth\ViewModel\HelperViewModel */
+$viewModel = $block->getViewModel();
+$jsonHelper = $viewModel->helper(\Magento\Framework\Json\Helper\Data::class);
+$twoFactorAuthHelper = $viewModel->helper(\Webkul\TwoFactorAuth\Helper\Data::class);
+
+$isModuleEnable = $twoFactorAuthHelper->isModuleEnable();
+$enableAtRegistration = $twoFactorAuthHelper->isEnableAtRegistration();
+$modalConfig = $twoFactorAuthHelper->getOtpModalConfig();
+
+if ($isModuleEnable && $enableAtRegistration) {
+    ?>
+    <div class="otpLoader">
+    </div>
+    <div data-mage-init='{
+        "verifyOtp": <?= /* @noEscape */ $jsonHelper->jsonEncode($modalConfig); ?>
+        }' class="otpPopupContainer">
+        <div class= "otp_popup">
+            <div class="otp_expire_message">Your Auth Code will expire in
+                <?= $block->escapeHtml($modalConfig['authCodeTimeToExpireString']); ?>.
+            </div>
+            <div class="otp_response"></div>
+            <div class="otp_action">
+                <input name="otp" type="password" class="user_otp" autocomplete="off">
+                <button class="submit_otp">
+                <?= $block->escapeHtml($modalConfig['submitButtonText']); ?>
+                </button>
+            </div>
+            <div class="validate_error"></div>
+        </div>
+    </div>
+<?php } ?>

@@ -1,0 +1,12 @@
+<!-- 
+/**
+ * @package   Verz_Design
+ * @copyright Copyright (c) 2022 VerzDesign (https://www.verzdesign.com/)
+ * @contacts  enquiry@verzdesign.com
+ */
+-->
+<page_layouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/PageLayout/etc/layouts.xsd">
+    <layout id="fullpage-layout">
+        <label translate="true">Full Page Layout</label>
+    </layout>
+</page_layouts>

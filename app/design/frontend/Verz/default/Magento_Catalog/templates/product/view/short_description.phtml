@@ -1,0 +1,38 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Product description template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Description
+ */
+?>
+<?php if($block->getProduct()->getShortDescription()): ?>
+<h3 class="size25"> ABOUT THE WORK </h3>
+<div class="dsk-text size20-p mb40">
+    <?= /* @noEscape */ $this->helper(Magento\Catalog\Helper\Output::class)->productAttribute(
+        $block->getProduct(),
+        $block->getProduct()->getShortDescription(),
+        'short_description'
+    ) ?>
+</div>
+<?php endif; ?>
+<?php if($block->getProduct()->getDescription()): ?>
+<div class="cmpy-logo-wrp">
+    <?= /* @noEscape */ $this->helper(Magento\Catalog\Helper\Output::class)->productAttribute(
+        $block->getProduct(),
+        $block->getProduct()->getDescription(),
+        'description'
+    ) ?>
+</div>
+<?php endif; ?>
+<div class="product-add-form2 price-section">
+    <?php echo $this->getLayout()->createBlock('Magento\Catalog\Block\Product\View\Attributes')->setTemplate('Magento_Catalog::product/view/attributes.phtml')->toHtml(); ?>
+    <span id="" class="swatch-attribute-label">PRICE</span>
+    <?php echo $this->getChildHtml("product.price.final"); ?> 
+</div>

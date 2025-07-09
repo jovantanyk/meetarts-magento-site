@@ -1,0 +1,28 @@
+{
+  "name": "verz/magento-2-price-slider",
+  "description": "Magento 2 Price slider",
+  "require": {
+    "php": "~7.0.0"
+  },
+  "type": "magento2-module",
+  "version": "0.0.1",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Verz",
+      "email": "nikunj.verz@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Verz\\PriceSlider\\": ""
+    }
+  }
+}

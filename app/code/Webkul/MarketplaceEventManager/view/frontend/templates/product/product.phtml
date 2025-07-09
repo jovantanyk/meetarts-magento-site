@@ -1,0 +1,169 @@
+<?php
+$_product = $block->getProduct();
+$helper = $block->getMpEventManagerHelper();
+$adminConfigCondition = $helper->getConfigTerms();
+if ($_product->getTypeId() == 'etickets') {
+    $expiredStatus = $block->getEventExpiredStatus();
+    $addToCartLabel = '';
+    if ($expiredStatus) {
+        $addToCartLabel = $helper->getExpiredAddToCartLabel();
+    }
+    ?>
+    <div class="mpevent-data fieldset">
+        <?php $eventvenue =  $_product->getEventVenue();
+        if (!empty($eventvenue)) {
+            ?> 
+            <!-- <p>
+                <a href="https://maps.google.com/?q=<?= /* @noEscape */ urlencode($eventvenue); ?>"
+                target="__blank"><?= /* @noEscape */ __('View Location'); ?></a>
+            </p> -->
+        <?php } ?>
+        <?php if ($_product->getEnableEventTerms() && $adminConfigCondition) { ?>
+            <div class="field required">
+                <div class="mpevent-terms-data">
+                    <input type="checkbox" class="accept-terms"/>
+                </div>
+                <label class="label"><span>
+                    <a href="javascript:void(0)" class="event-terms">
+                        <?= /* @noEscape */ __('Terms &amp; Conditions'); ?>
+                    </a><span>
+                </label>
+            </div>
+        <?php } ?>
+    </div>
+    <?php
+    $optionValues = [];
+    $options = $block->getProductOptions($_product);
+    foreach ($options as $option) {
+        $value = $block->getValueCollectionOfOption($option['option_id']);
+        foreach ($value as $val) {
+            $valueData = $val->getData();
+            $optionValues[$valueData['option_type_id']] = $valueData['qty'];
+        }
+    }
+    ?>
+    <?php if ($_product->getEnableEventTerms() && $adminConfigCondition) { ?>
+    <div class="wk_pickup">
+        <div id="wk-mpem-data" class="wk_mpem_condition">
+            <div class="mp-modals-wrapper">
+                <aside tabindex="0" data-type="popup" data-role="modal"
+                class="modal-popup modal-slide _inner-scroll wk-mpem-model-popup">
+                <div tabindex="0" data-role="focusable-start"></div>
+                    <div data-role="focusable-scope" class="modal-inner-wrap wk_mpem_scroll">
+                        <header class="modal-header">
+                            <h4 class="modal-title"><?= /* @noEscape */ __('Terms and Conditions') ?></h4>
+                            <button type="button" data-role="closeBtn" class="action-close wk-close" data-id="">
+                                <span>Close</span>
+                            </button>
+                            <span  class="wk-clear" ></span>
+                        </header>
+                        <div id="wk-mpem-tetm-condition">
+                            <?= /* @noEscape */ __($_product->getEventTerms()); ?>
+                        </div>
+                        <div class="modal-footer"></div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+<script>
+    require([
+        "jquery",
+        'Magento_Ui/js/modal/alert',
+        'mage/translate',
+        "mage/mage"
+    ], function($, alert, $t){
+        var label = '<?= /* @noEscape */ $addToCartLabel; ?>';
+            $(document).ready(function () {
+                var html = $('.mpevent-data');
+                $('#product-options-wrapper').before(html);
+                $('.mpevent-data').css({'display':'inline'});
+                $('.mpevent-terms-data').css({'display':'inline-block'});
+                if (label != '') {
+                    $("#product-addtocart-button").attr('disabled',true);
+                    $("#product-addtocart-button span").html(label);
+                    $("#product-addtocart-button").addClass('disabled');
+                }
+            })
+
+            <?php if ($_product->getEnableEventTerms() && $adminConfigCondition) { ?>
+                $(window).on('load',function(){
+                    $('#product-addtocart-button').attr('disabled','disabled');
+                });
+                setTimeout(() => {
+                    $('#product-addtocart-button').attr('disabled','disabled');
+                }, 500);
+                setTimeout(() => {
+                    $('#product-addtocart-button').attr('disabled','disabled');
+                }, 1000);
+                $('body').append($('[id^=wk-mpem-data]'));
+                $('.accept-terms').on('change',function(){
+                    if ($(this).prop('checked')) {
+                        $('#product-addtocart-button').prop('disabled','');
+                    } else {
+                        $('#product-addtocart-button').prop('disabled','disabled');
+                    }
+                });
+            <?php } ?>
+            $(document).ready(function() {
+                var optionarr = <?= /* @noEscape */ json_encode($optionValues); ?>;
+                var length = optionarr.length;
+                var disabled = 0;
+                $('#product-options-wrapper').find('[name^="options["]').each(function() {
+                    var value = $(this).val();
+                    var qty = $('.product-options-bottom').find('[name="qty"]').val();
+                    if (parseInt(optionarr[value], 10) < parseInt(qty, 10)) {
+                        $(this).prop('checked', false);
+                        $(this).attr('disabled','disabled');
+                    }
+                })
+                $('.product-options-bottom').find('[name="qty"]').on('keyup', function() {
+                    $('#product-options-wrapper').find('[name^="options["]').each(function() {
+                        var value = $(this).val();
+                        var qty = $('.product-options-bottom').find('[name="qty"]').val();
+                        if (parseInt(optionarr[value], 10) < parseInt(qty, 10) && $(this).is(':checked')) {
+                            alert({
+                                content: $t('Requested quantity is not available for selected ticket type. Only '+
+                                optionarr[value]+' quantity is available for selected ticket type.')
+                            });
+                            $('.product-options-bottom').find('[name="qty"]').val(optionarr[value]);
+                        } else {
+                            if (parseInt(optionarr[value], 10) < parseInt(qty, 10)) {
+                                $(this).attr('disabled','disabled');
+                            } else {
+                                $(this).removeAttr('disabled');
+                            }
+                        }
+                    })
+                })
+            });
+            $(document).on('click', '.event-terms', function (event) {
+                $('.page-wrapper').css('opacity','0.4');
+                $('.wk-mpem-model-popup').addClass('_show');
+                $('.wk_mpem_condition').show();
+                $('.page').css('opacity','0.4');
+            });
+            $('.wk-close').click(function () {
+                $('.page-wrapper').css('opacity','1');
+                $('#resetbtn').trigger('click');
+                $('.wk_mpem_condition').hide();
+            });
+
+                $lightbox = $('.mpevent-terms-cont');
+                $('.mpevent-terms-cont').remove();
+                $('body').append($lightbox);
+                $('body').on('click','.close-terms',function(){
+                    $(this).parents('.mpevent-terms-cont').fadeOut(300);
+                });
+                $('body').on('click','.event-terms',function(){
+                    $('.mpevent-terms-cont').fadeIn(300);
+                });
+
+            });
+        </script>
+    <?php
+}
+
+?>

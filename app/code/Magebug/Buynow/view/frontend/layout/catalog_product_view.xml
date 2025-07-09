@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!--Display Buy now button after Add to cart button-->
+        <referenceBlock name="product.info.addtocart">
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.buynow" as="buynow" template="Magebug_Buynow::product/view/buynow.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="product.info.addtocart.additional">
+            <block class="Magento\Catalog\Block\Product\View" name="product.info.buynow.additional" as="buynow-additional" template="Magebug_Buynow::product/view/buynow.phtml" after="product.info.addtocart"/>
+        </referenceBlock>
+    </body>
+</page>

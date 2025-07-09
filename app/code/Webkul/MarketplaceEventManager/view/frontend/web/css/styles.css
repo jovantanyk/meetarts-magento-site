@@ -1,0 +1,29 @@
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+#wk-mem-tickettype {
+    width:10%;
+}
+.customoption-table{
+    border:1px solid #ddd;
+    margin-top: 10px;
+}
+#wk-mpem-tetm-condition{
+    padding: 15px;
+    font-size: 16px;
+    max-height: 70%;
+    overflow-y: auto;
+}
+.wk_mpem_scroll{
+    overflow: auto;
+}
+.wk-mp-design {
+    padding-top: 1px !important;
+    padding-bottom: 80px;
+}

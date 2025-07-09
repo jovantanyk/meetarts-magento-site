@@ -1,0 +1,106 @@
+<?php
+/**
+*
+* @category  Verz
+* @package   Verz_Priceslider
+* @author    Verz
+*/
+?>
+<?php
+/**
+ * Template for filter items block
+ *
+ * @var $block \Magento\LayeredNavigation\Block\Navigation\FilterRenderer
+ */
+$blockCurrency = $block->getLayout()->createBlock('Magento\Directory\Block\Currency');
+?>
+<ol class="items">
+<?php if ($filter instanceof Magento\CatalogSearch\Model\Layer\Filter\Price): ?>
+    <?php   $range = $this->getPriceRange($filter); ?>
+    <?php $filteredrange = $this->getPriceRangeFiltered($filter); ?>
+    <?php $url = $this->getFilterUrl($filter); ?> 
+    <?php $currency = $blockCurrency->getCurrentCurrencyCode(); ?> 
+    <script>
+        var price_url = "<?= $url; ?>";
+        require([
+            'jquery',
+            "jquery/ui",
+            'jquery/ui-modules/widgets/slider',
+            'domReady!'
+        ], function ($) {
+            $("div#price-slider").slider({
+                range: true,
+                min: <?= $filteredrange['min'] ?>,
+                max: <?= $filteredrange['max'] ?>,
+                values: [<?= $filteredrange['min'] ?>, <?= $filteredrange['max'] ?>],
+                slide: function (event, ui) {
+                    var rangemaxPrice = parseInt(ui.values[1])
+                    $("#amountfrom").text(ui.values[ 0 ]+" <?= $currency; ?>");
+                    $("#amountto").text( rangemaxPrice+" <?= $currency; ?>");
+                },
+                change: function (event, ui) {
+                     var rangemaxPrice = parseInt(ui.values[1]);
+                     var resultURL = price_url.replace("price=", "price="+ui.values[0] + "-" + rangemaxPrice);
+                     window.location.href = resultURL;
+                }
+            });
+            $( "#price-go" ).click(function() {                
+                var priceFrom = $("#amountfrom").val();
+                var priceTo = $("#amountto").val();
+                var rangemaxPrice = parseInt(priceTo+1)
+                var resultURL = price_url.replace("price=", "price="+priceFrom + "-" + priceTo);
+                window.location.href = resultURL;
+            });
+            $("#amount").val("$" + $("#price-slider").slider("values", 0) + " - $" + $("#price-slider").slider("values", 1));
+            $("#amountfrom").text($("#price-slider").slider("values", 0)+" <?= $currency; ?>");
+            $("#amountto").text($("#price-slider").slider("values", 1)+" <?= $currency; ?>");
+        });
+    </script>
+    <li class="item">
+        <div class="min-max-section">
+            <div class="min-price">
+                <label>Min</label>
+                <span id="amountfrom"><?= $range['min'] ?> <?= $currency; ?></span>
+            </div>
+            <div class="max-price">
+                <label>Max</label>
+                <span id="amountto"><?= $range['max'] ?> <?= $currency; ?></span>
+            </div>
+        </div> 
+        <div id="price-slider"></div>
+        <div id="price_range_text"><span class="min_show"><?= $filteredrange['min'] ?></span><span class="max_show"><?= $filteredrange['max'] ?></span></div>
+    </li>
+<?php else: ?>
+    <?php $i=0; foreach ($filterItems as $filterItem): $i++; ?>
+        <li class="item <?php if($i>5):?>hideshow<?php endif; ?>" <?php if($i>5):?>style="display:none;"<?php endif; ?>>
+            <?php if ($filterItem->getCount() > 0): ?>
+                <?php
+                    $filter = $filterItem->getFilter();
+                    $attributeModel = $filter->getData('attribute_model');
+                    ?>
+                <a href="<?php echo $block->escapeUrl($filterItem->getUrl()) ?>">
+                    <?php if ($attributeModel && $attributeModel->getFrontendInput() == 'multiselect'): ?>
+                        <input type="checkbox" disabled="disabled" />
+                    <?php endif; ?>
+                    <label for="<?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>"> <?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?></label>
+                    <?php if ($filterItem->getCount() > 0):?>
+                        <span class="count"><?= /* @noEscape */ (int) $filterItem->getCount()?><span class="filter-count-label">
+                        <?php if ($filterItem->getCount() == 1):?>
+                            <?= $escaper->escapeHtml(__('item')) ?>
+                        <?php else:?>
+                            <?= $escaper->escapeHtml(__('items')) ?>
+                        <?php endif;?>
+                        </span></span>
+                    <?php endif; ?>
+                </a>
+            <?php else: ?>
+                <label for="<?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?>"> <?php /* @escapeNotVerified */ echo $filterItem->getLabel() ?></label>
+            <?php endif; ?>
+        </li>
+    <?php endforeach ?>
+<?php endif; ?>
+</ol>
+<?php if(count($filterItems)>5): ?>
+    <span class="show-more-items">Show more</span>
+    <span class="less-more-items" style="display:none;">Show less</span>
+<?php endif; ?>

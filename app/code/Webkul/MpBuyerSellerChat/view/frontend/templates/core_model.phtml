@@ -1,0 +1,41 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<script>
+  window.chatboxCoreConfig = <?= /* @noEscape */ \Zend_Json::encode($block->getChatBoxCoreConfig()); ?>;
+</script>
+<script id="notification-template" type="text/x-magento-template">
+    <div class="chat-message-client chat-message-notification">
+        <div class="msg_notification" id="<%- data.senderUniqueId %>">
+            <div class="wk_msgLogo">
+                <img src="<%- data.image %>">
+            </div>
+            <div class="wk_msgdetails">
+                <div class="wk_userName"><%- data.customerName %></div>
+                <div class="wk_userMsg"><%- data.message %></div>
+                <div class="wk_userLink">
+                    <span class="wk_msgClose">
+                        <i class="fa fa-times-circle"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script>
+    require([
+        'mage/url',
+        'Magento_Ui/js/block-loader'
+    ], function(url, blockLoader) {
+        blockLoader("<?= /* @noEscape */ $block->getViewFileUrl('images/loader-1.gif') ?>");
+        return url.setBaseUrl('<?= /* @noEscape */ $block->getBaseUrl() ?>');
+    })
+</script>

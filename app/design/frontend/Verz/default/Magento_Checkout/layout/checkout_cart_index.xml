@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<move element="checkout.cart.form" destination="checkout.cart.container" before="-" />
+		<move element="checkout.cart.coupon" destination="checkout.cart.totals.container" after="checkout.cart.totals" />
+		<move element="checkout.cart.crosssell" destination="columns" after="-" />
+        <referenceContainer name="checkout.cart.container">
+            <container name="cart.discount" label="Cart Discount Container" htmlTag="div" after="-" />
+        </referenceContainer>
+		<move element="cart.discount" destination="cart.summary" after="checkout.cart.totals.container" />
+		<!-- <move element="cart.summary" destination="checkout.cart.container" after="checkout.cart.coupon" /> -->
+    </body>
+</page>

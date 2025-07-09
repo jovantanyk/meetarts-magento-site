@@ -1,0 +1,20 @@
+{
+    "name": "webkul/marketplace-buyer-seller-chat",
+    "description": "Webkul Magento2 Marketplace Buyer Seller Chat System",
+    "require": {
+        "webkul/module-marketplace": "5.*.*"
+    },
+    "type": "magento2-module",
+    "version": "5.0.2",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\MpBuyerSellerChat\\": ""
+        }
+    }
+}

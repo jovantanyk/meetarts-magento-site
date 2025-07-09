@@ -1,0 +1,71 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+$_helper = $block->getMpHelper();
+$dataHelper = $block->getMpEventManagerHelper();
+$isPartner= $_helper->isSeller();
+$magentoCurrentUrl = $block->getCurrentUrl();
+$allow_pro_type=$_helper->getAllowedProductType();
+$isSellerGroup = $_helper->isSellerGroupModuleInstalled();
+if ($dataHelper->isEventManagerEnable() && $isPartner) {
+    ?>
+<style type="text/css">
+    @media only screen and (max-width: 767px){
+
+        .block-collapsible-nav.wk-mp-main{
+            top: 20px;
+        }
+    }
+</style>
+<li 
+class="level-0 
+    <?= /* @noEscape */ strpos($magentoCurrentUrl, 'marketplaceeventmanager/event/add')?
+    "current active":"";?>">
+    <a href="#" onclick="return false;" class="">
+        <span><?= /* @noEscape */ __('Event Management')?></span>
+    </a>
+    <div class="wk-mp-submenu">
+        <strong class="wk-mp-submenu-title"><?= /* @noEscape */ __('Event Management')?></strong>
+        <a href="#" class="action-close _close" data-role="wk-mp-close-submenu"></a>
+        <ul>
+            <li data-ui-id="menu-webkul-marketplace-menu" class="item-menu  parent  level-1">
+                <strong class="wk-mp-submenu-group-title">
+                    <span><?= /* @noEscape */ __('Menu')?></span>
+                </strong>
+                <div class="wk-mp-submenu">
+                    <ul>
+                        <?php if (($isSellerGroup && $_helper
+                        ->isAllowedAction('marketplaceeventmanager/event/add')) || !$isSellerGroup) { ?>
+                            <li class="level-2">
+                                <a href="<?= /* @noEscape */ $block
+                                ->getUrl('marketplaceeventmanager/event/add', ['_secure' => $block
+                                ->getRequest()->isSecure()]); ?>">
+                                    <span><?= /* @noEscape */ __('Add Event Ticket') ?></span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                        <?php if (($isSellerGroup && $_helper
+                        ->isAllowedAction('marketplaceeventmanager/event/eventlist')) || !$isSellerGroup) { ?>
+                            <li class="level-2">
+                                <a href="<?= /* @noEscape */ $block
+                                ->getUrl('marketplaceeventmanager/event/eventlist', ['_secure' => $block
+                                ->getRequest()->isSecure()]); ?>">
+                                    <span><?= /* @noEscape */ __('My Events List') ?></span>
+                                </a>
+                            </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</li>
+<?php } ?>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="marketplaceeventmanager_settings_order_notification_mail" label="Order Notification" file="order-notification.html" type="html" module="Webkul_MarketplaceEventManager" area="frontend"/>
+    <template id="marketplaceeventmanager_settings_reminder_mail" label="Reminder mail" file="reminder-mail.html" type="html" module="Webkul_MarketplaceEventManager" area="frontend"/>
+</config>

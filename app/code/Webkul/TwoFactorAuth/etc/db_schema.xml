@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!-- /**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="wk_twofactorauth" resource="default" engine="innodb" comment="Webkul Two Factor Auth Module">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Customer Email"/>
+        <column xsi:type="varchar" name="auth_code" nullable="false" length="6" comment="Auth Code"/>
+        <column xsi:type="int" name="verified" padding="10" unsigned="true" nullable="false" comment="Verified Status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="WK_TWOFACTORAUTH_CUSTOMER_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+    </table>
+    <table name="wk_pushnotification_userstoken" resource="default" engine="innodb" comment="Push Notification User Token">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="10" identity="true" comment="Entity Id"/>
+        <column xsi:type="text" name="token" nullable="true" comment="token"/>
+        <column xsi:type="text" name="browser" nullable="true" comment="browser"/>
+        <column xsi:type="int" name="template_id" unsigned="true" nullable="false" default="0" comment="template_id"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" comment="Creation Time"/>
+        <column xsi:type="text" name="name" nullable="true" comment="name"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" default="CURRENT_TIMESTAMP" comment="Update Time"/>
+        <column xsi:type="int" name="hour_status" unsigned="true" nullable="false" default="0" comment="hour_status"/>
+        <column xsi:type="int" name="minute_status" unsigned="true" nullable="false" default="0" comment="minute_status"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+     <table name="wk_backupcode" resource="default" engine="innodb" comment="Backup Code">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity Id"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Customer Email"/>
+        <column xsi:type="varchar" name="backupcode" nullable="false" length="255" comment="Backkup Code"/>
+        <column xsi:type="int" name="active" padding="10" unsigned="true" nullable="false" comment="Active"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

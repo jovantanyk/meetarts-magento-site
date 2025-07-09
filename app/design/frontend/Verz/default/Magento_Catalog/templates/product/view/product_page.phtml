@@ -1,0 +1,245 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Product Page template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Description
+ */
+$_product = $block->getProduct();
+$helperImage    = $this->helper(Magento\Catalog\Helper\Image::class);
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+?>
+<?php if ($_product->getTypeId() != 'etickets'):  ?>
+<div class="product-details-wrapper pt100">
+    <?php echo $this->getChildHtml("custom_title"); ?> 
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <?php echo $this->getChildHtml("product.info.media"); ?>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div class="product-info-main">
+                <?php echo $this->getChildHtml("short_description"); ?>
+                <?php echo $this->getChildHtml("product.info.main"); ?>
+                <?php echo $this->getChildHtml("product.info"); ?>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->getChildHtml("bundle.options.container"); ?>  
+    <?php echo $this->getChildHtml("seller_detail"); ?>
+</div>
+<?php echo $this->getChildHtml("artist_products"); ?>
+<?php echo $this->getChildHtml("content.aside"); ?>
+<?php else: ?>
+<?php 
+    $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_product->getId());
+    $sellerId = "";
+    $sellerName = "";
+    foreach ($marketplaceProduct as $value) {
+        $sellerId = $value['seller_id'];
+        $sellerName = $value['name'];
+    }
+?>
+<?php if($sellerId): ?>
+    <?php
+        $sellerInfo = $webkul_helper->getSellerInfo($sellerId);
+        $shopTitle = @$sellerInfo['shop_title'];
+        $shopUrl = @$sellerInfo['shop_url'];
+        $logo = @$sellerInfo['logo_pic'];
+        $productCount = (int)@$sellerInfo['product_count'];
+        $locality = isset($sellerInfo['company_locality']) ?$sellerInfo['company_locality'] :'';
+        $sellerDescInfo = $webkul_helper->getSellerDataByShopUrl($shopUrl);
+        $company_description = "";
+        foreach($sellerDescInfo as $value)
+        {
+            $company_description = $value['company_description'];
+        }
+    ?>
+<?php else: ?>
+    <?php
+        $locality = "";
+        $logo = "";
+        $company_description = "";
+    ?>
+<?php endif; ?>
+<?php
+
+	$product_title 	= urlencode($_product->getName());
+	$product_url	= urlencode($_product->getProductUrl());
+	$product_img	= urlencode($this->getUrl('pub/media/catalog').'product'.$_product->getImage());
+	$facebook_url 	= 'https://www.facebook.com/sharer/sharer.php?u=' . $product_url;
+	$twitter_url	= 'https://twitter.com/intent/tweet?text=' . $product_title . '+' . $product_url;
+	$pinterest_url	= 'https://pinterest.com/pin/create/bookmarklet/?media=' . $product_img . '&url=' . $product_url . '&is_video=false&description=' . $product_title;
+	$email_url		= 'mailto:?subject=' .  $product_title . '&body=' . $product_url;
+	$linkedin_url	= 'http://www.linkedin.com/shareArticle?mini=true&url='.$product_url.'&title='.$product_title.'&source='.$product_url;
+	$whatsapp_url	= 'https://wa.me/?text='.$product_url;
+	$telegram_url	= 'https://telegram.me/share/url?url='.$product_url;
+
+	$blockGallery = $block->getLayout()->createBlock('Magento\Catalog\Block\Product\View\Gallery');
+    $images = $blockGallery->getGalleryImages()->getItems();
+?>
+<div class="event-page pb20">
+   <div class="first-event-banner e-height-cnt">
+      <div class="row">
+         <div class="col-sm-8 e-height-element">
+			<div class="eventset-img">
+				<div class="event-one">
+				   <?php
+				   $imageUrl = $helperImage->init($_product, 'product_page_image_small')
+				   ->setImageFile($_product->getSmallImage()) // image,small_image,thumbnail
+				   ->keepFrame(FALSE)
+				   ->resize(1352,562,false)
+				   ->getUrl();
+				   ?>
+				   <?php if($imageUrl): ?>
+				   <img src="<?= $imageUrl; ?>" alt=""/>
+				   <?php endif; ?>
+				
+				</div>
+				<div class="ps-cnt-top">
+					  <h3 class="size40"><?= $_product->getName(); ?> by <?= $sellerName; ?></h3>
+					  <div class="user-tp mt20">
+						 <div class="evt-user-name">
+							<?php if($logo): ?>
+								<img src="<?= $block->escapeUrl($block->getUrl('')) ?>media/avatar/<?= $logo; ?>" alt=""/>
+							<?php else: ?>
+								<img src="<?= $block->escapeUrl($verz_helper->getPlaceHolderImage()) ?>" style="width:59px;" alt=""/>
+							<?php endif; ?>
+						 </div>
+						 <div class="user-tp-info">
+							<h4><?= $sellerName; ?></h4>
+							<span> <?php if($locality): ?><i class="fa-solid fa-location-dot"></i> <?= $locality; ?><?php endif; ?> </span>
+						 </div>
+					  </div>
+				</div>
+			</div>	
+         </div>
+         <div class="col-sm-4 e-height-element">
+            <div class="setall-event">
+               <div class="event-date-info mb30">
+                  <p class="size20 bd-text"><img src="<?php echo $block->getViewFileUrl('images/event-date-time.svg'); ?>" alt=""> Start: <?= $escaper->escapeHtml(date("l, F d, Y",strtotime($_product->getData('event_start_date')))); ?></p>
+                  <p class="size20 bd-text"><img src="<?php echo $block->getViewFileUrl('images/event-date-time.svg'); ?>" alt=""> End: <?= $escaper->escapeHtml(date("l, F d, Y",strtotime($_product->getData('event_end_date')))); ?></p>
+               </div>
+               <div class="event-header mb25">
+                  <h2 class="size40"> <?= $_product->getName(); ?> <br/> by <?= $sellerName; ?> </h2>
+                  <div class="us-price mt40">
+                    <?= /* @noEscape */ $block->getProductPrice($_product) ?>
+                  </div>
+               </div>
+                <?php echo $this->getChildHtml("product.info"); ?>
+            </div>
+         </div>
+      </div>
+   </div>
+    <?php if($block->getProduct()->getShortDescription()): ?>
+   <div class="row pb60">
+      <div class="col-sm-8">
+         <div class="dsk-text size25-p bd-text mt20">
+            <?= /* @noEscape */ $this->helper(Magento\Catalog\Helper\Output::class)->productAttribute(
+                $block->getProduct(),
+                $block->getProduct()->getShortDescription(),
+                'short_description'
+            ) ?>
+         </div>
+      </div>
+   </div>
+    <?php endif; ?>
+    <div class="about-this-event">
+        <h2 class="size45 mb30 themetext">About This Event</h2>
+        <div class="row">
+            <div class="col-sm-9">
+                <?php if(count($images)>1): ?>
+                    <div class="abt-event-img">
+                        <?php $i=0; foreach ($images as $image) : $i++; if($i==1)continue; ?>
+                            <?php $img_url = $image->getData('large_image_url') ?>
+                            <img src="<?php echo $img_url ?>" alt=""/>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+                <?php if($block->getProduct()->getDescription()): ?>
+                    <div class="event-dsk size15-p mt40 mb50">
+                    <?= /* @noEscape */ $this->helper(Magento\Catalog\Helper\Output::class)->productAttribute(
+                        $block->getProduct(),
+                        $block->getProduct()->getDescription(),
+                        'description'
+                    ) ?>
+                    </div>
+                <?php endif; ?>
+                <div class=" event-dsk artist-biography mb50">
+                    <h3 class="size20 themetext bd-text"> Artist biography </h3>
+                    <div class="user-tp mt30">
+                        <div class="evt-user-name">
+                            <?php if($logo): ?>
+                                <img src="<?= $block->escapeUrl($block->getUrl('')) ?>media/avatar/<?= $logo; ?>" alt=""/>
+                            <?php else: ?>
+                                <img src="<?= $block->escapeUrl($verz_helper->getPlaceHolderImage()) ?>" style="width:59px;" alt=""/>
+                            <?php endif; ?>
+                        </div>
+                        <div class="user-tp-info">
+                            <h4><?= $sellerName; ?></h4>
+                            <span> <?php if($locality): ?><i class="fa-solid fa-location-dot"></i> <?= $locality; ?><?php endif; ?></span>
+                        </div>
+                    </div>
+                    <div class="artist-page-link review-section">
+                        <a href="<?= $block->escapeUrl($block->getUrl('')) ?>marketplace/seller/profile/shop/<?= $shopUrl;?>" class="link themetext size20">View Artist Profile</a>
+                    </div>
+                    <div class="size15-p">
+                        <?= $company_description; ?>
+                    </div>
+                </div>				
+                <div class=" event-dsk artist-biography">
+                    <h3 class="size20 themetext bd-text"> Share with friends </h3>
+                    <ul class="social-icon mt20">
+                        <li>
+                            <a href="<?= $facebook_url; ?>" target="_blank"> <i class="fa-brands fa-facebook"></i>  </a>
+                        </li>
+                        <li>
+                            <a href="<?= $twitter_url; ?>" target="_blank"> <i class="fa-brands fa-twitter"></i>  </a>
+                        </li>	
+                        <li>
+                            <a href="<?= $linkedin_url; ?>" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
+                        </li>	
+                        <li>
+                            <a href="<?= $pinterest_url; ?>" target="_blank"> <i class="fa-brands fa-pinterest"></i> </a>
+                        </li>
+                        <li>												
+                            <a href="<?= $whatsapp_url; ?>" target="_blank"> <i class="fa-brands fa-whatsapp"></i>  </a>
+                        </li>	
+                        <li>	
+                            <a href="<?= $telegram_url; ?>" target="_blank"> <i class="fa-solid fa-paper-plane"></i> </a>
+                        </li>	
+                        <li>	
+                            <a href="<?= $email_url; ?>"> <i class="fa-solid fa-envelope"></i> </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="event-time">
+                    <ul>
+                        <li>
+                            <h4>Date and time</h4>
+                            <p> Start: <?= $escaper->escapeHtml(date("D, F d Y, h:ia",strtotime($_product->getData('event_start_date')))); ?> <br/>
+                                End: <?= $escaper->escapeHtml(date("D, F d Y, h:ia",strtotime($_product->getData('event_end_date')))); ?> <br/>
+                                Singapore Standard Time </p>
+                        </li>
+                        <li>
+                            <h4>Event Location</h4>
+                            <p><?= $_product->getData('event_venue'); ?></p>
+                            <a href="https://maps.google.com/?q=<?= /* @noEscape */ urlencode($_product->getData('event_venue')); ?>" class="link" target="__blank">Visit Location</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php echo $this->getChildHtml("artist_events"); ?>
+<?php echo $this->getChildHtml("content.aside"); ?>
+<?php endif; ?>

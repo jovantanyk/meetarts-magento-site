@@ -1,0 +1,65 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<div class="field choice" id="change-phone-number-checkbox-div">
+    <input type="checkbox"
+    name="change_phone_number"
+    id="change-phone-number"
+    data-role="change-phone-number"
+    value="1"
+    title="<?= $block->escapeHtmlAttr(__('Change Phone Number')) ?>"
+    <?php if ($block->getRequest()->getParam('change_phone_number')): ?> checked="checked"<?php endif; ?>
+    class="checkbox" />
+    <label class="label"for="change-phone-number">
+        <span><?= $block->escapeHtml(__('Change Phone Number')) ?></span>
+    </label>
+</div>
+<div class="field phone_number required" data-container="change-phone-number-div" id="change-phone-number-div">
+    <label class="label" for="change-phone-number"><span><?= $block->escapeHtml(__(' Phone Number')) ?></span></label>
+    <div class="control">
+        <input type="tel" 
+        name="phone_number_input"
+        id="phone-number-input"
+        autocomplete="phone_number_input"
+        data-input="change-phone-number"
+        title="<?= $block->escapeHtmlAttr(__('Phone Number')) ?>"
+        value="<?= $block->escapeHtmlAttr($block->getCustomerPhoneNumber()) ?>"
+        class="input-text" data-validate="{required:true}" />
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "[data-role=change-phone-number], [data-role=change-email], [data-role=change-password]": {
+            "changePhoneNumber": {
+                "titleChangePhoneNumber": "<?= $block->escapeJs($block->escapeHtml(__('Change Phone Number'))) ?>",
+                "titleChangeEmailPasswordAndPhoneNumber": "<?= $block->escapeJs($block->escapeHtml(
+                    __('Change Email, Password and Phone Number')
+                )) ?>",
+                "titleChangeEmailAndPhoneNumber": "<?= $block->escapeJs($block->escapeHtml(
+                    __('Change Email and Phone Number')
+                )) ?>",
+                "titleChangePasswordAndPhoneNumber": "<?= $block->escapeJs($block->escapeHtml(
+                    __('Change Password and Phone Number')
+                )) ?>",
+                "titleChangeEmail": "<?= $block->escapeJs($block->escapeHtml(__('Change Email'))) ?>",
+                "titleChangePassword": "<?= $block->escapeJs($block->escapeHtml(__('Change Password'))) ?>",
+                "titleChangeEmailAndPassword": "<?= $block->escapeJs($block->escapeHtml(
+                    __('Change Email and Password')
+                )) ?>"
+            }
+        },
+        "[data-container=new-password]": {
+            "passwordStrengthIndicator": {
+                "formSelector": "form.form-edit-account"
+            }
+        }
+    }
+</script>

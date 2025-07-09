@@ -1,0 +1,6 @@
+.wk-etickets-custom-option [data-index=delete_button] {
+    display: none;
+}
+[data-index="event_start_date"], [data-index="event_end_date"], [data-index="is_mp_event"] {
+    display: none;
+}

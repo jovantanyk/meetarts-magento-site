@@ -1,0 +1,37 @@
+<?php
+/**
+ * Webkul MarketplaceEventManager Product Edit
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+
+$eventDateTime = $block->getEventDateTime();
+if ($eventDateTime) { ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Webkul_MarketplaceEventManager/js/seteventattribute": {
+                    "eventFrom": "<?= /* @noEscape */ $eventDateTime['event_start_date'] ?>",
+                    "eventTo": "<?= /* @noEscape */ $eventDateTime['event_end_date'] ?>",
+                    "dateFormat" : "<?= /* @noEscape */ $eventDateTime['date_format'] ?>",
+                    "productType" : "<?= /* @noEscape */ $eventDateTime['productType'] ?>",
+                    "productId" : "<?= /* @noEscape */ $eventDateTime['productId'] ?>"
+                }
+            }
+        }
+    </script>
+<?php } ?>
+<script>
+    require([
+        "jquery",
+        "mage/mage"
+    ], function($){
+        $('body').trigger('contentUpdated');
+    });
+</script>
+

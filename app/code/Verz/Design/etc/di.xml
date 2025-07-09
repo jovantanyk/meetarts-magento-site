@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 
+
+/**
+
+ * @package   Verz_Design
+
+ * @copyright Copyright (c) 2022 VerzDesign (https://www.verzdesign.com/)
+
+ * @contacts  enquiry@verzdesign.com
+
+ */
+
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+   <preference for="Magento\Checkout\Block\Cart\Crosssell" type="Verz\Design\Block\Cart\Crosssell" />
+
+   <preference for="Magento\Swatches\Helper\Media" type="Verz\Design\Helper\Media" />
+   <preference for="Magento\OfflinePayments\Model\InstructionsConfigProvider" type="Verz\Design\Model\Rewrite\InstructionsConfigProvider" />
+
+</config>

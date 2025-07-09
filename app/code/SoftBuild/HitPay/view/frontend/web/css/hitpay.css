@@ -1,0 +1,33 @@
+label[for='p_method_hitpay'] img{
+    margin-right: 5px;
+}
+.hitpay_success_loader {
+    display: inline-block;
+}
+.payment_status_failed img {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+}
+.payment_error img {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+}
+.payment_status_pending img {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+}
+.payment_status_complete img {
+    display: inline-block;
+}
+.hitpay_status {
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+.payment_status_failed span, .payment_status_pending span, .payment_error span {
+    font-size: 20px;
+    font-weight: bold;
+}

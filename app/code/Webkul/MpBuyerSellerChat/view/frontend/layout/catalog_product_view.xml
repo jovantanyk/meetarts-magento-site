@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpBuyerSellerChat::css/style.css"/>
+    </head>
+    <body>
+        <referenceBlock name="active_customer_model" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Webkul\MpBuyerSellerChat\Block\CoreConfigModel" name="core_config_model" template="Webkul_MpBuyerSellerChat::core_model.phtml" />
+            <block class="Webkul\MpBuyerSellerChat\Block\ChatBox\Content" name="chatbox" template="Webkul_MpBuyerSellerChat::chatbox/content.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="mpchatbox-content" xsi:type="array">
+                                <item name="component" xsi:type="string">Webkul_MpBuyerSellerChat/js/chatbox</item>
+                                <item name="children" xsi:type="array">
+                                    <item name="mpchat-reply-management" xsi:type="array">
+                                        <item name="sortOrder" xsi:type="string">1</item>
+                                        <item name="component" xsi:type="string">Webkul_MpBuyerSellerChat/js/view/reply-management</item>
+                                        <item name="displayArea" xsi:type="string">mpchat-reply-management</item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+                <block class="Webkul\MpBuyerSellerChat\Block\ChatBox\Style" name="chat_style_template" template="window/style.phtml"/></block>
+        </referenceContainer>
+    </body>
+</page>

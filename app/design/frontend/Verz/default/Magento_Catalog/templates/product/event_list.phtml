@@ -1,0 +1,113 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+<?php
+$_productCollection = $block->getLoadedProductCollection();
+/** @var \Magento\Catalog\Helper\Output $_helper */
+$_helper = $block->getData('outputHelper');
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+?>
+<section class="event-list-wrapper psame100 pt0" id="amasty-shopby-product-list">
+<?php if (!$_productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></div>
+    </div>
+<?php else: ?>
+    <?= $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() === 'grid') {
+        $viewMode = 'grid';
+        $imageDisplayArea = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $imageDisplayArea = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+    $pos = $block->getPositioned();
+    ?>
+    <div class="row">
+        <div class="col-sm-12 ">
+            <h1 class="size60 themetext mb40">Events of the Week</h1>
+        </div>
+        <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+        <?php foreach ($_productCollection as $_product):  ?>
+            <?php
+            $productImage = $block->getImage($_product, $imageDisplayArea);
+            if ($pos != null) {
+                $position = 'left:' . $productImage->getWidth() . 'px;'
+                    . 'top:' . $productImage->getHeight() . 'px;';
+            }
+            ?>
+            <div class="col-sm-6 col-md-4 productitem">
+                <div class="event-list-holder">
+                    <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>" class="imgArea ">
+                        <?= $productImage->toHtml() ?>
+                    </a>
+                    <div class="event-list-info-holder">
+                        <div class="event-info ">
+                            <a class="title-event" href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>"><?=/* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name')?> </a>
+                        </div>
+                        <div class="entry-fees">
+                            <?= /* @noEscape */ $block->getProductPrice($_product) ?>
+                        </div>
+                    </div>
+                    <?php if($_product->getData('event_start_date')): ?>
+                        <label class="event-date">
+                            <img src="<?php echo $block->getViewFileUrl('images/event-date-time.svg'); ?>" alt="">
+                            <span>Start: <?= $escaper->escapeHtml(date("F d, Y",strtotime($_product->getData('event_start_date')))); ?> | End: <?= $escaper->escapeHtml(date("F d, Y",strtotime($_product->getData('event_end_date')))); ?></span>
+                        </label>
+                    <?php endif; ?>
+                    <label class="event-address">
+                        <?php if($_product->getData('event_venue')): ?>
+                        <img src="<?php echo $block->getViewFileUrl('images/event-address.svg'); ?>" alt="">
+                        <span><?= $escaper->escapeHtml($_product->getData('event_venue')); ?></span>
+                        <?php endif; ?>
+                    </label>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?= $block->getChildBlock('toolbar')->setIsBottom(true)->toHtml() ?>
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+    <script type="text/x-magento-init">
+    {
+        "[data-role=tocart-form], .form.map.checkout": {
+            "catalogAddToCart": {
+                "product_sku": "<?= $escaper->escapeJs($_product->getSku()) ?>"
+            }
+        }
+    }
+    </script>
+<?php endif; ?>
+</section>
+<script>
+    require(["jquery","matchHeight"],function(e){
+        jQuery( document ).on( "ajaxSuccess", function() {
+			jQuery("#amasty-shopby-product-list .col-md-4").matchHeight();
+			jQuery(".event-list-info-holder").matchHeight();
+			jQuery(".event-list-holder label.event-date").matchHeight();
+			jQuery(".event-list-wrapper .event-list-holder label.event-address").matchHeight();
+	  } );
+    });
+</script>

@@ -1,0 +1,88 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$customerid = $block->getCustomerId();
+$pid = $block->getRequest()->getParam('pid');
+if ($pid) {
+    $issellerpro = $block->getMarketplaceProductData();
+    if ($issellerpro['seller_id'] && $issellerpro['seller_id'] == $customerid) {
+        $_product = $block->getProductDetails();
+        ?>
+    <form method="post" 
+    action="<?= /* @noEscape */ $block
+    ->getUrl('marketplaceeventmanager/event/sendremindermail'); ?>" 
+    enctype="multipart/form-data" 
+    data-mage-init='{"validation":{}}' 
+    id="wk_mem_reminder_form">
+        <fieldset class="fieldset">
+            <?php  if (count($block->getBuyerList()) <= 0) {
+                   /* @noEscape */ echo '<h4 
+                   style="float:left;color:red">'.__("No buyers of block product yet").'</h4>';
+            } ?>
+            <?php if (count($block->getBuyerList()) > 0) {?>
+                <?= /* @noEscape */ $block->getFormKeyBlockHtml(); ?>
+            <legend class="legend">
+                <span><?= /* @noEscape */ __("Event Reminder"); ?></span>
+                <button class="button wk-mp-btn" type="submit" id="wk_ssp_save_button">
+                    <span><span><?= /* @noEscape */ __("Send Reminder"); ?></span></span>
+                </button>
+            </legend>
+            <div style="clear:both"></div>
+                <input type="hidden" name="pid" value="<?= /* @noEscape */ $_product->getId(); ?>">
+                <input type="hidden" name="cid" value="<?= /* @noEscape */ $customerid; ?>">
+            <div class="event-product-image">
+                <img 
+                title="<?= /* @noEscape */ $_product->getName(); ?>" 
+                src="<?= /* @noEscape */ $block->getImageUrl($_product->getImage())?>" 
+                class="image" height="250px" width="250px" />
+            </div>
+            <div class="field required">
+                <label for="Buyer_list" class="label">
+                    <span><?= /* @noEscape */ __("Buyer List:"); ?></span>
+                </label>
+                <div class="control">
+                    <select multiple class="wk-mem-multiple-select required-entry" name="buyerlist[]" id="Buyer_list" >
+                        <?php foreach ($block->getBuyerList() as $mail => $buyer) { ?>
+                            <option value="<?= /* @noEscape */ $mail ?>">
+                                <?= /* @noEscape */ $buyer;  ?>    
+                            </option>
+                            <?php } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field required">
+                <label for="reminder_subject" class="label">
+                    <span><?= /* @noEscape */ __("Subject:"); ?></span>
+                </label>
+                <div class="control">
+                    <textarea name="event_subject" id="reminder_subject" class="input-text required-entry"></textarea>
+                </div>
+            </div>
+            <div class="field required">
+                <label for="reminder_message" class="label">
+                    <span><?= /* @noEscape */ __("Message:"); ?></span>
+                </label>
+                <div class="control">
+                    <textarea name="event_message" id="reminder_message" class="input-text required-entry"></textarea>
+                </div>
+            </div>
+            <?php } ?>
+        </fieldset>
+    </form>
+    <?php } else { ?>
+        <h2 class="wk_mp_error_msg">
+            <?= /* @noEscape */ __("Invalid request"); ?>
+        </h2>
+<?php	} } else { ?>
+<h2 class="wk_mp_error_msg">
+        <?= /* @noEscape */ __("Invalid request"); ?>
+</h2>
+<?php }
+?>

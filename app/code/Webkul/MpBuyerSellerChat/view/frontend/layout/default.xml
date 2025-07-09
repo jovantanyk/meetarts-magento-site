@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_MpBuyerSellerChat::css/panel.css"/>
+        <css src="Webkul_MpBuyerSellerChat::css/style.css"/>
+    </head>
+    <body>
+        <referenceContainer name="root">
+            <block class="Webkul\MpBuyerSellerChat\Block\CoreConfigModel" name="core_config_model" template="Webkul_MpBuyerSellerChat::core_model.phtml" />
+            <block class="Webkul\MpBuyerSellerChat\Block\Seller\ActiveModel" name="active_customer_model" as="chat_model" template="Webkul_MpBuyerSellerChat::account/active_model.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="active-users" xsi:type="array">
+                                <item name="component" xsi:type="string">Webkul_MpBuyerSellerChat/js/view/active-model</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="seller.main">
+            <block class="Webkul\MpBuyerSellerChat\Block\CoreConfigModel" name="core_config_model_layout2" template="Webkul_MpBuyerSellerChat::core_model.phtml" />
+            <block class="Webkul\MpBuyerSellerChat\Block\Seller\ActiveModel" name="active_customer_model_layout2" template="Webkul_MpBuyerSellerChat::account/active_model.phtml">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="active-users" xsi:type="array">
+                                <item name="component" xsi:type="string">Webkul_MpBuyerSellerChat/js/view/active-model</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

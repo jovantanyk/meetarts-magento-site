@@ -1,0 +1,344 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Catalog\ViewModel\Product\Listing\PreparePostData;
+use Magento\Framework\App\ActionInterface;
+
+/* @var $block \Magento\Catalog\Block\Product\AbstractProduct */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+
+<?php
+switch ($type = $block->getType()) {
+
+    case 'related-rule':
+        if ($exist = $block->hasItems()) {
+            $type = 'related';
+            $class = $type;
+
+            $image = 'related_products_list';
+            $title = __('Similar Artworks');
+            $items = $block->getAllItems();
+            $limit = $block->getPositionLimit();
+            $shuffle = (int) $block->isShuffled();
+            $isWeightedRandom = (int) $block->getRotation()->isWeightedRandom($block->getProductListType());
+            $canItemsAddToCart = $block->canItemsAddToCart();
+
+            $showAddTo = true;
+            $showCart = false;
+            $templateType = null;
+            $description = false;
+        }
+        break;
+
+    case 'related':
+        /** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
+        if ($exist = $block->getItems()->getSize()) {
+            $type = 'related';
+            $class = $type;
+
+            $image = 'related_products_list';
+            $title = __('Similar Artworks');
+            $items = $block->getItems();
+            $limit = 4;
+            $shuffle = 0;
+            $isWeightedRandom = 0;
+            $canItemsAddToCart = $block->canItemsAddToCart();
+
+            $showAddTo = true;
+            $showCart = false;
+            $templateType = null;
+            $description = false;
+        }
+        break;
+
+    case 'upsell-rule':
+        if ($exist = $block->hasItems()) {
+            $type = 'upsell';
+            $class = $type;
+
+            $image = 'upsell_products_list';
+            $title = __('We found other products you might like!');
+            $items = $block->getAllItems();
+            $limit = $block->getPositionLimit();
+            $shuffle = (int) $block->isShuffled();
+            $isWeightedRandom = (int) $block->getRotation()->isWeightedRandom($block->getProductListType());
+
+            $showAddTo = false;
+            $showCart = false;
+            $templateType = null;
+            $description = false;
+            $canItemsAddToCart = false;
+        }
+        break;
+
+    case 'upsell':
+        /** @var \Magento\Catalog\Block\Product\ProductList\Upsell $block */
+        if ($exist = count($block->getItemCollection()->getItems())) {
+            $type = 'upsell';
+            $class = $type;
+
+            $image = 'upsell_products_list';
+            $title = __('We found other products you might like!');
+            $items = $block->getItemCollection()->getItems();
+            $limit = $block->getItemLimit('upsell');
+            $shuffle = 0;
+            $isWeightedRandom = 0;
+
+            $showAddTo = false;
+            $showCart = false;
+            $templateType = null;
+            $description = false;
+            $canItemsAddToCart = false;
+        }
+        break;
+
+    case 'crosssell-rule':
+        /** @var \Magento\Catalog\Block\Product\ProductList\Crosssell $block */
+        if ($exist = $block->hasItems()) {
+            $type = 'crosssell';
+            $class = $type;
+
+            $image = 'cart_cross_sell_products';
+            $title = __('More Choices:');
+            $items = $block->getItemCollection();
+
+            $showAddTo = true;
+            $showCart = true;
+            $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+            $description = false;
+            $canItemsAddToCart = false;
+        }
+        break;
+
+    case 'crosssell':
+        /** @var \Magento\Catalog\Block\Product\ProductList\Crosssell $block */
+        if ($exist = count($block->getItems())) {
+            $type = 'crosssell';
+            $class = $type;
+
+            $image = 'cart_cross_sell_products';
+            $title = __('More Choices:');
+            $items = $block->getItems();
+
+            $showAddTo = true;
+            $showCart = true;
+            $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+            $description = false;
+            $canItemsAddToCart = false;
+        }
+        break;
+
+    case 'new':
+        if ($exist = $block->getProductCollection()) {
+            $type = 'new';
+            $mode = 'grid';
+            $type = $type . ' ' . $mode;
+
+            $class = 'widget' . ' ' . $type;
+
+            $image = 'new_products_content_widget_grid';
+            $title = __('New Products');
+            $items = $exist;
+
+            $showAddTo = true;
+            $showCart = true;
+            $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+            $description = ($mode == 'list') ? true : false;
+            $canItemsAddToCart = false;
+        }
+        break;
+
+    default:
+        $exist = null;
+}
+$_item = null;
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+$_product = $verz_helper->getCurrentProduct();
+$product_type = "";
+if($_product)
+{
+    $product_type =  $_product->getTypeId();
+}
+?>
+
+<?php if ($exist):?>
+<?php if($product_type=="etickets"): ?>
+<section class="event-list-wrapper psame100 events-organizer pt40">
+    <div class="title">
+        <h1 class="size45 themetext mb40"> <?= $block->escapeHtml('Other Workshops And Exhibitions You May Like') ?> </h1>
+    </div>
+    <div class="row">
+        <?php $i=0; foreach ($items as $_item): $i++; if($i>4)continue; ?>
+            <div class="col-sm-3 col-md-3">
+                <div class="event-list-holder">
+                    <div class="img-holder img-cover">
+                        <div class="whisli-wrp">
+                            <?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow()) : ?>
+                                <a data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_item); ?>' data-action="add-to-wishlist" class="button custome-btn"><img alt="" class="img1" src="<?php echo $block->getViewFileUrl('images/whislist_icon.png'); ?>"> Add to wishlist</a>
+                            <?php endif; ?>
+                        </div>
+                        <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="imgArea">
+                            <?= $block->getImage($_item, 'new_products_content_widget_grid')->toHtml() ?>
+                        </a>
+                    </div>
+                    <div class="event-list-info-holder">
+                        <div class="event-info ">
+                            <a class="title-event" href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"><?= $block->escapeHtml($_item->getName()) ?> </a>
+                        </div>
+                        <div class="entry-fees">
+                            <?= /* @noEscape */ $block->getProductPrice($_item) ?>
+                        </div>
+                    </div>
+                    <label class="event-date">
+                        <img src="<?php echo $block->getViewFileUrl('images/event-date-time.svg'); ?>" alt="">
+                        <span>Start: <?= $block->escapeHtml(date("F d, Y",strtotime($_item->getData('event_start_date')))); ?> | End: <?= $block->escapeHtml(date("F d, Y",strtotime($_item->getData('event_end_date')))); ?></span>
+                    </label>
+                    <label class="event-address">
+                        <?php if($_item->getData('event_venue')): ?>
+                        <img src="<?php echo $block->getViewFileUrl('images/event-address.svg'); ?>" alt="">
+                        <span><?= $block->escapeHtml($_item->getData('event_venue')); ?></span>
+                        <?php endif; ?>
+                    </label>
+                    <?php 
+                        $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_item->getId());
+                        $sellerId = "";
+                        $sellerName = "";
+                        foreach ($marketplaceProduct as $value) {
+                            $sellerId = $value['seller_id'];
+                            $sellerName = $value['name'];
+                        }
+                    ?>
+                    <?php if($sellerId): ?>
+                        <?php
+                            $sellerInfo = $webkul_helper->getSellerInfo($sellerId);
+                            $shopTitle = @$sellerInfo['shop_title'];
+                            $shopUrl = @$sellerInfo['shop_url'];
+                            $logo = @$sellerInfo['logo_pic'];
+                            $productCount = (int)@$sellerInfo['product_count'];
+                            $locality = isset($sellerInfo['company_locality']) ?$sellerInfo['company_locality'] :'';
+                            $sellerDescInfo = $webkul_helper->getSellerDataByShopUrl($shopUrl);
+                            $company_description = "";
+                            foreach($sellerDescInfo as $value)
+                            {
+                                $company_description = $value['company_description'];
+                            }
+                        ?>
+                    <?php else: ?>
+                        <?php
+                            $locality = "";
+                            $logo = "";
+                            $company_description = "";
+                        ?>
+                    <?php endif; ?>
+                    <div class="user-tp mt30">
+                        <div class="evt-user-name">
+                            <?php if($logo): ?>
+                                <img src="<?= $block->escapeUrl($block->getUrl('')) ?>media/avatar/<?= $logo; ?>" alt=""/>
+                            <?php else: ?>
+                                <img src="<?= $block->escapeUrl($verz_helper->getPlaceHolderImage()) ?>" style="width:71px;" alt=""/>
+                            <?php endif; ?>
+                        </div>
+                        <div class="user-tp-info">
+                            <h4><?= $sellerName; ?></h4>
+                            <span> <?php if($locality): ?><i class="fa-solid fa-location-dot"></i> <?= $locality; ?><?php endif; ?> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
+    <div class="center mt20 btn-ctm">
+        <a href="<?= $block->escapeUrl($block->getUrl('')) ?>events-exhibitions.html" class="button custome-btn"> Browse More </a>
+    </div>
+</section>
+<?php else: ?>
+<section class="artwork-collection psame50 mb50">
+    <div class="title mb20">
+        <h2 class="size30 themetext pb15 semi-text"> <?= $block->escapeHtml($title) ?> </h2>
+    </div>
+    <div class="row">
+        <?php $i=0; foreach ($items as $_item): $i++; if($i>4)continue; ?>
+            <div class="col-sm-3">
+                <div class="product-item-info ">
+                    <div class="product-item-photo">
+                        <div class="product-image-container">
+                            <div class="product-img-view">
+                                <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="product-image-wrapper">
+                                    <?= $block->getImage($_item, $image)->toHtml() ?>
+                                </a>
+                            </div>		
+                        </div>	
+                    </div>
+                    <div class="product-item-details">
+                        <h2 class="size20"> <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"> <?= $block->escapeHtml($_item->getName()) ?> </a>
+                            <?php 
+                                $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_item->getId());
+                                $sellerName = "";
+                                foreach ($marketplaceProduct as $value) {
+                                $sellerName = $value['name'];
+                                }
+                            ?>
+                            <span class="sub-title"><?= $sellerName; ?></span>
+                        </h2>
+                        <?php if ($_item->isSaleable()):?>
+                            <?php if (!$_item->getTypeInstance()->isPossibleBuyFromList($_item)):?>
+                                <button
+                                        class="action tocart"
+                                        data-mage-init='{"redirectUrl": {"url": "<?= $block->escapeUrl($block->getAddToCartUrl($_item)) ?>"}}' type="button" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>">
+                                        <img src="<?php echo $block->getViewFileUrl('images/car2.png'); ?>" alt="">
+                                </button>
+                            <?php else :?>
+                                <?php
+                                /** @var $viewModel PreparePostData */
+                                $viewModel = $block->getViewModel();
+                                $postArray = $viewModel->getPostData(
+                                    $block->escapeUrl($block->getAddToCartUrl($_item)),
+                                    ['product' => $_item->getEntityId()]
+                                );
+                                $value = $postArray['data'][ActionInterface::PARAM_NAME_URL_ENCODED];
+                                ?>
+                                <form data-role="tocart-form"
+                                        data-product-sku="<?= $block->escapeHtmlAttr($_item->getSku()) ?>"
+                                        action="<?= $block->escapeUrl($block->getAddToCartUrl($_item)) ?>"
+                                        method="post">
+                                    <input type="hidden" name="product"
+                                            value="<?= /* @noEscape */ (int)$_item->getEntityId() ?>">
+                                    <input type="hidden"
+                                            name="<?= /* @noEscape */ ActionInterface::PARAM_NAME_URL_ENCODED?>"
+                                            value="<?= /* @noEscape */ $value ?>">
+                                    <?= $block->getBlockHtml('formkey') ?>
+                                    <button type="submit"
+                                            title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                            class="action tocart">
+                                            <img src="<?php echo $block->getViewFileUrl('images/car2.png'); ?>" alt="">
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>	
+        <?php endforeach ?>
+    </div>
+    <div class="center mt15">
+        <a href="<?= $block->escapeUrl($block->getUrl('')) ?>artworks.html" class="button custome-btn"> Browse More </a>
+    </div>
+</section>
+        <?php if (!$block->isRedirectToCartEnabled() && $_item):?>
+            <script type="text/x-magento-init">
+            {
+                "[data-role=tocart-form], .form.map.checkout": {
+                    "catalogAddToCart": {
+                        "product_sku": "<?= $block->escapeJs($_item->getSku()) ?>"
+                    }
+                }
+            }
+            </script>
+    <?php endif;?>
+<?php endif;?>
+<?php endif;?>

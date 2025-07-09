@@ -1,0 +1,60 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="columns.top">
+            <block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml"/>
+            <container name="page.messages" htmlTag="div" htmlClass="page messages container">
+                <block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
+                <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
+            </container>
+        </referenceContainer>
+		<referenceContainer name="page.wrapper">
+            <block class="Magento\Theme\Block\Html\Header" name="custom_header" template="Magento_Theme::html/header.phtml" cacheable="false" before="-">
+				
+                <block class="Magento\Framework\View\Element\Html\Links" name="header.links">
+                    <arguments>
+                        <argument name="css_class" xsi:type="string">header links</argument> 
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml">
+	                <arguments>
+	                    <argument name="configProvider" xsi:type="object">Magento\Search\ViewModel\ConfigProvider</argument>
+	                </arguments>
+	            </block>
+            </block>
+        </referenceContainer>
+		<move element="navigation.sections" destination="custom_header"/>
+		<move element="logo" destination="custom_header"/>
+		<move element="top.search" destination="custom_header"/>
+		<move element="store_language" destination="custom_header"/>
+		<move element="top.links" destination="custom_header"/>
+		<move element="currency" destination="custom_header"/>
+		<move element="skip_to_content" destination="custom_header"/>
+		<move element="minicart" destination="custom_header"/>
+		<move element="catalog.topnav" destination="custom_header"/>
+		  
+		<referenceContainer name="header.container" remove="1"/>
+		<referenceContainer name="header.panel" remove="1"/>
+		<referenceContainer name="header-wrapper" remove="1"/>
+		<referenceBlock name="cookie-status-check" remove="true"/>
+		
+		<referenceContainer name="footer-container">
+            <block class="Magento\Framework\View\Element\Template" name="custom_footer" template="Magento_Theme::html/footer.phtml">
+                <block class="Magento\Store\Block\Switcher" name="footer.store_switcher" template="switch/stores.phtml"/>
+            </block>
+        </referenceContainer>
+		
+		<move element="footer_links" destination="custom_footer" />
+		<move element="store_switcher" destination="custom_footer" />
+		<move element="copyright" destination="custom_footer" />
+		<referenceContainer name="report.bugs" remove="1"/>
+		<referenceContainer name="form.subscribe" remove="1"/>
+		
+		<referenceContainer name="page.wrapper">
+            <container name="banner_wrapper" htmlClass="home_custom_banner" htmlTag="div" before="main.content">
+            </container>
+		 </referenceContainer>
+		<move element="banner_section" destination="banner_wrapper" after="custom_header" />
+		<move element="page.messages" destination="banner_wrapper" before="-" /> 
+		
+    </body>
+</page>

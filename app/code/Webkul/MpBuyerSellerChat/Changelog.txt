@@ -1,0 +1,66 @@
+Legend
+
++ Features
+- Bugs
+
+-------------------------------- Version 5.0.2 --------------------------------------
+	+ Compatible with Magento 2.4.4 and Marketplace 5.0.5
+
+-------------------------------- Version 5.0.1 --------------------------------------
+	+ Compatible with Magento 2.4.1 and Marketplace 5.0.4
+
+-------------------------------- Version 5.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.* and Marketplace 5.*.*
+
+-------------------------------- Version 4.0.2 --------------------------------------
+	+ Compatible with Magento 2.4.4EE and Marketplace 4.0.4
+
+-------------------------------- Version 4.0.1 --------------------------------------
+	+ Compatible with Magento 2.4.1EE and Marketplace 4.0.4
+	
+-------------------------------- Version 4.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.*EE and Marketplace 4.*.*
+
+-------------------------------- Version 3.0.0 --------------------------------------
+	+ Updated according to Magento 2.3.x and Marketplace 3.x.x version
+	+ Private content feature implemented.
+	- Bugs Fixed.
+
+-------------------------------- Version 2.2.0 --------------------------------------
+	+ Compatible with Magento 2.2.* and Marketplace 2.3.*
+	+ Private content feature implemented.
+	- Bugs Fixed.
+
+-------------------------------- Version 2.0.3 --------------------------------------
+	- Bugs Fixed.
+	+ If seller change status, it will reflect to all customer's chat window without refreshing page.
+	+ Seller/Buyer can send attachment from the chat window.
+	+ Seller can block buyer for chat.
+	+ Seller can load each cutomer chat history from chat window.
+	+ Buyer can register from Chat Window.
+	+ Admin can view the Blocked Buyer list.
+
+-------------------------------- Version 2.0.2 --------------------------------------
+	+ Compatible with Magento2.2.* and Marketplace 2.1.*
+
+-------------------------------- Version 2.0.1 --------------------------------------
+	- Bugs Fixed.
+	+ Seller will be notified if customer goes offline during chat.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+
+	+ Socket.io & KnockoutJS based real time Chat System.
+	+ Admin can Stop & Start Chat Server.
+	+ Admin can set chat name to display on frontend.
+	+ Seller can chat with multiple buyers.
+	+ Seller can change his profile image.
+	+ Seller can load each buyer history from chat window.
+	+ Seller and Buyer can change their status to Online, Busy, Offline.
+	+ Emoji supports.
+	+ Push Notification is there to notify seller and buyer.
+	+ Customers can login using chat window.
+	+ Customers can change their profile image.
+	+ Customers can load their chat history.
+	+ Customers can update their chat status.
+	+ Customers can enable & disable chat notification sound.
+

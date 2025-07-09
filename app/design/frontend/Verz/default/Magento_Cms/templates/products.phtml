@@ -1,0 +1,83 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+/** @var \Magento\CatalogWidget\Block\Product\ProductsList $block */
+?>
+<?php 
+	$verz_helper    = $this->helper(Verz\Design\Helper\Data::class); 
+	$cat = $block->getData("data-cat");
+	if(!$cat)
+		$cat = 9;
+	$items = $verz_helper->getProductCollectionByCategories($cat,12);
+?>
+<?php if (count($items)>0) : ?>
+    <?php
+    $type = 'widget-product-grid';
+    $mode = 'grid';
+    $image = 'new_products_content_widget_grid';
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+	$blockAbstractProduct = $block->getLayout()->createBlock('Magento\Catalog\Block\Product\ListProduct');
+    ?>
+    <div class="featured-slider">
+		<?php foreach ($items as $_item) : ?>
+		  	<div class="single-item">
+		  		<div class="product-item-info">
+					<?php if (!$_item->isSaleable()) : ?>
+						<div class="product-label"><span class="out-stock-label">out of stock</span></div>
+					<?php elseif ($verz_helper->isSaleProduct($_item)) : ?>
+						<div class="product-label"><span class="sale-label">sale</span></div>
+					<?php elseif ($verz_helper->isNewProduct($_item)) : ?>
+						<div class="product-label"><span class="new-label">New</span></div>
+					<?php endif; ?>
+                    <a href="<?= $block->escapeUrl($blockAbstractProduct->getProductUrl($_item)); ?>" class="product-image-container">
+                    	<?= $blockAbstractProduct->getImage($_item, $image)->toHtml(); ?>
+                    </a>
+                    <div class="product-item-details text-center">
+                      	<div class="product-name-sec">
+                      		<strong class="product-item-name"><a href="<?= $block->escapeUrl($blockAbstractProduct->getProductUrl($_item)); ?>" class="product-item-link"><?= $block->escapeHtml($_item->getName()); ?></a></strong>
+                      	</div>
+                      	<?= $blockAbstractProduct->getProductPrice($_item); ?>
+                    </div>
+                    <div class="product-on-hover">
+                    	<div class="icon-center">
+							<?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow() && $showWishlist) : ?>
+                        	<div class="add-to-wishlist">
+								<a data-post='<?= /* @noEscape */ $blockAbstractProduct->getAddToWishlistParams($_item); ?>' data-action="add-to-wishlist" class="wishlist-icon">
+									<span class="normal-icon"><img src="<?php echo $block->getViewFileUrl('images/wishlist-icon.png'); ?>" alt=""></span>
+								</a>
+	                        </div>
+							<?php endif; ?>
+	                        <div class="addcart">
+								<?php if ($_item->isSaleable()) : ?>
+                                    <?php $postParams = $blockAbstractProduct->getAddToCartPostParams($_item); ?>
+                                    <form data-role="tocart-form"
+                                          data-product-sku="<?= $block->escapeHtml($_item->getSku()) ?>"
+                                          action="<?= $block->escapeUrl($postParams['action']) ?>"
+                                          method="post">
+                                        <input type="hidden"
+                                               name="product"
+                                               value="<?= /* @noEscape */ $postParams['data']['product'] ?>">
+                                        <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
+                                               value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
+                                        <?= $blockAbstractProduct->getBlockHtml('formkey') ?>
+                                        <button type="submit" class="tocart btn">
+                                            <span class="bag_main"><img src="<?php echo $block->getViewFileUrl('images/cart.png'); ?>" alt=""></span>
+                                        </button>
+                                    </form>
+								<?php endif; ?>
+	                        </div>
+	                    </div>
+                    </div>
+            	</div>
+		  	</div>
+		<?php endforeach ?>
+    </div>
+<?php endif; ?>

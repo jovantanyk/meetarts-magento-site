@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<block class="Magento\Catalog\Block\Product\View" name="banner_section" template="Magento_Catalog::product/banner_image.phtml" />
+		<block class="Magento\Catalog\Block\Product\View" name="extra_attibutes" template="Magento_Catalog::product/view/extra_attibutes.phtml" />
+		<block class="Magento\Catalog\Block\Product\View" name="short_description" template="Magento_Catalog::product/view/short_description.phtml" />
+		<block class="Magento\Catalog\Block\Product\View" name="seller_detail" template="Magento_Catalog::product/view/seller_detail.phtml" />
+		<block class="Magento\Catalog\Block\Product\View" name="artist_products" template="Magento_Catalog::product/view/artist_products.phtml" />
+		<block class="Magento\Catalog\Block\Product\View" name="artist_events" template="Magento_Catalog::product/view/artist_events.phtml" />
+		<block class="Magento\Catalog\Block\Product\View" name="custom_title" template="Magento_Catalog::product/view/custom_title.phtml" />
+		<referenceContainer name="content">
+			<block class="Magento\Catalog\Block\Product\View" name="product_page" template="Magento_Catalog::product/view/product_page.phtml" before="-" />
+		</referenceContainer>
+		
+		<move element="breadcrumbs" destination="banner_section" /> 
+		<move element="custom_title" destination="product_page" /> 
+		<move element="product.info.media" destination="product_page" before="-" /> 
+		<move element="product.info.main" destination="product_page" after="product.info.media" />  
+		<move element="short_description" destination="product_page" />   
+		<move element="product.price.final" destination="short_description" before="-" />  
+		<move element="product.info" destination="product_page" />  
+		<move element="seller_detail" destination="product_page" />  
+		<move element="content.aside" destination="product_page" />  
+		<move element="artist_products" destination="product_page" />  
+		<move element="artist_events" destination="product_page" />  
+		<move element="bundle.options.container" destination="product_page" />  
+		
+		<referenceContainer name="view.addto.compare" remove="1" /> 
+		<referenceBlock name="page.main.title" remove="1" /> 
+		<referenceBlock name="rewards.social.buttons" remove="1" /> 
+		<referenceBlock name="product.info.social" remove="1" /> 
+		<referenceBlock name="product.info.stock.sku" remove="1" /> 
+		<referenceBlock name="product.info.overview" remove="1" /> 
+		<referenceBlock name="product.info.review" remove="1" /> 
+		<referenceBlock name="product.info.description" remove="1" /> 
+		<referenceBlock name="product.info.details.after.wrapper" remove="1" /> 
+		<referenceBlock name="product.info.details" remove="1" /> 
+		<referenceBlock name="product.info.configurable.catalog_inventory_stockqty_default" remove="1" /> 
+		<referenceBlock name="marketplace_sellerprofile22" remove="1" /> 
+    </body>
+</page>

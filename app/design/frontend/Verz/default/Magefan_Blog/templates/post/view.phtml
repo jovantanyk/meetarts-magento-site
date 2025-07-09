@@ -1,0 +1,96 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ *
+ * Glory to Ukraine! Glory to the heroes!
+ */
+?>
+<?php
+/**
+ * Blog post view template
+ *
+ * @var $block \Magefan\Blog\Block\Post\View
+ */
+?>
+<?php
+$_post = $block->getPost();
+$_postUrl = $_post->getPostUrl();
+$_postName = $block->escapeHtml($_post->getTitle(), null);
+?>
+<?php
+    $product_title  = urlencode($_postName);
+    $product_url    = urlencode($_postUrl);
+    $product_img    = urlencode($_post->getFeaturedImage());
+    $facebook_url   = 'https://www.facebook.com/sharer/sharer.php?u=' . $product_url;
+    $twitter_url    = 'https://twitter.com/intent/tweet?text=' . $product_title . '+' . $product_url;
+    $pinterest_url  = 'https://pinterest.com/pin/create/bookmarklet/?media=' . $product_img . '&url=' . $product_url . '&is_video=false&description=' . $product_title;
+    $email_url      = 'mailto:?subject=' .  $product_title . '&body=' . $product_url;
+    $linkedin_url   = 'http://www.linkedin.com/shareArticle?mini=true&url='.$product_url.'&title='.$product_title.'&source='.$product_url;
+    $telegram_url   = 'https://telegram.me/share/url?url='.$product_url.'&text='.$product_title;
+    $whatsapp_url   = 'https://web.whatsapp.com/send?text='.$product_url;
+?>
+<div class="blog-page-grid">
+    <div class="event-page-details">
+        <h2 class="size45 themetext"> <?= /*@noEscape*/ $_postName ?> </h2>
+        <div class="">
+            <ul class="mnt-set">
+                <span> <i class="fa-solid fa-calendar-days"></i> <?= $block->escapeHtml($_post->getPublishDate("F d, Y")) ?></span>
+                <?php if ($_categoriesCount = $_post->getCategoriesCount()) { ?> 
+                    <?php $n = 0; ?>
+                    <span> <i class="fa-solid fa-rectangle-list"></i>
+                    <?php foreach ($_post->getParentCategories() as $ct) { ?>
+                        <?php $n++; ?>
+                        <?= $block->escapeHtml($ct->getTitle()) ?></a><?= /*@noEscape*/ ($n != $_categoriesCount) ? ',' : '' ?>
+                    <?php } ?>
+                    </span>
+                <?php } ?>
+            </ul>
+        </div>
+        <div class="blg-lg-img mb40">
+            <?php if ($featuredImage = $_post->getFeaturedImage()) { ?>
+                <?php
+                $featuredImgAlt = $_post->getData('featured_img_alt');
+                if (!$featuredImgAlt) {
+                    $featuredImgAlt = $_postName;
+                }
+                ?>
+                <div class="post-ftimg-hld">
+                    <img src="<?= $block->escapeUrl($featuredImage) ?>" alt="<?= $block->escapeHtml($featuredImgAlt) ?>" />
+                </div>
+            <?php } ?>
+        </div>
+        <div class="dsk-text size18p clearboth">
+            <?= /*@noEscape*/ $block->getContent() ?>
+            <div class="share-icon">
+                <span>	Share this to: </span>
+                <ul class="social-icon mt20">
+                    <li>
+                        <a href="<?= $facebook_url; ?>" target="_blank"> <i class="fa-brands fa-facebook"></i>  </a>
+                    </li>
+                    <li>
+                        <a href="<?= $twitter_url; ?>" target="_blank"> <i class="fa-brands fa-twitter"></i>  </a>
+                    </li>	
+                    <li>
+                        <a href="<?= $linkedin_url; ?>" target="_blank"> <i class="fa-brands fa-linkedin"></i> </a>
+                    </li>	
+                    <li>
+                        <a href="<?= $pinterest_url; ?>" target="_blank"> <i class="fa-brands fa-pinterest"></i> </a>
+                    </li>
+                    <li>												
+                        <a href="<?= $whatsapp_url; ?>" target="_blank"> <i class="fa-brands fa-whatsapp"></i>  </a>
+                    </li>	
+                    <li>	
+                        <a href="<?= $telegram_url; ?>" target="_blank"> <i class="fa-solid fa-paper-plane"></i> </a>
+                    </li>	
+                    <li>	
+                        <a href="<?= $email_url; ?>"> <i class="fa-solid fa-envelope"></i> </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="post-bottom">
+            <?= $block->getChildHtml('blog.post.bottom') ?>
+        </div>
+    </div>
+</div>

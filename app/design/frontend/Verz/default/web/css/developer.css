@@ -1,0 +1,7 @@
+.product-options-wrapper ul li .value-show {
+    margin-right: 25px;
+}
+body.catalog-product-view #preview{left: 100% !important;}
+.page-header{position: absolute;}
+.productitem .prd-title{min-height: 95px;}
+.wk-mp-page-header-before.page-header{display: none !important;}

@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Review\Block\Product\ReviewRenderer $block */
+
+$url = $block->getReviewsUrl() . '#reviews';
+$urlForm = $block->getReviewsUrl() . '#review-form';
+?>
+<?php if ($block->isReviewEnabled() && $block->getReviewsCount()) : ?>
+    <?php $rating = $block->getRatingSummary(); ?>
+    <div class="product-reviews-summary short<?= !$rating ? ' no-rating' : '' ?>">
+        <?php if ($rating) :?>
+        <div class="rating-summary">
+            <span class="label"><span><?= $block->escapeHtml(__('Rating')) ?>:</span></span>
+            <div class="rating-result" title="<?= $block->escapeHtmlAttr($rating) ?>%">
+                <span style="width:<?= $block->escapeHtmlAttr($rating) ?>%"><span><?= $block->escapeHtml($rating) ?>%</span></span>
+            </div>
+        </div>
+        <?php endif;?>
+        <div class="reviews-actions">
+            <a class="action view" href="<?= $block->escapeUrl($url) ?>"><?= $block->escapeHtml($block->getReviewsCount()) ?>&nbsp;<span><?= ($block->getReviewsCount() == 1) ? $block->escapeHtml(__('Review')) : $block->escapeHtml(__('Reviews')) ?></span></a>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="product-reviews-summary empty">
+        <div class="rating-summary">
+             <span class="label"><span><?= $block->escapeHtml(__('Rating')) ?>:</span></span>
+             <div class="rating-result" >
+                 <span style="width:0%">
+                     <span>
+                         <span itemprop="ratingValue">0</span>% of <span itemprop="bestRating">100</span>
+                     </span>
+                 </span>
+             </div>
+         </div>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,39 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Product Title template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Description
+ */
+$_product = $block->getProduct();
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$product_cat    = $verz_helper->getProductCategory($_product);
+?>
+<?php 
+    $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_product->getId());
+    $sellerId = "";
+    $sellerName = "";
+    foreach ($marketplaceProduct as $value) {
+        $sellerId = $value['seller_id'];
+        $sellerName = $value['name'];
+    }
+?>
+<div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <div class="page-title-wrapper product">
+            <h1 class="size45 themetext "> <?= $_product->getName(); ?> <?php if($sellerName): ?>by <?= $sellerName; ?><?php endif; ?></h1>
+            <div class="md-wrp">
+                <span class="ctg-name"> <?= $product_cat; ?> </span>
+                <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=639af020b92caa0012f80e41&amp;product=inline-share-buttons&amp;source=platform"></script>
+                <a href="javascript:void(0);" data-network="sharethis" class="st-custom-button"><img src="<?php echo $block->getViewFileUrl('images/share-icon.png'); ?>" alt=""/> Share </a>
+            </div>
+        </div>
+    </div>	
+</div>

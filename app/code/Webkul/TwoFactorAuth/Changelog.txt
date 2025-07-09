@@ -1,0 +1,21 @@
+Legend
+
++ Features
+- Bugs
+-------------------------------- Version 5.0.1 --------------------------------------
+	+ Compatible with Magento 2.4.x
+	+ Adding Features For Verify Customer Account 
+	+ To Send OTP on Customer Email ID to  Verify Customer Account 
+	+ To Send verification link on Customer Email ID to  Verify Customer Account
+	+ To get OTP through Push notification on the browser to  Verify Customer Account
+	+ Customer Verify Account Using Backup code
+	+ TOTP/Authenticator verification
+
+-------------------------------- Version 5.0.0 --------------------------------------
+
+	+ Compatible to Magento 2.4.x.
+	+ At the time of registration Auth Code will be sent to the mobile number entered,
+	however it will be verfified after the account will be created
+	+ Admin can enable/disable TwoFactorAuth module from admin configuration.
+	+ Admin can enable/disable TwoFactorAuth verification of the customers at the time of registration.
+	+ Untill the Auth Code is verfied customer cannot access any other page in his account

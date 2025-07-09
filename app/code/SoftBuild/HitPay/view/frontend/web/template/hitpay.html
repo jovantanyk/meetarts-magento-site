@@ -1,0 +1,108 @@
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+			<span data-bind="text: getTitle()"></span>
+			
+			<!-- ko if: visa -->
+            <img data-bind="attr: {src: getHitpayLogoPath('visa')}" class="payment-icon" title="Visa" />
+            <!-- /ko -->
+			<!-- ko if: master -->
+            <img data-bind="attr: {src: getHitpayLogoPath('master')}" class="payment-icon" title="Master Card" />
+            <!-- /ko -->
+			<!-- ko if: american_express -->
+            <img data-bind="attr: {src: getHitpayLogoPath('american_express')}" class="payment-icon" title="American Express" />
+            <!-- /ko -->
+			<!-- ko if: apple_pay -->
+            <img data-bind="attr: {src: getHitpayLogoPath('apple_pay')}" class="payment-icon" title="Apple Pay" />
+            <!-- /ko -->
+			<!-- ko if: google_pay -->
+            <img data-bind="attr: {src: getHitpayLogoPath('google_pay')}" class="payment-icon" title="Google Pay" />
+            <!-- /ko -->
+			<!-- ko if: paynow -->
+            <img data-bind="attr: {src: getHitpayLogoPath('paynow')}" class="payment-icon" title="PayNow QR"/>
+            <!-- /ko -->
+            <!-- ko if: grabpay -->
+            <img data-bind="attr: {src: getHitpayLogoPath('grabpay')}" class="payment-icon" title="GrabPay"/>
+            <!-- /ko -->
+			<!-- ko if: wechatpay -->
+            <img data-bind="attr: {src: getHitpayLogoPath('wechatpay')}" class="payment-icon" title="WeChatPay"/>
+            <!-- /ko -->
+			<!-- ko if: alipay -->
+            <img data-bind="attr: {src: getHitpayLogoPath('alipay')}" class="payment-icon" title="AliPay"/>
+            <!-- /ko -->
+			<!-- ko if: shopeepay -->
+            <img data-bind="attr: {src: getHitpayLogoPath('shopeepay')}" class="payment-icon" title="Shopee Pay"/>
+            <!-- /ko -->
+			<!-- ko if: fpx -->
+            <img data-bind="attr: {src: getHitpayLogoPath('fpx')}" class="payment-icon" title="FPX"/>
+            <!-- /ko -->
+			<!-- ko if: zip -->
+            <img data-bind="attr: {src: getHitpayLogoPath('zip')}" class="payment-icon" title="Zip"/>
+            <!-- /ko -->
+			<!-- ko if: atomeplus -->
+            <img data-bind="attr: {src: getHitpayLogoPath('atomeplus')}" class="payment-icon" title="ATome+"/>
+            <!-- /ko -->
+			<!-- ko if: unionbank -->
+            <img data-bind="attr: {src: getHitpayLogoPath('unionbank')}" class="payment-icon" title="Unionbank Online"/>
+            <!-- /ko -->
+			<!-- ko if: qrph -->
+            <img data-bind="attr: {src: getHitpayLogoPath('qrph')}" class="payment-icon" title="Instapay QR PH"/>
+            <!-- /ko -->
+			<!-- ko if: pesonet -->
+            <img data-bind="attr: {src: getHitpayLogoPath('pesonet')}" class="payment-icon" title="PESONet"/>
+            <!-- /ko -->
+			<!-- ko if: gcash -->
+            <img data-bind="attr: {src: getHitpayLogoPath('gcash')}" class="payment-icon" title="GCash"/>
+            <!-- /ko -->
+			<!-- ko if: billease -->
+            <img data-bind="attr: {src: getHitpayLogoPath('billease')}" class="payment-icon" title="Billease BNPL"/>
+            <!-- /ko -->
+			
+		</label>
+    </div>
+
+    <div class="payment-method-content">
+        <p data-bind="html: getInstructions()"></p>
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')},
+                        enable: (getCode() == isChecked()),
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        "
+                        disabled>
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

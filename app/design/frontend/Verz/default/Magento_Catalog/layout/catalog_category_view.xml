@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<block class="Magento\Catalog\Block\Category\View" name="banner_section" template="Magento_Catalog::category/banner_image.phtml" />
+		
+		<move element="breadcrumbs" destination="banner_section" />
+		<move element="category.description" destination="content" before="-" /> 
+		<move element="category.cms" destination="banner_section" />    
+		<move element="page.main.title" destination="banner_section"  />   
+		
+		<referenceContainer name="category.image" remove="1" />
+    </body>
+</page>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Webkul\TwoFactorAuth\Api\Data\TwoFactorAuthInterface" type="Webkul\TwoFactorAuth\Model\TwoFactorAuth" />
+    <preference for="Webkul\TwoFactorAuth\Api\TwoFactorAuthRepositoryInterface" type="Webkul\TwoFactorAuth\Model\TwoFactorAuthRepository" />
+    <preference for="Webkul\TwoFactorAuth\Api\Data\UsersTokenInterface" type="Webkul\TwoFactorAuth\Model\UsersToken" />
+    <preference for="Webkul\TwoFactorAuth\Api\UsersTokenRepositoryInterface" type="Webkul\TwoFactorAuth\Model\UsersTokenRepository" />
+    <preference for="Magento\Customer\Controller\Account\Index" type="Webkul\TwoFactorAuth\Controller\Rewrite\Account\Index" />
+    <type name="Magento\Customer\Block\Form\Login">
+        <plugin name="login_form_template" type="Webkul\TwoFactorAuth\Block\Customer\Plugin\CustomerLoginFormTemplate" />
+    </type>
+    <type name="Magento\Customer\Model\Account\Redirect">
+        <plugin name="NewAcctRedirectPlug" type="Webkul\TwoFactorAuth\Plugin\Redirect" disabled="false" sortOrder="1"/>
+    </type>
+    <type name="Magento\Customer\Controller\Account\EditPost">
+        <plugin name="twofactorauth-around-edit-post" type="Webkul\TwoFactorAuth\Plugin\Controller\EditAccountData" sortOrder="1" />
+    </type>
+
+</config>

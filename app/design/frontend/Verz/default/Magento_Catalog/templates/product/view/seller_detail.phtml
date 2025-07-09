@@ -1,0 +1,65 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+/**
+ * Product description template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Description
+ */
+$_product = $block->getProduct();
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+?>
+<?php 
+    $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_product->getId());
+    $sellerId = "";
+    $sellerName = "";
+    foreach ($marketplaceProduct as $value) {
+        $sellerId = $value['seller_id'];
+        $sellerName = $value['name'];
+    }
+?>
+<?php if($sellerId): ?>
+    <?php
+        $sellerInfo = $webkul_helper->getSellerInfo($sellerId);
+        $shopTitle = @$sellerInfo['shop_title'];
+        $shopUrl = @$sellerInfo['shop_url'];
+        $logo = @$sellerInfo['logo_pic'];
+        $productCount = (int)@$sellerInfo['product_count'];
+        $locality = isset($sellerInfo['company_locality']) ?$sellerInfo['company_locality'] :'';
+        $sellerDescInfo = $webkul_helper->getSellerDataByShopUrl($shopUrl);
+        $company_description = "";
+        foreach($sellerDescInfo as $value)
+        {
+            $company_description = $value['company_description'];
+        }
+    ?>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="review-section pt30">
+                <div class="user-icon mb25">
+                    <?php if($logo): ?>
+                        <img src="<?= $block->escapeUrl($block->getUrl('')) ?>media/avatar/<?= $logo; ?>" alt=""/>
+                    <?php else: ?>
+                        <img src="<?= $block->escapeUrl($verz_helper->getPlaceHolderImage()) ?>" style="width:99px;" alt=""/>
+                    <?php endif; ?>
+                    <div class="user-ac-name">
+                        <h3 class="size25"><?= $sellerName; ?></h3>
+                        <?php if($locality): ?><span> <i class="fa-solid fa-location-dot"></i> <?= $locality; ?> </span><?php endif; ?>
+                    </div>
+                </div>
+                <?php if($company_description): ?>
+                <div class="size20-p mb25">
+                    <p> <?= $company_description; ?> </p>
+                </div>
+                <?php endif; ?>
+                <a href="<?= $block->escapeUrl($block->getUrl('')) ?>marketplace/seller/profile/shop/<?= $shopUrl;?>" class="link themetext size20">View Artist Profile</a>
+            </div>
+        </div>
+    </div>	
+<?php endif; ?>

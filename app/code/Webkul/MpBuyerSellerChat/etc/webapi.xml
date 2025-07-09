@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/message/save-message/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Api\SaveMessageInterface" method="saveMessage"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/chat/change-status/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Api\ChangeStatusInterface" method="changeStatus"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/chat/enable-chat/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Model\EnableSellerChat" method="enable"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/chat/mp-load-history/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Api\LoadHistoryInterface" method="loadHistory"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+
+    <route url="/V1/customer/buyer-start-chat/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Api\SaveCustomerInterface" method="save"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/customer/is-available/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Model\CustomerAvailable" method="check"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+    <route url="/V1/chat/is-customer-validate/" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Model\CustomerAvailable" method="isCustomerValidate"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/customer/me/chat/:sellerId/block" method="POST">
+        <service class="Webkul\MpBuyerSellerChat\Model\CustomerAvailable" method="blockCustomer"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="sellerId" force="true">%customer_id%</parameter>
+        </data>
+    </route>
+</routes>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Webkul_TwoFactorAuth::css/twoFactor.css" />
+       <link rel="manifest" src="Webkul_TwoFactorAuth::json/manifest.json"/>
+    </head>
+    <referenceContainer name="after.body.start">
+        <block class="Magento\Framework\View\Element\Template" name="otp_modal_popup_template" template="Webkul_TwoFactorAuth::otpModalPopupTemplate.phtml">
+        </block>
+        <block class="Magento\Framework\View\Element\Template" name="otp_loader" template="Webkul_TwoFactorAuth::otpLoaderTemplate.phtml">
+        </block>
+        <block class="Webkul\TwoFactorAuth\Block\AuthRedirect" name="auth_redirect" template="Webkul_TwoFactorAuth::authRedirect.phtml"  ifconfig="twofactorauth/enable/twofactorauth_enable">
+        </block>
+    </referenceContainer>
+    <referenceContainer name="header.container">
+            <block class="Webkul\TwoFactorAuth\Block\PushHome" name="push_page_js" template="Webkul_TwoFactorAuth::push_script.phtml"/>
+    </referenceContainer>
+    <referenceContainer name="content">
+            <block class="Webkul\TwoFactorAuth\Block\Popup" name="walletsystem.index.index1" template="Webkul_TwoFactorAuth::permission-popup.phtml"/>
+        </referenceContainer>
+
+        <referenceBlock name="head.additional">
+            <block class="Webkul\TwoFactorAuth\Block\PushHome" name="push.head.manifest" template="Webkul_TwoFactorAuth::head.phtml"/>
+        </referenceBlock>
+</page>

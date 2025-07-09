@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+?>
+<?php
+/**
+ * Product list template
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+<?php
+$_productCollection = $block->getLoadedProductCollection();
+/** @var \Magento\Catalog\Helper\Output $_helper */
+$_helper = $block->getData('outputHelper');
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+?>
+<div id="amasty-shopby-product-list" class="pb70">
+<?php if (!$_productCollection->count()): ?>
+    <div class="message info empty">
+        <div><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></div>
+    </div>
+<?php else: ?>
+    <?= $block->getAdditionalHtml() ?>
+    <?php
+    if ($block->getMode() === 'grid') {
+        $viewMode = 'grid';
+        $imageDisplayArea = 'category_page_grid';
+        $showDescription = false;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    } else {
+        $viewMode = 'list';
+        $imageDisplayArea = 'category_page_list';
+        $showDescription = true;
+        $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::FULL_VIEW;
+    }
+    /**
+     * Position for actions regarding image size changing in vde if needed
+     */
+    $pos = $block->getPositioned();
+    ?>
+    <div class="product-list-wrapper">
+        <div class="row">
+            <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
+            <?php foreach ($_productCollection as $_product): ?>
+                <?php
+                $productImage = $block->getImage($_product, $imageDisplayArea);
+                if ($pos != null) {
+                    $position = 'left:' . $productImage->getWidth() . 'px;'
+                        . 'top:' . $productImage->getHeight() . 'px;';
+                }
+                ?>
+                <div class="col-md-4 col-sm-4 productitem">
+                    <div class="item">
+                        <div class="product-item">
+                            <div class="product-item-info">
+                                <div class="product-item-photo">
+                                <div class="product-image-container">
+                                    <div class="product-img-view">
+                                        <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>" class="product-image-wrapper">
+                                            <?= $productImage->toHtml() ?>
+                                        </a>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="product-item-details">
+                                    <div class="prd-title">
+                                        <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>" class="product-name-warpper"> 
+                                        <span class="product-name"> <?=/* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name')?> </span>
+                                        </a>
+                                        <?php 
+                                            $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_product->getId());
+                                            $sellerName = "";
+                                            foreach ($marketplaceProduct as $value) {
+                                            $sellerName = $value['name'];
+                                            }
+                                        ?>
+                                        <span class="sub-title"><?= $sellerName; ?></span>
+                                    </div>
+                                    <?= /* @noEscape */ $block->getProductPrice($_product) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?= $block->getChildBlock('toolbar')->setIsBottom(true)->toHtml() ?>
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+    <script type="text/x-magento-init">
+    {
+        "[data-role=tocart-form], .form.map.checkout": {
+            "catalogAddToCart": {
+                "product_sku": "<?= $escaper->escapeJs($_product->getSku()) ?>"
+            }
+        }
+    }
+    </script>
+<?php endif; ?>
+</div>

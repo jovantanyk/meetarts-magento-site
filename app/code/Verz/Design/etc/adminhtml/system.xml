@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<!--
+
+/**
+
+ * @package   Verz_Design
+
+ * @copyright Copyright (c) 2022 VerzDesign (https://www.verzdesign.com/)
+
+ * @contacts  enquiry@verzdesign.com
+
+ */
+
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+
+    <system>
+
+        <tab id="verz_main_conf" translate="label" sortOrder="10">
+
+           <label>Verz Configuration</label>
+
+		</tab>
+
+        <section id="banner_verz" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+
+            <label>Banners</label>
+
+            <tab>verz_main_conf</tab>
+
+            <resource>Verz_Design::setting</resource>
+
+            <group id="general_cms" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+
+                <field id="default_banner" translate="label comment" type="image" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+
+                    <label>Default Banner</label>
+
+                    <backend_model>Magento\Config\Model\Config\Backend\File</backend_model>
+
+                    <upload_dir config="system" scope_info="1">custom</upload_dir>
+
+                    <base_url type="media" scope_info="1">custom</base_url>
+
+                </field>
+
+            </group>
+
+        </section>
+
+    </system>
+
+</config>
+
+
+

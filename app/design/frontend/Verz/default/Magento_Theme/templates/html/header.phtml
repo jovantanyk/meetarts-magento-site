@@ -1,0 +1,89 @@
+<?php $verz_helper    = $this->helper(Verz\Design\Helper\Data::class); ?>
+<header class="page-header">
+ <div class="header" id="header">
+   <div class="logo-wrapper-container">
+      <div class="container">
+         <div class="logo-wrapper-main" >
+            <div class="logo-wrapper">
+               <a href="<?= $block->escapeUrl($block->getUrl('')); ?>">
+                  <img src="<?php echo $block->getLayout()->getBlock('logo')->getLogoSrc(); ?>" alt="MeetArts">
+               </a>
+            </div>
+            <div class="main-menu-wrapper">
+               <div class="navigation-section">
+                  <div class="sections">
+                     <div class="container">
+                        <div class="block ves-menu ves-megamenu-mobile" id="">
+                           <nav class="navigation mean-nav navigation-mobile" role="navigation" data-action="navigation" data-exclude_html_desktop="1">
+                                <?php echo $this->getChildHtml("catalog.topnav"); ?>
+                           </nav>
+                        </div>
+                        <div class="search-wrp  mobile-set">
+                           <div class="search-name desktop">
+                           </div>
+                        </div>
+                        <div class="md-category-set">
+                           <div class="nav-category">
+                                <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('header-extra-menu')->toHtml(); ?>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="user-links">
+               <div class="set-icon">
+                  <div class="user-info">
+                     <?php  echo $this->getChildHtml("currency"); ?>
+                     <ul>
+                        <li class="user-icon-style">
+                           <?php if($verz_helper->isCustomerloggedIn()): ?>
+                           <div class="btn-bg logged-in">
+                              <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/"><?= __('My Account'); ?> </a> /
+                              <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/logout">  <?= __('Logout'); ?> </a>
+                           </div>
+                           <?php else: ?>
+                           <div class="btn-bg">
+                              <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/create/"><?= __('Sign Up'); ?> </a> /
+                              <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/">  <?= __('Login'); ?> </a>
+                           </div>
+                           <?php endif; ?>
+                        </li>
+                        <li class="cart-wrp">
+                            <?php  echo $this->getChildHtml("minicart"); ?>
+                        </li>
+                        <li class="toggle-btn">
+                           <div id="mobile-nav-toggle" data-action="toggle-nav" class="style-same nav-toggle">
+                              <span class="bar1"></span>
+                              <span class="bar2"></span>
+                              <span class="bar3"></span>
+                           </div>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="search-wrp">
+            <div class="search-name desktop">
+                <?php echo $this->getChildHtml("top.search"); ?>
+               <div class="login-md">
+                  <div class="btn-bg">
+                        <?php if($verz_helper->isCustomerloggedIn()): ?>
+                            <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/"><?= __('My Account'); ?> </a> /
+                            <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/logout">  <?= __('Logout'); ?> </a>
+                        <?php else: ?>
+                            <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/create/"><?= __('Sign Up'); ?> </a> /
+                            <a class="action" href="<?= $block->escapeUrl($block->getUrl('')); ?>customer/account/">  <?= __('Login'); ?> </a>
+                        <?php endif; ?>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="nav-category desktop">
+            <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('header-extra-menu')->toHtml(); ?>
+         </div>
+      </div>
+   </div>
+</div>
+</header>

@@ -1,0 +1,1075 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $block Webkul\MarketplaceEventManager\Block\Event\Add */
+// phpcs:ignoreFile
+$helper = $block->getMpHelper();
+$memhelper = $block->getMpEventManagerHelper();
+$product_hint_status = $helper->getProductHintStatus();
+$currency_code = $helper->getCurrentCurrencyCode();
+$currency_symbol = $helper->getCurrencySymbol();
+$product_id = $block->getRequest()->getParam('id');
+$product_coll = $block->getProduct($product_id);
+$attribute_set_id = $product_coll['attribute_set_id'];
+if ($block->getRequest()->getParam('set')) {
+    $attribute_set_id = $block->getRequest()->getParam('set');
+}
+$skuType = $helper->getSkuType();
+$allowedType = explode(',', $helper->getAllowedProductType());
+?>
+<form action="<?= /* @noEscape */ $block
+->getUrl('marketplaceeventmanager/event/save', ['_secure' => $block
+->getRequest()->isSecure()]) ?>" enctype="multipart/form-data" 
+method="post" id="form-seller-event-new" data-form="edit-product" 
+data-mage-init='{"validation":{}}'>
+    <div class="wk-mp-design" id="wk-bodymain">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend">
+                <span><?= /* @noEscape */ __('Edit Event') ?></span>
+                <button class="button wk-mp-btn" title="<?= /* @noEscape */ __('Save') ?>" type="submit" id="save-btn">
+                    <span><span><?= /* @noEscape */ __('Save') ?></span></span>
+                </button>
+            </legend>            
+            <?= /* @noEscape */ $block->getBlockHtml('formkey')?>
+            <?= /* @noEscape */ $block->getBlockHtml('seller.formkey')?>
+            <input id="product_type_id" name="type" type="hidden" 
+            value="<?= /* @noEscape */ $product_coll['type_id']?>">                    
+            <input type="hidden" name="id" value="<?= /* @noEscape */ $product_id; ?>" />
+            <input type="hidden" name="product_id" value="<?= /* @noEscape */ $product_id; ?>" />
+            <input type="hidden"  
+            name="product[website_ids][]" id="website" 
+            value="<?= /* @noEscape */ $product_coll->getStore()->getWebsiteId()?>" 
+            title="wstoreids" class="" />                
+            <?php if (count($helper->getAllowedSets()) > 1) { ?>
+                <div class="field required">
+                    <label class="label"><?= /* @noEscape */ __('Attribute Set') ?>:</label>
+                    <div class="control">
+                        <select name="set" id="attribute-set-id"  class="required-entry">
+                        <?php foreach ($helper->getAllowedSets() as $set) {?>
+                            <option 
+                            value="<?= /* @noEscape */ $set['value'] ?>" 
+                            <?php if ($attribute_set_id==$set['value']) { ?> selected="selected" <?php } ?>
+                            ><?= /* @noEscape */ $set['label']?></option>
+                        <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <?php
+            } else {
+                $allowedSets = $helper->getAllowedSets();
+                ?>
+                <input type="hidden" 
+                name="set" id="attribute-set-id" 
+                value="<?= /* @noEscape */ $allowedSets[0]['value'] ?>" />
+                <?php
+            } ?>    
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Event Category') ?>:</label>
+                <div class="wk-field wk-category">
+                    <div class="wk-for-validation">
+                        <div id="wk-category-label"><?= /* @noEscape */ __("CATEGORIES"); ?></div>
+                        <?php
+                        $categories = $product_coll->getCategoryIds();
+                        $cat_ids=implode(",", $categories);
+                        
+                        if ($memhelper->getAllowedCategoryIds()) {
+                            $storeconfig_catids = explode(',', trim($memhelper->getAllowedCategoryIds()));
+                            $storeconfig_catids = array_unique($storeconfig_catids);
+                            foreach ($storeconfig_catids as $storeconfig_catid) {
+                                $cat_model = $block->getCategory()->load($storeconfig_catid);
+                                if (isset($cat_model["entity_id"]) && $cat_model["entity_id"]) {
+                                    ?>
+                                    <div class="wk-cat-container">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span 
+                                        class="wk-elements wk-cat-name">
+                                            <?= /* @noEscape */ $cat_model->getName() ?>
+                                        </span>
+                                        <?php
+                                        if (in_array($cat_model["entity_id"], $categories)) {?>
+                                            <input 
+                                            class="wk-elements" 
+                                            type="checkbox" name="product[category_ids][]" 
+                                            value=<?= /* @noEscape */ $cat_model['entity_id'] ?> 
+                                            checked />
+                                             <?php
+                                        } else { ?>
+                                            <input 
+                                            class="wk-elements" 
+                                            type="checkbox" 
+                                            name="product[category_ids][]" 
+                                            value='<?= /* @noEscape */ $cat_model['entity_id'] ?>'/>
+                                            <?php
+                                        } ?>
+                                    </div> 
+                                       <?php
+                                }
+                            }
+                        } else {
+                            $count = 0;
+                            $category_helper = $block->getCatalogCategoryHelper();
+                            $category_model = $block->getCategory();
+                            $_categories = $category_helper->getStoreCategories();
+                            foreach ($_categories as $_category) {
+                                $count++;
+                                if (count($category_model
+                                ->getAllChildren($category_model
+                                ->load($_category['entity_id'])))-1 > 0) { ?>
+                                    <div class="wk-cat-container" style="margin-left:0px;">
+                                        <span class="wk-plus">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span 
+                                        class="wk-elements wk-cat-name">
+                                        <?= /* @noEscape */ $_category->getName() ?></span>
+                                        <?php
+                                        if (in_array($_category["entity_id"], $categories)) { ?>
+                                            <input class="wk-elements" 
+                                            type="checkbox" name="product[category_ids][]" 
+                                            value=<?= /* @noEscape */ $_category['entity_id'] ?> 
+                                            checked />
+                                        <?php } else { ?>
+                                            <input class="wk-elements" 
+                                            type="checkbox" name="product[category_ids][]" 
+                                            value='<?= /* @noEscape */ $_category['entity_id'] ?>'/>
+                                            <?php
+                                        } ?>
+                                    </div>
+                                    <?php
+                                } else { ?>
+                                    <div class="wk-cat-container">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span class="wk-elements wk-cat-name">
+                                            <?= /* @noEscape */ $_category->getName() ?>
+                                        </span>
+                                        <?php
+                                        if (in_array($_category["entity_id"], $categories)) {?>
+                                            <input class="wk-elements" type="checkbox" 
+                                            name="product[category_ids][]" 
+                                            value=<?= /* @noEscape */ $_category['entity_id'] ?> 
+                                            checked />
+                                             <?php
+                                        } else { ?>
+                                            <input 
+                                            class="wk-elements" 
+                                            type="checkbox" name="product[category_ids][]" 
+                                            value='<?= /* @noEscape */ $_category['entity_id'] ?>'/>
+                                            <?php
+                                        } ?>
+                                    </div> 
+                                       <?php
+                                }
+                            }
+                        } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Name') ?>:</label>
+                <div class="control">
+                    <input type="text" 
+                    class="required-entry input-text" 
+                    name="product[name]" id="name" 
+                    value="<?= /* @noEscape */ $product_coll->getName(); ?>"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Short Description') ?>:</label>
+                <div class="control">
+                    <textarea name="product[short_description]" 
+                    class="input-text" id="short_description" rows="5" 
+                    cols="75" ><?= /* @noEscape */ $product_coll->getShortDescription(); ?>
+                    </textarea>
+                    <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygShortDescription = new wysiwygSetup("short_description", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce" : {
+                                        "toolbar":"formatselect | bold italic underline | "+
+                                        "alignleft aligncenter alignright |" + 
+                                        "bullist numlist |"+
+                                        "link table charmap","plugins":"advlist "+
+                                        "autolink lists link charmap media noneditable table "+
+                                        "contextmenu paste code help table",
+                                    },
+                                    files_browser_window_url: "<?= /* @noEscape */$block->getWysiwygUrl();?>"
+                                });
+                                wysiwygShortDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Description') ?>:</label>
+                <div class="control">
+                    <textarea 
+                    name="product[description]" 
+                    class="required-entry input-text" 
+                    id="description" rows="5" 
+                    cols="75" ><?= /* @noEscape */ $product_coll->getDescription(); ?></textarea>
+                    <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygShortDescription = new wysiwygSetup("description", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce" : {
+                                        "toolbar":"formatselect | bold italic underline | "+
+                                        "alignleft aligncenter alignright |" + 
+                                        "bullist numlist |"+
+                                        "link table charmap","plugins":"advlist "+
+                                        "autolink lists link charmap media noneditable table "+
+                                        "contextmenu paste code help table",
+                                    },
+                                    files_browser_window_url: "<?= /* @noEscape */$block->getWysiwygUrl();?>"
+                                });
+                                wysiwygShortDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Terms & Conditions') ?>:</label>
+                <div class="control">
+                    <textarea name="product[event_terms]" 
+                    class="input-text" id="event_terms" 
+                    rows="5" cols="75" ><?= /* @noEscape */ $product_coll->getEventTerms(); ?>
+                    </textarea>
+                    <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygShortDescription = new wysiwygSetup("event_terms", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce" : {
+                                        "toolbar":"formatselect | bold italic underline | "+
+                                        "alignleft aligncenter alignright |" + 
+                                        "bullist numlist |"+
+                                        "link table charmap","plugins":"advlist "+
+                                        "autolink lists link charmap media noneditable table "+
+                                        "contextmenu paste code help table",
+                                    },
+                                    files_browser_window_url: "<?= /* @noEscape */$block->getWysiwygUrl();?>"
+                                });
+                                wysiwygShortDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Enable Terms') ?>:</label>
+                <div class="control">
+                    <select name="product[enable_event_terms]" class="select" id="enable_event_terms">
+                        <option <?php if ($product_coll->getEnableEventTerms() == 0) {echo "selected"; }?> 
+                        value='0'>
+                            <?= /* @noEscape */ __('No') ?>
+                        </option>
+                        <option <?php if ($product_coll->getEnableEventTerms() == 1) {echo "selected"; }?> 
+                        value='1'>
+                            <?= /* @noEscape */ __('Yes') ?>
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Venue') ?>:</label>
+                <div class="control">
+                    <textarea name="product[event_venue]" 
+                    id="event_venue" rows="5" cols="75" 
+                    class="required-entry input-text" ><?= /* @noEscape */ $product_coll->getEventVenue(); ?>
+                </textarea>
+                </div>
+            </div>
+
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Refund Policy') ?>:</label>
+                <div class="control">
+                    <textarea name="product[refund_policy]" 
+                    id="refund_policy" rows="5" cols="75" 
+                    class="required-entry input-text" ><?= /* @noEscape */ $product_coll->getEventVenue(); ?>
+                </textarea>
+                </div>
+            </div>
+           
+            <?php
+            if ($skuType == 'static') { ?>
+                <div class="field required">
+                    <label class="label"><?= /* @noEscape */ __('Event Unique Code') ?>:</label>
+                    <div class="control">
+                        <input name="product[sku]" id="sku" 
+                        class="required-entry input-text validate-no-html-tags" 
+                        type="text" value="<?= /* @noEscape */ $product_coll->getsku(); ?>"/>
+                    </div>
+                    <div id="skuavail" style="color:green;">
+                        <span class="success-msg skuavailable">
+                            <?= /* @noEscape */ __('Event Code Available') ?>
+                        </span>
+                    </div>
+                    <div id="skunotavail" style="color:red;">
+                        <span 
+                        class="error-msg skunotavailable">
+                        <?= /* @noEscape */ __('Event Code Already Exist') ?>
+                        </span>
+                    </div>
+                </div>
+                <?php
+            } ?>
+            <div class="field required">
+                <label class="label">
+                    <?= /* @noEscape */ __('Price') ?>
+                    <b><?= /* @noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                <div class="control">
+                    <input type="text" 
+                    class="required-entry validate-zero-or-greater input-text" 
+                    value="<?= /* @noEscape */ $product_coll->getPrice() ?>" 
+                    name="product[price]" id="price" />
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">
+                    <?= /* @noEscape */ __('Special Price') ?>
+                    <b><?= /* @noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                <div class="control">
+                    <input type="text" 
+                    class="widthinput input-text validate-zero-or-greater" 
+                    name="product[special_price]" 
+                    value="<?= /* @noEscape */ $product_coll->getSpecialPrice() ?>" 
+                    id="special-price"/>
+                </div>
+            </div>
+            <?php
+            if ($product_coll->getData('special_from_date')) {
+                $special_from_date = $block->formatDate($product_coll->getSpecialFromDate());
+            } else {
+                $special_from_date = '';
+            }
+            ?>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Special Price From') ?>:</label>
+                <div class="control">
+                    <input type="text" 
+                    name="product[special_from_date]" 
+                    value="<?= /* @noEscape */ $special_from_date; ?>" 
+                    id="special-from-date" class="input-text" autocomplete="off" />
+                </div>
+            </div>
+            <?php
+            if ($product_coll->getData('special_to_date')) {
+                $special_to_date = $block->formatDate($product_coll->getData('special_to_date'));
+            } else {
+                $special_to_date = '';
+            }
+            ?>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Special Price To') ?>:</label>
+                <div class="control">
+                    <input type="text" 
+                    name="product[special_to_date]" 
+                    value="<?= /* @noEscape */ $special_to_date; ?>" 
+                    id="special-to-date" 
+                    class="input-text" autocomplete="off" />
+                </div>
+            </div>
+            <input id="inventory_manage_stock" type="hidden" 
+            name="product[stock_data][manage_stock]" value="1">
+            <input type="hidden" 
+            value="1" 
+            name="product[stock_data][use_config_manage_stock]" 
+            id="inventory_use_config_manage_stock">
+
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Visibility') ?>:</label>
+                <div class="control">
+                    <select id="visibility" class=" required-entry required-entry select" name="product[visibility]">
+                        <option value=""><?= /* @noEscape */ __('Please Select')?></option>
+                        <?php
+                        $product_visibility = $helper->getVisibilityOptionArray();
+                        foreach ($product_visibility as $key => $value) {
+                            ?>
+                            <option 
+                            value="<?= /* @noEscape */ $key ?>" 
+                            <?php if ($key==$product_coll->getVisibility()) {
+                                echo "selected='selected'";
+                            }?>
+                            >
+                            <?= /* @noEscape */ $value?></option>
+                            <?php
+                        } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Tax Class') ?>:</label>
+
+                <div class="control">
+                    <select id="tax-class-id" 
+                    class="required-entry required-entry select" 
+                    name="product[tax_class_id]">
+                        <option value="0"><?= /* @noEscape */ __('None')?></option>
+                        <?php
+                        $taxid=$product_coll->getData('tax_class_id');
+                        $taxes=$helper->getTaxClassModel();
+                        foreach ($taxes as $tax) {
+                            ?>
+                            <option <?= /* @noEscape */ $taxid==$tax->getId()? 'selected':''; ?> 
+                            value="<?= /* @noEscape */ $tax->getId() ?>">
+                            <?= /* @noEscape */ $tax->getClassName()?>
+                            </option>
+                            <?php
+                        } ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Set Event Code Prefix') ?>:</label>
+                <div class="control">
+                    <input type="text" 
+                    name="product[event_ticket_prefix]" 
+                    id="event_ticket_prefix" 
+                    value="<?= /* @noEscape */ $product_coll
+                    ->getEventTicketPrefix() ?>" 
+                    class="input-text"/>
+                </div>
+            </div>
+
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Start Time') ?>:</label>
+                <div class="control input-append date start_datetime show">
+                    <input type="text" name="product[event_start_date]" 
+                    id="event_start_date" 
+                    value="<?= /* @noEscape */ date('m/d/Y H:i:s', strtotime($block
+                    ->formatDate($product_coll
+                    ->getEventStartDate(), \IntlDateFormatter::SHORT, true))) ?>" 
+                    class="required-entry input-text" autocomplete="off" />
+                </div>
+            </div>
+
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Stop Time') ?>:</label>
+                <div class="control input-append date stop_datetime show">
+                    <input type="text" name="product[event_end_date]" 
+                    value="<?= /* @noEscape */ date('m/d/Y H:i:s', strtotime($block
+                    ->formatDate($product_coll
+                    ->getEventEndDate(), \IntlDateFormatter::SHORT, true))) ?>" 
+                    id="event_end_date" class="required-entry input-text" autocomplete="off" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Meta Title') ?>:</label>
+                <div class="control">
+                    <input type="text" 
+                    class="input-text" 
+                    name="product[meta_title]" id="meta_title" 
+                    value="<?= /* @noEscape */ $product_coll['meta_title'] ?>"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Meta Keywords') ?>:</label>
+                <div class="control">
+                    <textarea 
+                    class="textarea" 
+                    id="meta_keyword" 
+                    name="product[meta_keyword]">
+                    <?= /* @noEscape */ $product_coll['meta_keyword'] ?>
+                    </textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Meta Description') ?>:</label>
+                <div class="control">
+                    <textarea class="textarea" 
+                    id="meta_description" 
+                    name="product[meta_description]">
+                    <?= /* @noEscape */ $product_coll['meta_description'] ?>
+                </textarea>
+                </div>
+            </div>
+            <?= /* @noEscape */ $block->getChildHtml(); ?>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Add Event Ticket Type') ?>:</label>
+                <div class="input-box wk_customoptionwidth">            
+                                <div id="coption">        
+                                    <div id="othercustomoption">    
+                                    <?php
+                                    $i=1;
+                                    $option = $block->getProductOptions($product_id);
+                                    if ((count($option))>0) {
+                                        $count=0;
+                                        foreach ($option as $opt) {
+                                            ?>    
+                                            <div class="customoption">        
+                                                <div class="head">    
+                                                    <span class="label required"><?= /* @noEscape */ __('Title'); ?><em>*</em></span>
+                                                    
+                                                </div>
+                                                <input name="removeoptions[]" value="<?= /* @noEscape */ $opt['option_id']; ?>" type="hidden" />
+                                                <input type="text" value="<?= /* @noEscape */ $opt['title']; ?>" name="product[options][<?= /* @noEscape */ $count; ?>][title]" class="required-entry validate-no-html-tags" readonly="readonly"/>
+                                                <div class="head">    
+                                                    <span class="label required"><?= /* @noEscape */ __('Type'); ?><em>*</em></span>
+                                                </div>
+                                                <select name="product[options][<?= /* @noEscape */ $count; ?>][type]">
+                                                    <option <?= /* @noEscape */ ($opt['type']=="checkbox")? "selected":""; ?>  value="checkbox" ><?= /* @noEscape */ __('Checkbox') ?></option>
+                                                    <option <?= /* @noEscape */ ($opt['type']=="radio")? "selected":""; ?>  value="radio"><?= /* @noEscape */ __('Radio') ?></option>
+                                                </select>
+                                                <input type="hidden" name="product[options][<?= /* @noEscape */ $count; ?>][product_id]" value="<?= /* @noEscape */ $product_id; ?>" />
+                                                <input type="hidden" name="product[options][<?= /* @noEscape */ $count; ?>][option_id]" value="<?= /* @noEscape */ $opt['option_id']; ?>" />
+                                                <input type="hidden" class="customoptindex" name="product[options][<?= /* @noEscape */ $count; ?>][customoptindex]" value="<?= /* @noEscape */ $count; ?>" />
+                                                <input type="hidden" value="<?= /* @noEscape */ $opt['is_require']; ?>" name="product[options][<?= /* @noEscape */ $count; ?>][is_require]" >                        
+                                                <input id="" class="widthinput" type="hidden" name="product[options][<?= /* @noEscape */ $count; ?>][sort_order]" value="<?= /* @noEscape */ $opt['sort_order'];?>"/>        
+                                                <?php
+                                                $select=['drop_down','radio','checkbox','multiple'];
+                                                if (in_array($opt['type'], $select)) {
+                                                    ?>                            
+                                                    <div class="customoption">        
+                                                        <div class="head">        
+                                                            <span class="label"><?= /* @noEscape */ __('Title'); ?><em>*</em></span>
+                                                            <span class="label">                                
+                                                                <?= /* @noEscape */ __('Price'); ?><b><?= /* @noEscape */ $currency_symbol;?></b><em>*</em>
+                                                            </span>                                    
+                                                            <span class="label"><?= /* @noEscape */ __('Price Type'); ?><em>*</em></span>
+                                                            <span class="label"><?= /* @noEscape */ __('SKU'); ?></span>
+                                                            <span class="label"><?= /* @noEscape */ __('Qty'); ?><em>*</em></span>
+                                                            <span class="label"><?= /* @noEscape */ __('Sort Order'); ?></span>
+                                                        </div>
+                                                        <?php
+                                                        $j=0;
+                                                        $values = $block->getValueCollectionOfOption($opt['option_id']);
+                                                        foreach ($values as $v) {
+                                                            if ($v['price_type'] == 'fixed') {
+                                                                $price = $v['price'];
+                                                            } else {
+                                                                $price = $v['price'];
+                                                            }
+                                                            ?>
+                                                            <div class="wk_row_all">    
+                                                                <input type="hidden" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][option_id]" value="<?= /* @noEscape */ $opt['option_id']; ?>" />
+                                                                <input type="hidden" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][option_type_id]" value="<?= /* @noEscape */ $v['option_type_id']; ?>" />
+                                                                <input type="hidden" class="wkevent_is_delete" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][is_delete]" value="0" />
+                                                                <div id="" class="wk_row">        
+                                                                    <input type="text" value="<?= /* @noEscape */ $v['title'];  ?>" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][title]" class="required-entry validate-no-html-tags" />
+                                                                    <span id="price_icon"></span>
+                                                                    <input type="text" style="padding-left:17px" value="<?= /* @noEscape */ number_format($price, 2, '.', ''); ?>" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][price]" class="required-entry validate-zero-or-greater input-text"/>                            
+                                                                    <select id="price_type" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][price_type]" class="importantWidth">
+                                                                        <option value="fixed" <?= /* @noEscape */ ($v['price_type']=="fixed")? "selected":""; ?> ><?= /* @noEscape */ __('Fixed') ?></option>
+                                                                        <option value="percent" <?= /* @noEscape */ ($v['price_type']=="percent")? "selected":""; ?> ><?= /* @noEscape */ __('Percent') ?></option>                                    
+                                                                    </select>
+                                                                    <input type="text" value="<?= /* @noEscape */ $v['sku'];  ?>" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][sku]" class="validate-no-html-tags"/>
+                                                                    <input type="text" value="<?= /* @noEscape */ $v['qty'];  ?>" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][qty]" class="required-entry validate-zero-or-greater input-text"/>
+                                                                    <input type="text" value="<?= /* @noEscape */ $v['sort_order'];  ?>" name="product[options][<?= /* @noEscape */ $count; ?>][values][<?= /* @noEscape */ $j;?>][sort_order]" />
+                                                                    <button type="button" class="button wkeventoptiondel" title=" Delete Options " style=" width: 4%; height: 30px; margin: 0; padding: 0; vertical-align: top; "></button>
+                                                                </div>
+                                                            </div>
+                                                            <?php $j++;
+                                                        } ?>
+                                                        <button title="Add Option" type="button" class="button addOption">    
+                                                            <span><span><span><?= /* @noEscape */ __('Add Option');?></span></span></span>    
+                                                        </button>
+                                                    </div> <?php
+                                                } elseif (in_array($opt['type'], ['field','area','date','date_time','time'])) {
+                                                    $display="style=display:none;";
+                                                    if ($opt['type']=="area" || $opt['type']=="field") {
+                                                        $display="";
+                                                    }
+                                                    if ($opt['price_type'] == 'fixed') {
+                                                        $price = $opt['price'];
+                                                    } else { $price = $opt['price'];
+                                                    }
+                                                    ?>
+                                                    <div class="customoption">        
+                                                        <div class="head">        
+                                                            <span class="label">    
+                                                                <?= /* @noEscape */ __('Price'); ?><b><?= /* @noEscape */ $currency_symbol;?></b>
+                                                            </span>                        
+                                                            <span class="label"><?= /* @noEscape */ __('Price Type'); ?></span>
+                                                            <span class="label"><?= /* @noEscape */ __('SKU'); ?></span>
+                                                            <span class="label" <?= /* @noEscape */ $display ?> ><?= /* @noEscape */ __('Max Characters'); ?></span>
+                                                        </div>    
+                                                        <div class="wk_row">
+                                                            <input value="<?= /* @noEscape */ number_format($price, 2, '.', '');?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][price]" />
+                                                            <select name="product[options][<?= /* @noEscape */ $count; ?>][price_type]">
+                                                                <option value="fixed" <?= /* @noEscape */ $pricetype[$opt['price_type']]=="Fixed"? "selected":""; ?> ><?= /* @noEscape */ __('Fixed') ?></option>
+                                                                <option value="percent" <?= /* @noEscape */ $pricetype[$opt['price_type']]=="Percent"? "selected":""; ?> ><?= /* @noEscape */ __('Percent') ?></option>
+                                                            </select>        
+                                                            <input value="<?= /* @noEscape */ $opt['sku'];?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][sku]" class="validate-no-html-tags"/>        
+                                                            <input value="<?= /* @noEscape */ $opt['max_characters'];?>" type="text" <?= /* @noEscape */ $display ?> name="product[options][<?= /* @noEscape */ $count; ?>][max_characters]" />
+                                                        </div>    
+                                                    </div>    <?php
+                                                } elseif ($opt['type']=="file") {
+                                                    if ($opt['price_type'] == 'fixed') {
+                                                        $price = $opt['price'];
+                                                    } else { $price = $opt['price'];
+                                                    }
+                                                    ?>
+                                                    <div class="customoption">        
+                                                        <div class="head">        
+                                                            <span class="label">    
+                                                                <?= /* @noEscape */ __('Price'); ?><b><?= /* @noEscape */ $currency_symbol;?></b>
+                                                            </span>                        
+                                                            <span class="label"><?= /* @noEscape */ __('Price Type'); ?></span>
+                                                            <span class="label"><?= /* @noEscape */ __('SKU'); ?></span>
+                                                            <span class="label"><?= /* @noEscape */ __('Allowed File Extensions'); ?></span>
+                                                            <span class="label"><?= /* @noEscape */ __('Maximum Image Size'); ?></span>
+                                                        </div>    
+                                                        <div class="wk_row">    
+                                                            <input value="<?= /* @noEscape */ number_format($price, 2, '.', '');?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][price]" />
+                                                            <select name="product[options][<?= /* @noEscape */ $count; ?>][price_type]" >
+                                                                <option value="fixed" <?= /* @noEscape */ ($opt['price_type']=="fixed")? "selected":""; ?> ><?= /* @noEscape */ __('Fixed') ?></option>
+                                                                <option value="percent" <?= /* @noEscape */ ($opt['price_type']=="percent")? "selected":""; ?> ><?= /* @noEscape */ __('Percent') ?></option>
+                                                            </select>        
+                                                            <input value="<?= /* @noEscape */ $opt['sku'];?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][sku]" class="validate-no-html-tags"/>        
+                                                            <input value="<?= /* @noEscape */ $opt['file_extension'];?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][file_extension]" />
+                                                            <span class="file_size">
+                                                                <input value="<?= /* @noEscape */ $opt['image_size_x'];?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][image_size_x]" />
+                                                                <input value="<?= /* @noEscape */ $opt['image_size_y'];?>" type="text" name="product[options][<?= /* @noEscape */ $count; ?>][image_size_y]" />
+                                                            <span>
+                                                        </div>    
+                                                    </div> <?php
+                                                } ?>                
+                                            </div>
+                                            <?php
+                                            $i++;
+                                            $count++;
+                                        }
+                                    } else {
+                                        ?>
+                                        <div class="input-box wk_customoptionwidth">
+                            
+                            <div id="coption">
+                                <input type="hidden" name="customcount" value="0" id="customcount" />
+                                <input type="hidden" name="customcountallid" value="0" id="customcountallid" />
+                                <div id="othercustomoption">
+                                    <div class="customoption">
+                                    <input type="text" value="<?= /* @noEscape */ __('Ticket Type'); ?>" 
+                                    name="product[options][0][title]" class="required-entry validate-no-html-tags" 
+                                    readonly="readonly"/>
+                                    <input type="hidden" name="product[options][0][type]" value="radio" />
+                                <input type="hidden" value="1" name="product[options][0][is_require]" />
+                                <input type="hidden" value="1" name="product[options][0][sort_order]">
+                                <input type="hidden" class="customoptindex" name="product[options][0][customoptindex]" 
+                                value="0">
+                                <div class="customoption">
+                                <div class="head">
+                                <span class="label"><?= /* @noEscape */ __('Title'); ?>  <em>*</em></span>
+                                <span class="label"><?= /* @noEscape */ __('Price'); ?> </span>
+                                <span class="label"> <?= /* @noEscape */ __('Price Type'); ?> </span>
+                                <span class="label"> <?= /* @noEscape */ __('Qty'); ?> </span>
+                                <span class="label"> <?= /* @noEscape */ __('SKU'); ?> </span>
+                                <span class="label"> <?= /* @noEscape */ __('Sort Order'); ?> </span>
+                                <span class="label"></span>
+                                </div>
+                                <div class="wk_row">
+                                <input type="text" placeholder="<?= /* @noEscape */ __('Title'); ?>" 
+                                name="product[options][0][values][0][title]" 
+                                class="required-entry validate-no-html-tags">
+                                <input type="text" placeholder="<?= /* @noEscape */ __('Price'); ?>" 
+                                name="product[options][0][values][0][price]" 
+                                class="required-entry validate-number validate-zero-or-greater">
+                                <select name="product[options][0][values][0][price_type]" 
+                                class="required-entry importantWidth">
+                                <option value=""><?= /* @noEscape */ __('--select--')?></option>
+                                <option value="fixed"><?= /* @noEscape */ __('Fixed'); ?></option>
+                                <option value="percent"> <?= /* @noEscape */ __('Percent'); ?> </option></select>
+                                <input type="text" placeholder="<?= /* @noEscape */ __('Qty'); ?>" 
+                                name="product[options][0][values][0][sku]" 
+                                class="validate-no-html-tags validate-number validate-zero-or-greater">
+                                <input type="text" placeholder="<?= /* @noEscape */ __('SKU'); ?>" 
+                                name="product[options][0][values][0][qty]" class="required-entry validate-no-html-tags">
+                                <input type="text" placeholder="<?= /* @noEscape */ __('Sort Order'); ?>" 
+                                name="product[options][0][values][0][sort_order]" class="validate-no-html-tags">
+                                </div>
+                                <button title=" <?= /* @noEscape */ __('Add Options'); ?> " 
+                                type="button" class="button addOption">
+                                <span>
+                                    <span>
+                                        <span> <?= /* @noEscape */ __('Add options'); ?> </span>
+                                    </span>
+                                </span>
+                            </button></div></div>
+                                </div>
+                                <div class="wk_clear"></div>
+                            </div>
+                        </div>
+                                        <?php
+                                    } ?>            
+                                    </div>        
+                                </div>            
+                                <input type="hidden" name="customcount" value="" id="customcount" />    
+                                <input type="hidden" name="customcountallid" value="" id="customcountallid" />    
+                                <div class="wk_clear"></div>
+                            </div>
+            </div>
+            <div class="buttons-set field required">
+                <p class="label">Required Fields</p>
+                <p class="back-link">
+                    <a class="left" onclick="javascript: window.history.back();" href="javascript:;">« Back</a>
+                </p>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<?php
+
+$formData = [
+    'countryPicSelector' => '#country-pic',
+    'verifySkuAjaxUrl' => $block
+    ->getUrl('marketplace/product/verifysku', ['_secure' => $block->getRequest()->isSecure()]),
+    'categoryTreeAjaxUrl' => $block
+    ->getUrl('marketplace/product/categorytree/', ['_secure' => $block->getRequest()->isSecure()])
+];
+$serializedFormData = $block->getJsonHelper()->jsonEncode($formData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "Webkul_MarketplaceEventManager/js/sellerAddProductjs": <?= /* @@noEscape */ $serializedFormData; ?>
+        }
+    }
+</script>
+<style>
+div[id^="product[options]"]{
+    display:none!important;
+}
+#price_icon, #price_icon1{
+    font-size: initial;
+    position: relative;
+    left: 16px;
+}
+</style>
+<script>
+require([
+            "jquery",
+            "mage/mage"
+        ], function($){
+        var ct=parseInt($('.customoptindex:last').val())+1;
+        if(isNaN(ct)){ct=0;}
+        $('.addcusop').click(function(){
+
+            var deletebutton=$('#add_new_defined_option').clone();
+
+            deletebutton.removeAttr('id')
+                        .removeClass('addcusop')
+                        .addClass('removeCustomOption')
+                        .find('span span span').text('<?= /* @noEscape */ __(' Delete Option ')?>');
+
+            var inputtype=$('<select/>',{'name':'options['+ct+'][type]'})
+                                    .attr('data_option_index',ct)
+                                    .addClass('required-entry customoption_type')
+                                    .append($('<option/>',{'value':''}).text('- - - -'))
+                                    .append($('<optgroup/>',{'label':'Text'})
+                                        .append($('<option/>')
+                                                    .attr('value','field')
+                                                    .text("<?= /* @noEscape */ __(' Field ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"area")
+                                                    .text("<?= /* @noEscape */ __(' Area ') ?>")))
+                                    .append($('<optgroup/>',{'label':'Select'})
+                                        .append($('<option/>')
+                                                    .attr('value',"drop_down")
+                                                    .text("<?= /* @noEscape */ __('Drop Down') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"radio")
+                                                    .text("<?= /* @noEscape */ __(' Radio Buttons ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"checkbox")
+                                                    .text("<?= /* @noEscape */ __(' Checkbox ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"multiple")
+                                                    .text("<?= /* @noEscape */ __(' Multi Select ') ?>")))
+                                    .append($('<optgroup/>',{'label':'Date'})
+                                        .append($('<option/>')
+                                                    .attr('value',"date")
+                                                    .text("<?= /* @noEscape */ __(' Date ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"date_time")
+                                                    .text("<?= /* @noEscape */ __(' Date & Time ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"time")
+                                                    .text("<?= /* @noEscape */ __(' Time ') ?>")));
+            var isrequired=$('<select/>',
+                                {'name':'options['+ct+'][is_require]'})
+                                .append($('<option/>').attr('value',"1").text("<?= /* @noEscape */ __(' Yes ') ?>"))
+                                .append($('<option/>').attr('value',"0").text("<?= /* @noEscape */ __(' No ') ?>"));
+                                                            
+            var customoption=$('<div/>')
+                                .addClass('customoption')
+                                .append($('<div/>')
+                                        .addClass('head')
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Title ')?>')
+                                                    .append($('<em/>').text('*')))
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Input Type ')?>')
+                                                    .append($('<em/>').text('*')))
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Is Required ')?>'))
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Sort Order ')?>'))
+                                        .append(deletebutton)
+                                        )
+                                .append($('<input/>',{'type':'text','name':'options['+ct+'][title]'})
+                                            .addClass('required-entry validate-no-html-tags'))
+                                .append(inputtype)
+                                .append(isrequired)
+                                .append($('<input/>',{'type':'text','name':'options['+ct+'][sort_order]'}))
+                                .append($('<input/>',{
+                                    'type':'hidden','name':'options['+ct+'][customoptindex]','value':ct}));
+                                
+            $('#othercustomoption').append(customoption);
+            ct++;                                        
+                                              
+        });
+
+        $('#othercustomoption').delegate('.customoption_type','change',function() {
+
+            var text=['field','area','date','date_time','time'];
+            var select=['drop_down','radio','checkbox','multiple'];
+            var thisobj=$(this);
+            var optindex=thisobj.attr('data_option_index');
+
+            var pricetype=$('<select/>',{'name':'options['+optindex+'][price_type]'})
+                                .addClass('required-entry')
+                                .append($('<option/>',{'value':'fixed'})
+                                            .text('<?= /* @noEscape */ __(' Fixed ')?>'))
+                                .append($('<option/>',{'value':'percent'})
+                                        .text('<?= /* @noEscape */ __(' Percent ')?>'));
+
+            if($.inArray(thisobj.val(),text)>=0){
+                var optionvalue=$('<div/>')
+                            .addClass('customoption')
+                            .append($('<div/>')
+                                    .addClass('head')
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Price ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Price Type ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Qty ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' SKU ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Max Characters ')?>'))
+                                    )
+                            .append($('<div/>',{'class':'wk_row'})
+                            .append($('<input/>',{'type':'text','name':'options['+optindex+'][price]'})
+                            .addClass('required-entry validate-number validate-zero-or-greater'))
+                            .append(pricetype)
+                            .append($('<input/>',{'type':'text','name':'options['+optindex+'][qty]'})
+                            .addClass('required-entry validate-number validate-zero-or-greater'))
+                            .append($('<input/>',{'type':'text','name':'options['+optindex+'][sku]'})
+                                .addClass('validate-no-html-tags'))
+                            .append($('<input/>',{'type':'text','name':'options['+optindex+'][max_characters]'})
+                            .addClass('required-entry validate-number validate-zero-or-greater')));
+                        
+                    if(thisobj.val()=='date'||thisobj.val()=='date_time'||thisobj.val()=='time'){
+                        optionvalue.find('.label:last').remove();
+                        optionvalue.find('input:last').remove();
+                    }
+
+                    thisobj.parents('.customoption').find('.customoption').remove();
+                    thisobj.parents('.customoption').append(optionvalue);
+
+                    thisobj.parents('.customoption ').find('.customoption .wk_row input').addClass('importantWidth');
+                    thisobj.parents('.customoption ').find('.customoption .wk_row select').addClass('importantWidth');
+
+            }else if($.inArray(thisobj.val(),select)>=0){
+
+                var deletebutton=$('#add_new_defined_option').clone();
+                    deletebutton.removeAttr('id')
+                                .removeClass('addcusop')
+                                .attr('title','<?= /* @noEscape */ __(' Delete Option ') ?>')
+                                .removeClass('removeCustomOption')
+                                .addClass('removeOption')
+                                .addClass('delete')
+                                .find('span span span').text('<?= /* @noEscape */ ''?>');
+
+                var addoptbutton=$('#add_new_defined_option').clone();
+                    addoptbutton.removeAttr('id')
+                                .removeClass('addcusop')
+                                .attr('title','<?= /* @noEscape */ __(' Add Option ') ?>')
+                                .removeClass('removeCustomOption')
+                                .addClass('addOption')
+                                .find('span span span').text('<?= /* @noEscape */ __(' Add Option ')?>');
+
+                var optionvalue=$('<div/>')
+                            .addClass('customoption')
+                            .append($('<div/>')
+                                    .addClass('head')
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Title ')?>')
+                                                .append($('<em/>').text('*')))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Price ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Price Type ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Qty ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' SKU ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ __(' Sort Order ')?>'))
+                                    .append($('<span/>')
+                                                .addClass('label')
+                                                .text('<?= /* @noEscape */ ('')?>'))
+                                    )
+                            .append(addoptbutton);
+                    thisobj.parents('.customoption').find('.customoption').remove();
+                    thisobj.parents('.customoption').append(optionvalue);
+                    thisobj.parents('.customoption').find('.addOption').trigger('click');
+            }    
+        });
+
+        $('#othercustomoption').delegate('.removeCustomOption','click',function(){
+            $(this).parents('.customoption').remove();
+        });
+
+        $('#othercustomoption').delegate('.removeOption','click',function(){
+            $(this).parents('.wk_row').remove();
+        });
+
+        $('#othercustomoption').delegate('.addOption','click',function(){
+
+            var selectoptindx=$(this).parent('.customoption').parents('.customoption')
+            .find('.customoption_type').attr('data_option_index');
+
+            var deletebutton=$("<button/>").addClass('button').append('<span/>')
+            .append('<span/>').append('<span/>').html('<?= /* @noEscape */ '';  ?>');
+                    deletebutton.attr('title','<?= /* @noEscape */ __(' Delete Options ') ?>')
+                                .addClass('removeOption')
+                                .addClass('delete');
+
+            var optindex=0;
+            var tempdata=$(this).parent('.customoption').find('.wk_row:last input:first').attr('name');
+
+            if(tempdata!=undefined){
+                optindex=parseFloat(tempdata.split('[')[4].split(']')[0])+1;    
+            }
+
+            var pricetype=$('<select/>',{
+                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][price_type]',
+                'id': 'price_type1'})
+                                .addClass('required-entry')
+                                .append($('<option/>',{'value':'fixed'})
+                                            .text('<?= /* @noEscape */ __('--Select--')?>'))
+                                .append($('<option/>',{'value':'fixed'})
+                                            .text('<?= /* @noEscape */ __(' Fixed ')?>'))
+                                .append($('<option/>',{'value':'percent'})
+                                        .text('<?= /* @noEscape */ __(' Percent ')?>'));    
+
+            var $wk_row=$('<div/>',{'class':'wk_row'})
+                            .append($('<input/>',{
+                                'type':'text','placeholder':'<?= /* @noEscape */ __(' Title ')?>',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][title]'})
+                            .addClass('required-entry validate-no-html-tags'))
+                            .append('<span id="price_icon1"></span>')
+                            .append($('<input/>',{
+                                'type':'text', 'placeholder':'<?= /* @noEscape */ __(' Price ')?>', 
+                                'style':'padding-left:17px',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][price]'})
+                            .addClass('required-entry validate-number validate-zero-or-greater'))
+                            .append(pricetype)
+                            .append($('<input/>',{
+                                'type':'text','placeholder':'<?= /* @noEscape */ __(' SKU ')?>', 
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][sku]'})
+                                .addClass('validate-no-html-tags'))
+                            .append($('<input/>',{
+                                'type':'text', 'placeholder':'<?= /* @noEscape */ __(' Qty ')?>', 
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][qty]'})
+                                .addClass('required-entry validate-number validate-zero-or-greater'))
+                            .append($('<input/>',{
+                                'type':'text', 'placeholder':'<?= /* @noEscape */ __(' Sort Order ')?>', 
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][sort_order]'}));
+
+                $wk_row.find('select').addClass('importantWidth');
+
+                if($(this).parent('.customoption').find('.wk_row').length > 0){
+                    $wk_row.append(deletebutton);
+                }    
+                $(this).before($wk_row);
+            });
+            $('.wkeventoptiondel').on('click', function() {
+                $(this).closest('div.wk_row').hide();
+                $(this).closest('div.wk_row_all').find('input.wkevent_is_delete').val(1);
+            });
+            $(document).on('change', '#price_type', function() {
+                if ($(this).val() == 'fixed') {
+                    $(this).closest('.wk_row').find('#price_icon').text('$')
+                } else if ($(this).val() == 'percent') {
+                    $(this).closest('.wk_row').find('#price_icon').text('%')
+                } else {
+                    $(this).closest('.wk_row').find('#price_icon').text('')
+                }
+            })
+            $(".wk_row_all").each(function() {
+                if ($('#price_type').val() == 'fixed') {
+                    $('#price_type').closest('.wk_row').find('#price_icon').text('$')
+                } else if ($('#price_type').val() == 'percent') {
+                    $('#price_type').closest('.wk_row').find('#price_icon').text('%')
+                }
+            });
+            $(".importantWidth").each(function(){
+                if ($(this).val() == 'fixed') {
+                    $(this).closest('.wk_row').find('span#price_icon').text('$')
+                } else if ($(this).val() == 'percent') {
+                    $(this).closest('.wk_row').find('span#price_icon').text('%')
+                }
+            })
+                
+
+            $(document).on('change', '#price_type1', function(e) {
+                if ($(this).val() == 'fixed') {
+                    $(this).closest('.wk_row').find('#price_icon1').text('$')
+                } else if ($(this).val() == 'percent') {
+                    $(this).closest('.wk_row').find('#price_icon1').text('%')
+                } else {
+                    $(this).closest('.wk_row').find('#price_icon1').text('')
+                }
+            })
+        });
+</script>

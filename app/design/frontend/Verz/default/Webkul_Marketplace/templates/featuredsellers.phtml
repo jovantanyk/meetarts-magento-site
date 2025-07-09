@@ -1,0 +1,60 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_Marketplace
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php
+$helper = $block->getMarketplacehelper();
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$sellerDetails = $block->getSellerDetailsById();
+$imgUrl = $block->getLogoUrl();
+if (count($sellerDetails)) {?>
+  <ul class="row">
+    <?php
+    foreach ($sellerDetails as $sellerId => $sellerData) {
+        $seller_product_count = $helper->getSellerProCount($sellerId);
+        $sellerDescInfo = $webkul_helper->getSellerDataByShopUrl($sellerData['shop_url']);
+        foreach($sellerDescInfo as $value)
+        {
+            $seller_name = $value['name'];
+            $company_locality = $value['company_locality'];
+        }
+        $rating = $helper->getSelleRating($sellerId);
+        $imageValue = $imgUrl.'noimage.png';
+        if ($sellerData['logo_pic'] != '') {
+            $imageValue = $imgUrl.$sellerData['logo_pic'];
+        }
+
+        ?>
+        <li class="grid-width">
+          <div class="center">
+            <div class="artists-img mb20">
+              <a href="<?= /* @escapeNotVerified */ $escaper->escapeUrl($helper
+                ->getRewriteUrl('marketplace/seller/profile/shop/'.$sellerData['shop_url'])); ?>">
+                  <?php if($imageValue): ?>
+                    <img src="<?= /* @escapeNotVerified */ $escaper->escapeUrl($imageValue) ; ?>" alt="image" />
+                    <?php else: ?>
+                        <img src="<?= $block->escapeUrl($verz_helper->getPlaceHolderImage()) ?>" style="width:99px;" alt=""/>
+                    <?php endif; ?>
+              </a>
+            </div>
+            <div class="artis-name">
+              <h3 class="size25"><a href="<?= /* @escapeNotVerified */ $escaper->escapeUrl($helper
+                ->getRewriteUrl('marketplace/seller/profile/shop/'.$sellerData['shop_url'])); ?>"> <?= $escaper->escapeHtml($seller_name) ?> </a> </h3> 
+              <span class="size20"> <?php if($company_locality): ?><i class="fa-solid fa-location-dot"></i> <span class="seller_address"><?= $escaper->escapeHtml($company_locality) ?></span> <?php endif; ?></span>
+            </div>
+          </div>
+        </li>
+        <?php
+    }
+    ?>
+    </ul>
+    <?php
+}

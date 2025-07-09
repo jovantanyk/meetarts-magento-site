@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!-- /**
+ * Webkul Software
+ *
+ * @category Webkul
+ * @package Webkul_MpBuyerSellerChat
+ * @author Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license https://store.webkul.com/license.html
+ */ -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="marketplace_chat_customer_info" resource="default" engine="innodb" comment="Customer Data">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="int" name="customer_id" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Customer ID"/>
+    <column xsi:type="text" name="unique_id" nullable="true" comment="Customer Unique ID"/>
+    <column xsi:type="text" name="image" nullable="true" comment="Profile Image"/>
+    <column xsi:type="int" name="chat_status" padding="10" unsigned="true" nullable="false" identity="false" default="0" comment="Chat Status"/>
+    <column xsi:type="text" name="registered_as" nullable="true" comment="Customer Registered as"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+    <constraint xsi:type="foreign" referenceId="MARKETPLACE_CHAT_CUSTOMER_INFO_CUSTOMER_ID" table="marketplace_chat_customer_info"
+                    column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+  </table>
+  <table name="marketplace_customer_online" resource="default" engine="innodb" comment="Marketplace Customer Online">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="text" name="sender_unique_id" nullable="true" comment="Sender Unique Id"/>
+    <column xsi:type="text" name="reciever_unique_id" nullable="true" comment="Receiver Unique Id"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+  <table name="marketplace_customer_blocked" resource="default" engine="innodb" comment="Blocked List of customers">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="text" name="customer_unique_id" nullable="true" comment="Customer Unique Id"/>
+    <column xsi:type="text" name="seller_unique_id" nullable="true" comment="Seller Unique Id"/>
+    <column xsi:type="mediumtext" name="block_reason" nullable="true" comment="block_reason"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+  <table name="marketplace_chat_history" resource="default" engine="innodb" comment="Blocked List of customers">
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+    <column xsi:type="text" name="sender_unique_id" nullable="true" comment="Sender Unique Id"/>
+    <column xsi:type="text" name="receiver_unique_id" nullable="true" comment="Receiver Unique Id"/>
+    <column xsi:type="mediumtext" name="message" nullable="true" comment="Message"/>
+    <column xsi:type="timestamp" name="date" on_update="false" nullable="true" comment="Message Date"/>
+    <column xsi:type="text" name="sender_name" nullable="true" comment="Sender Name"/>
+    <column xsi:type="text" name="receiver_name" nullable="true" comment="Receiver Name"/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="entity_id"/>
+    </constraint>
+  </table>
+</schema>

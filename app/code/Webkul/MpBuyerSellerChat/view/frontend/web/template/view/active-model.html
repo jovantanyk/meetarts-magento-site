@@ -1,0 +1,140 @@
+<!-- /**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ -->
+ <div class="chat__menu">
+    <div class="pannel-control" data-bind="click: openChatPanel"></div>
+    <div class="chat-model" outerClick="closeChatPanel">
+        <div class="chat-loading-mask" data-role="chat-loader" data-bind="visible: showSellerLoader">
+            <div class="chat-loader">
+                <img alt="Loading..." data-bind="attr: {'src': window.chatboxCoreConfig.loaderImage}">
+            </div>
+        </div>
+        <strong class="submenu-title" data-bind="text: chatName"></strong>
+        <a href="#" class="action-close _close" data-bind="click: closeChatPanel"></a>
+        <div id="chat-data">
+            <!-- ko if: isServerRunning() === false -->
+            <span class="server-error" data-bind="i18n: 'Chat server is not working.'"></span>
+            <!-- /ko -->
+            <!--ko if: chatEnabled() === true -->
+            <header class="model-chat-controls">
+
+                <div class="profile-control" data-bind="click: showHideProfileBox">
+                    <span data-bind="attr: {class: 'chat_status actual_status '+getSellerChatStatus()}"></span>
+                    <span class="profile-image">
+                        <img data-bind="attr: {src: sellerProfile()}" width="35" height="35"></img>
+                    </span>
+                </div>
+                <div class="controls">
+                    <i class="fa fa-volume-up wk_chat_sound" data-bind="click: enableDisableSound">
+                        <audio controls="controls" class="wk_sound_play hide" id="myAudio">
+                            <source data-bind="attr: {'src': getSoundUrl}" type="audio/ogg"></source>
+                        </audio>
+                    </i>
+                    <i class="fa fa-cog wk_chat_setting" data-bind="click: showControlList">
+                        <div class="wk_chat_setting_options list-group">
+                            <span class="status_point"></span>
+                            <!-- <div class="list-group-item" id="wk_report_manager">Report To Manager</div> -->
+                            <div class="list-group-item chatStatus" id="0" data="10" data-bind="i18n: 'End Chat', click: changeSellerStatusEnd"></div>
+                            <div class="list-group-item" id="wk_profile_setting" data-bind="i18n: 'Profile Setting', click: showHideProfileBox"></div>
+                        </div>
+                    </i>
+                    <i class="fa fa-angle-down wk_control_status" data-bind="click: showControlList">
+                        <div class="wk_chat_status_options list-group">
+                            <span class="status_point"></span>
+                            <div class="list-group-item chatStatus" id="1" data-bind="click: changeSellerStatus">
+                                <span class="chat_status online" data-bind="i18n: 'Online'"></span>
+                            </div>
+                            <div class="list-group-item chatStatus" id="2" data-bind="click: changeSellerStatus">
+                                <span class="chat_status busy" data-bind="i18n: 'Busy'"></span>
+                            </div>
+                            <div class="list-group-item chatStatus" id="0" data-bind="click: changeSellerStatus">
+                                <span class="chat_status offline" data-bind="i18n: 'Offline'"></span>
+                            </div>
+                        </div>
+                    </i>
+                </div>
+            </header>
+            <!-- /ko -->
+            <div class="profile-setting-box" data-bind="visible: showProfileBox">
+                <form id="profile-form" data-bind="submit:uploadProfileImage" method="post" enctype="multipart/form-data">
+                    <div class="image_block">
+                        <img id="seller-profile-image" data-bind="attr: {'src': sellerProfile()}">
+                    </div>
+                    <input id="seller_profile_image" type="file" name="profile_image" class="profile_image" data-bind="event:{ change: showSelectedImage}">
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <button type="button" class="button">
+                                <span data-bind="i18n: 'Cancel', click: showHideProfileBox"></span>
+                            </button>
+                            <button type="submit" class="button">
+                                <span data-bind="i18n: 'Upload'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!--ko if: chatEnabled() === false -->
+            <div class="enable-chat">
+                <button class="button primary action enable_chat" data-bind="i18n: 'Enable Chat', click: enableSellerChat"></button>
+            </div>
+            <!-- /ko -->
+            <!--ko if: chatEnabled() === true -->
+            <div class="model-search-bar">
+                <span class="fa fa-search"></span>
+                <input type="text" data-bind="value: searchQuery, valueUpdate: 'keyup'"></input>
+            </div>
+            <ol class="chat-customer-list" data-bind="foreach: enabledCustomerList">
+                <li class="customer-info" data-bind="attr : {
+                        'data-post': $parent.getPostData($data), 
+                        id:'customer-'+customerUniqueId,
+                        class: $parent.checkIsBlocked($parent, $data) == true?'blocked-user':''
+                    }, 
+                    click: $parent.openChatWindow.bind($parent)">
+                    <span style="position:absolute" data-bind="attr : {id:'status-'+customerUniqueId, class:'chat_status '+$parent.getCustomerStatus(chatStatus)}"></span>
+                    <span class="user_image">
+                        <img data-bind="attr: {src: customerImage}" width="30"></img>
+                    </span>
+                    <span class="user-info">
+                        <span class="name" data-bind="text: customerName"></span>
+                        <span class="email" data-bind="text: customerEmail"></span>
+                    </span>
+                    <!-- ko if: $parent.checkIsBlocked($parent, $data) == false -->
+                    <span class="user-action" data-bind="click: function(){$parent.showblockUserBox($parent, $data)}, clickBubble:false">
+                        <i class="fa fa-ban fa-2x" aria-hidden="true" data-bind="attr :{title: $t('Block')}"></i>
+                    </span>
+                    <!-- /ko -->
+                    <!-- ko if: $parent.checkIsBlocked($parent, $data) == true -->
+                    <span class="user-action" data-bind="click: function(){$parent.blockUser($parent, $data)}, clickBubble:false">
+                        <i class="fa fa-unlock-alt" aria-hidden="true" data-bind="attr :{title: $t('Unblock')}"></i>
+                    </span>
+                    <!-- /ko -->
+                </li>
+            </ol>
+            <!-- ko if: showBlockBox() === true -->
+            <div class="user-block-reason">
+                <i class="fa fa-close cancel-reason-box" data-bind="click: closeBlockBox, clickBubble:false"></i>
+                <form data-bind="submit: blockUserFormSubmit">
+                    <input type="hidden" name="customerUniqueId" data-bind="value: blockUserUniqueId"></input>
+                    <textarea name="block_reason" id="block_reason" class="block-reason" data-bind="attr :{placeholder: $t('Enter Reason to Block')}"></textarea>
+                    <div class="actions-toolbar">
+                        <div class="primary">
+                            <button type="submit" class="button action primary">
+                                <span data-bind="i18n: 'Block'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /ko -->
+
+            <!-- /ko -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Webkul_MpBuyerSellerChat::menu" translate="title" title="Buyer Seller Chat" module="Webkul_MpBuyerSellerChat" sortOrder="100" parent="Webkul_Marketplace::marketplace" resource="Webkul_MpBuyerSellerChat::menu"/>
+        
+        <add id="Webkul_MpBuyerSellerChat::block" translate="title" title="Blocked Customers List" module="Webkul_MpBuyerSellerChat" sortOrder="20" parent="Webkul_MpBuyerSellerChat::menu" action="mpchatsystem/blocklist" resource="Webkul_MpBuyerSellerChat::block"/>
+        <add id="Webkul_MpBuyerSellerChat::history" translate="title" title="Chat History" module="Webkul_MpBuyerSellerChat" sortOrder="10" parent="Webkul_MpBuyerSellerChat::menu" action="mpchatsystem/history" resource="Webkul_MpBuyerSellerChat::history"/>
+    </menu>
+</config>

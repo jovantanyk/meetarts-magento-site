@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+/**
+
+ * @package   Verz_Design
+
+ * @copyright Copyright (c) 2022 VerzDesign (https://www.verzdesign.com/)
+
+ * @contacts  enquiry@verzdesign.com
+
+ */
+
+-->
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+     xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+
+<widget id="category_products_list" class="Verz\Design\Block\Widget\Category\Products" is_email_compatible="true"
+
+        placeholder_image="Magento_CatalogWidget::images/products_list.png" ttl="86400">
+
+    <label translate="true">Category Products List</label>
+
+    <description translate="true">List of Products</description>
+
+        <parameters>
+
+            <parameter name="title" xsi:type="text" required="false" visible="true">
+
+                <label translate="true">Title</label>
+
+            </parameter>
+
+            <parameter name="products_count" xsi:type="text" required="true" visible="true">
+
+                <label translate="true">Number of Products to Display</label>
+
+                <value>10</value>
+
+            </parameter>
+
+            <parameter name="template" xsi:type="select" required="true" visible="true">
+
+                <label translate="true">Template</label>
+
+                <options>
+
+                    <option name="default" value="Verz_Design::product/widget/content/category_products.phtml" selected="true">
+
+                        <label translate="true">Defaul Products Template</label>
+
+                    </option>
+                    <option name="artworks" value="Verz_Design::product/widget/content/artworks.phtml" >
+
+                        <label translate="true">Artworks Products Template</label>
+
+                    </option>
+
+                </options>
+
+            </parameter>
+
+            <parameter name="id_path" xsi:type="block" visible="true" required="true" sort_order="10">
+
+                <label translate="true">Category</label>
+
+                <block class="Magento\Catalog\Block\Adminhtml\Category\Widget\Chooser">
+
+                    <data>
+
+                        <item name="button" xsi:type="array">
+
+                            <item name="open" xsi:type="string" translate="true">Select Category...</item>
+
+                        </item>
+
+                    </data>
+
+                </block>
+
+            </parameter>
+
+        </parameters>
+
+   </widget>
+
+</widgets>

@@ -1,0 +1,826 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $block \Webkul\MarketplaceEventManager\Block\Event\Add */
+// phpcs:ignoreFile
+$helper = $block->getMpHelper();
+$memhelper = $block->getMpEventManagerHelper();
+$currency_code = $helper->getCurrentCurrencyCode();
+$currency_symbol = $helper->getCurrencySymbol();
+$skuType = $helper->getSkuType();
+$skuPrefix = $helper->getSkuPrefix();
+$allowedType = explode(',', $helper->getAllowedProductType());
+?>
+<form action="<?= /* @noEscape */ $block
+->getUrl('marketplaceeventmanager/event/save', ['_secure' => $block
+->getRequest()->isSecure()]) ?>" enctype="multipart/form-data" 
+method="post" id="form-seller-event-new" data-form="edit-product" 
+data-mage-init='{"validation":{}}'>
+    <div class="wk-mp-design" id="wk-bodymain">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend">
+                <span><?= /* @noEscape */ __('Add New Event') ?></span>
+                <button class="button wk-mp-btn" title="<?= /* @noEscape */ __('Save') ?>" type="submit" id="save-btn">
+                    <span><span><?= /* @noEscape */ __('Save') ?></span></span>
+                </button>
+            </legend>
+            <?= /* @noEscape */ $block->getBlockHtml('formkey')?>
+            <?= /* @noEscape */ $block->getBlockHtml('seller.formkey')?>
+            <input type="hidden" name="type" id="producttype" value="etickets" />
+            <input type="hidden" name="product[is_mp_event]" value="1" />
+            <?php if (count($helper->getAllowedSets()) > 1) { ?>
+                <div class="field required">
+                    <label class="label"><?= /* @noEscape */ __('Attribute Set') ?>:</label>
+                    <div class="control">
+                        <select name="set" id="attribute-set-id" class="required-entry">
+                        <?php foreach ($helper->getAllowedSets() as $setval) {?>
+                            <option value="<?= /* @noEscape */ $setval['value'] ?>" >
+                                <?= /* @noEscape */ $setval['label']?>
+                            </option>
+                        <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <?php
+            } else {
+                $allowedSets = $helper->getAllowedSets();
+                ?>
+                <input type="hidden" name="set" 
+                id="attribute-set-id" 
+                value="<?= /* @noEscape */ $allowedSets[0]['value'] ?>" />
+                <?php
+            } ?>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Event Category') ?>:</label>
+                <div class="wk-field wk-category">
+                    <div class="wk-for-validation">
+                        <div id="wk-category-label"><?= /* @noEscape */ __("CATEGORIES"); ?></div>
+                        <?php
+                        if ($memhelper->getAllowedCategoryIds()) {
+                            $storeconfig_catids = explode(',', trim($memhelper->getAllowedCategoryIds()));
+                            $storeconfig_catids = array_unique($storeconfig_catids);
+                            foreach ($storeconfig_catids as $storeconfig_catid) {
+                                $cat_model = $block->getCategory()->load($storeconfig_catid);
+                                if (isset($cat_model["entity_id"]) && $cat_model["entity_id"]) {
+                                    ?>
+                                    <div class="wk-cat-container">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span class="wk-elements wk-cat-name">
+                                            <?= /* @noEscape */ $cat_model->getName() ?>
+                                        </span>
+                                        <input class="wk-elements" 
+                                        type="checkbox" 
+                                        name="product[category_ids][]" 
+                                        value='<?= /* @noEscape */ $cat_model['entity_id'] ?>'/>
+                                    </div> 
+                                       <?php
+                                }
+                            }
+                        } else {
+                            $count = 0;
+                            $category_helper = $block->getCatalogCategoryHelper();
+                            $category_model = $block->getCategory();
+                            $_categories = $category_helper->getStoreCategories();
+                            foreach ($_categories as $_category) {
+                                $count++;
+                                if (count($category_model
+                                ->getAllChildren($category_model
+                                ->load($_category['entity_id'])))-1 > 0) { ?>
+                                    <div class="wk-cat-container" style="margin-left:0px;">
+                                        <span class="wk-plus">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span class="wk-elements wk-cat-name">
+                                            <?= /* @noEscape */ $_category->getName() ?>
+                                        </span>
+                                        <input class="wk-elements" 
+                                        type="checkbox" name="product[category_ids][]" 
+                                        value='<?= /* @noEscape */ $_category['entity_id'] ?>'/>
+                                    </div>
+                                    <?php
+                                } else { ?>
+                                    <div class="wk-cat-container">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span 
+                                        class="wk-elements wk-cat-name">
+                                        <?= /* @noEscape */ $_category->getName() ?></span>
+                                        <input 
+                                        class="wk-elements" 
+                                        type="checkbox" 
+                                        name="product[category_ids][]" 
+                                        value='<?= /* @noEscape */ $_category['entity_id'] ?>'/>
+                                    </div> 
+                                       <?php
+                                }
+                            }
+                        } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Name') ?>:</label>
+                <div class="control">
+                    <input type="text" class="required-entry input-text" name="product[name]" id="name"/>
+                </div>
+            </div>
+             <div class="field ">
+                <label class="label"><?= /* @noEscape */ __('Short Description') ?>:</label>
+                <div class="control">
+                    <textarea name="product[short_description]" 
+                    class="input-text" id="sdescription" rows="5" 
+                    cols="75" ></textarea>
+                    <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygShortDescription = new wysiwygSetup("sdescription", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce4" : {
+                                        "toolbar":`formatselect | bold italic underline | 
+                                        alignleft aligncenter alignright | bullist numlist | 
+                                        link table charmap`,"plugins":`advlist autolink lists link 
+                                        charmap media noneditable table 
+                                        contextmenu paste code help table`,
+                                    },
+                                    files_browser_window_url: "<?= /* @noEscape */ $block->getWysiwygUrl();?>"
+                                });
+                                wysiwygShortDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Description') ?>:</label>
+                <div class="control">
+                    <textarea name="product[description]" 
+                    class="required-entry input-text" id="description" 
+                    rows="5" cols="75" ></textarea>
+                    <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygDescription = new wysiwygSetup("description", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce4" : {
+                                        "toolbar":`formatselect | bold italic underline | 
+                                        alignleft aligncenter alignright | bullist numlist | 
+                                        link table charmap`,"plugins":`advlist autolink lists link charmap 
+                                        media noneditable table contextmenu paste code help table`,
+                                    },
+                                    files_browser_window_url: "<?= /* @noEscape */ $block->getWysiwygUrl();?>"
+                                });
+                                wysiwygDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?>
+                </div>
+            </div> 
+           
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Terms & Conditions') ?>:</label>
+                <div class="control">
+                    <textarea name="product[event_terms]" 
+                    class="input-text" id="event_terms" 
+                    rows="5" cols="75" ></textarea>
+                    <?php if ($helper->isWysiwygEnabled()): ?>
+                        <script>
+                            require([
+                                "jquery",
+                                "mage/translate",
+                                "mage/adminhtml/events",
+                                "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                            ], function(jQuery) {
+                                wysiwygDescription = new wysiwygSetup("event_terms", {
+                                    "width" : "100%",
+                                    "height" : "200px",
+                                    "plugins" : [{"name":"image"}],
+                                    "tinymce4" : {
+                                        "toolbar":`formatselect | bold italic underline | 
+                                        alignleft aligncenter alignright | bullist numlist | 
+                                        link table charmap`,"plugins":`advlist autolink lists link 
+                                        charmap media noneditable table contextmenu paste code help table`,
+                                    },
+                                    files_browser_window_url: "<?= /* @noEscape */ $block->getWysiwygUrl();?>"
+                                });
+                                wysiwygDescription.setup("exact");
+                            });
+                        </script>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Enable Terms') ?>:</label>
+                <div class="control">
+                    <select name="product[enable_event_terms]" class="select" id="enable_event_terms">
+                        <option value='0'><?= /* @noEscape */ __('No') ?></option>
+                        <option value='1'><?= /* @noEscape */ __('Yes') ?></option>
+                    </select>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Venue') ?>:</label>
+                <div class="control">
+                    <textarea name="product[event_venue]" 
+                    id="event_venue" rows="5" cols="75" 
+                    class="required-entry input-text" ></textarea>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Refund Policy') ?>:</label>
+                <div class="control">
+                    <textarea name="product[refund_policy]" 
+                    id="refund_policy" rows="5" cols="75" 
+                    class="required-entry input-text" ></textarea>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Unique Code') ?>:</label>
+                <div class="control">
+                    <input name="product[sku]" 
+                    id="sku" class="required-entry input-text validate-no-html-tags" 
+                    type="text" />
+                </div>
+                <div id="skuavail" style="color:green">
+                    <span class="success-msg skuavailable"><?= /* @noEscape */ __('Event Code Available') ?></span>
+                </div>
+                <div id="skunotavail" style="color:red;">
+                    <span class="error-msg skunotavailable"><?= /* @noEscape */ __('Event Code Already Exist') ?></span>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Price') ?>
+                <b><?= /* @noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                <div class="control">
+                    <input type="text" 
+                    class="required-entry validate-zero-or-greater input-text" 
+                    name="product[price]" id="price" />
+                </div>
+            </div>
+            <div class="field">
+                <label 
+                class="label"><?= /* @noEscape */ __('Special Price') ?>
+                <b><?= /* @noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                <div class="control">
+                    <input type="text" 
+                    class="widthinput input-text validate-zero-or-greater" 
+                    name="product[special_price]" id="special-price"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Special Price From') ?>:</label>
+                <div class="control">
+                    <input type="text" name="product[special_from_date]" id="special-from-date" class="input-text" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Special Price To') ?>:</label>
+                <div class="control">
+                    <input type="text" name="product[special_to_date]" id="special-to-date" class="input-text"/>
+                </div>
+            </div>
+            <input id="inventory_manage_stock" type="hidden" name="product[stock_data][manage_stock]" value="1">
+            <input type="hidden" 
+            value="1" 
+            name="product[stock_data][use_config_manage_stock]" 
+            id="inventory_use_config_manage_stock">
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Visibility') ?>:</label>
+                <div class="control">
+                    <select id="visibility" class=" required-entry required-entry select" name="product[visibility]">
+                        <option value=""><?= /* @noEscape */ __('Please Select')?></option>
+                        <?php
+                        $product_visibility = $helper->getVisibilityOptionArray();
+                        foreach ($product_visibility as $key => $value) {
+                            ?>
+                            <option value="<?= /* @noEscape */ $key ?>"><?= /* @noEscape */ $value?></option>
+                            <?php
+                        } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Tax Class') ?>:</label>
+                <div class="control">
+                    <select id="tax-class-id" class="required-entry select" name="product[tax_class_id]">
+                        <option value="0"><?= /* @noEscape */ __('None')?></option>
+                        <?php
+                        $taxes=$helper->getTaxClassModel();
+                        foreach ($taxes as $tax) {
+                            ?>
+                            <option value="<?= /* @noEscape */ $tax->getId() ?>">
+                                <?= /* @noEscape */ $tax->getClassName()?>
+                            </option>
+                            <?php
+                        } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Set Event Code Prefix') ?>:</label>
+                <div class="control">
+                    <input type="text" name="product[event_ticket_prefix]" id="event_ticket_prefix" class="input-text"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Start Time') ?>:</label>
+                <div class="control input-append date start_datetime show" data-date="2013-02-21T15:25:00Z">
+                    <input type="text" 
+                    name="product[event_start_date]" 
+                    id="event_start_date" class="required-entry input-text"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* @noEscape */ __('Event Stop Time') ?>:</label>
+                <div class="control input-append date stop_datetime show" 
+                data-date="2013-02-21T15:25:00Z">
+                    <input type="text" 
+                    name="product[event_end_date]" 
+                    id="event_end_date" class="required-entry input-text"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Meta Title') ?>:</label>
+                <div class="control">
+                    <input type="text" class="input-text" name="product[meta_title]" id="meta_title" value=""/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Meta Keywords') ?>:</label>
+                <div class="control">
+                    <textarea class="textarea" id="meta_keyword" name="product[meta_keyword]"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Meta Description') ?>:</label>
+                <div class="control">
+                    <textarea class="textarea" id="meta_description" name="product[meta_description]"></textarea>
+                </div>
+            </div>
+            <?= /* @noEscape */ $block->getChildHtml(); ?>
+            <div class="field">
+                <label class="label"><?= /* @noEscape */ __('Add Event Ticket Type') ?>:</label>
+                <div class="input-box wk_customoptionwidth">
+                            <div id="coption">
+                                <input type="hidden" name="customcount" value="0" id="customcount" />
+                                <input type="hidden" name="customcountallid" 
+                                value="0" id="customcountallid" />
+                                <div id="othercustomoption">
+                                    <div class="customoption">
+                                    <input type="text" 
+                                    value="<?= /* @noEscape */ __('Ticket Type'); ?>" 
+                                    name="product[options][0][title]" 
+                                    class="required-entry validate-no-html-tags" 
+                                    readonly="readonly"/>
+                                    <!-- <input type="hidden" 
+                                    class="customoption_type" 
+                                    name="product[options][0][type]" value="radio" 
+                                    data_option_index="<?= /* @noEscape */ 0;?>" /> -->
+                                    <div class="head">    
+                                        <span class="label required"><?= /* @noEscape */ __('Type'); ?><em>*</em></span>
+                                    </div>
+                                    <select name="product[options][0][type]" 
+                                    class="customoption_type" 
+                                    data_option_index="<?= /* @noEscape */ 0;?>">
+                                        <option value="checkbox" ><?= /* @noEscape */ __('Checkbox') ?></option>
+                                        <option value="radio"><?= /* @noEscape */ __('Radio') ?></option>
+                                    </select>
+                                <input type="hidden" value="1" name="product[options][0][is_require]" />
+                                <input type="hidden" value="1" name="product[options][0][sort_order]">
+                                <input type="hidden" 
+                                class="customoptindex" 
+                                name="product[options][0][customoptindex]" value="0">
+                                <input type="hidden" name="product[options][0][option_id]" value="0">
+                                    <div class="customoption">
+                                    <div class="head">
+                                    <span class="label"><?= /* @noEscape */ __('Title'); ?>  <em>*</em></span>
+                                    <span class="label"><?= /* @noEscape */ __('Price'); ?> <em>*</em></span>
+                                    <span class="label"> <?= /* @noEscape */ __('Price Type'); ?> <em>*</em></span>
+                                    <span class="label"> <?= /* @noEscape */ __('Qty'); ?> <em>*</em></span>
+                                    <span class="label"> <?= /* @noEscape */ __('SKU'); ?> </span>
+                                    <span class="label"> <?= /* @noEscape */ __('Sort Order'); ?> </span>
+                                    <span class="label"></span>
+                                </div>
+                                <div class="wk_row">
+                                <input type="text" 
+                                placeholder="<?= /* @noEscape */ __('Title'); ?>" 
+                                name="product[options][0][values][0][title]" 
+                                class="required-entry validate-no-html-tags">
+                                <span id="price_icon"></span>
+                                <input type="text" 
+                                style="padding-left:17px" 
+                                placeholder="<?= /* @noEscape */ __('Price'); ?>" 
+                                name="product[options][0][values][0][price]" 
+                                class="required-entry validate-number validate-zero-or-greater">
+                                <select id="price_type" 
+                                name="product[options][0][values][0][price_type]" 
+                                class="required-entry importantWidth">
+                                <option value=""><?= /* @noEscape */ __('--select--'); ?></option>
+                                <option value="fixed"><?= /* @noEscape */ __('Fixed'); ?></option>
+                                <option value="percent"> <?= /* @noEscape */ __('Percent'); ?> </option>
+                                </select>
+                                <input type="text" 
+                                placeholder="<?= /* @noEscape */ __('Qty'); ?>" 
+                                name="product[options][0][values][0][qty]" 
+                                class="required-entry validate-number 
+                                validate-zero-or-greater">
+                                <input type="text" 
+                                placeholder="<?= /* @noEscape */ __('SKU'); ?>" 
+                                name="product[options][0][values][0][sku]" class="validate-no-html-tags">
+                                <input 
+                                type="text" 
+                                placeholder="<?= /* @noEscape */ __('Sort Order'); ?>" 
+                                name="product[options][0][values][0][sort_order]" class="validate-no-html-tags">
+                                </div>
+                                <button 
+                                title=" <?= /* @noEscape */ __('Add Options'); ?> " 
+                                type="button" class="button addOption">
+                                <span>
+                                    <span>
+                                        <span> <?= /* @noEscape */ __('Add options'); ?> </span>
+                                    </span>
+                                </span>
+                            </button></div></div>
+                                </div>
+                                <div class="wk_clear"></div>
+                            </div>
+                        </div>
+            </div>
+            <div class="buttons-set field required">
+                <p class="label">Required Fields</p>
+                <p class="back-link">
+                    <a class="left" onclick="javascript: window.history.back();" href="javascript:;">« Back</a>
+                </p>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<?php
+$formData = [
+    'countryPicSelector' => '#country-pic',
+    'verifySkuAjaxUrl' => $block
+    ->getUrl('marketplace/product/verifysku', ['_secure' => $block
+    ->getRequest()->isSecure()]),
+    'categoryTreeAjaxUrl' => $block
+    ->getUrl('marketplace/product/categorytree/', ['_secure' => $block
+    ->getRequest()->isSecure()])
+];
+$serializedFormData = $block->getJsonHelper()->jsonEncode($formData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "sellerAddProductjs": <?= /* @@noEscape */ $serializedFormData; ?>
+        }
+    }
+</script>
+<!-- <script id="customOptionTemplate" type="text/x-magento-template">
+    <tr>
+        <td>
+            <input type="text" name="selectoptions[0][0][title]" class="required-entry">
+        </td>
+        <td>
+            <input type="text" name="selectoptions[0][0][price]" class="required-entry validate-number">
+        </td>
+        <td>
+            <select name="selectoptions[0][0][price_type]" 
+            class="required-entry importantWidth">
+            <option value="fixed"><?php //echo __('Fixed'); ?></option>
+            <option value="percent"> <?php //echo __('Percent'); ?> </option></select>
+        </td>
+        <td>
+            <input type="text" name="selectoptions[0][0][qty]" class="required-entry validate-number">
+        </td>
+        <td><input type="text" name="selectoptions[0][0][sku]">
+        </td>
+        <td></td>
+    </tr>
+</script> -->
+<style>
+div[id^="product[options]"]{
+    display:none!important;
+}
+#price_icon, #price_icon1{
+    font-size: initial;
+    position: relative;
+    left: 16px;
+}
+</style>
+<script>
+require([
+            "jquery",
+            "mage/mage"
+        ], function($){
+        var ct=parseInt($('.customoptindex:last').val())+1;
+        if(isNaN(ct)){ct=0;}
+        $('.addcusop').click(function(){
+
+            var deletebutton=$('#add_new_defined_option').clone();
+
+            deletebutton.removeAttr('id')
+                        .removeClass('addcusop')
+                        .addClass('removeCustomOption')
+                        .find('span span span').text('<?= /* @noEscape */ __(' Delete Option ')?>');
+
+            var inputtype=$('<select/>',{'name':'options['+ct+'][type]'})
+                                    .attr('data_option_index',ct)
+                                    .addClass('required-entry customoption_type')
+                                    .append($('<option/>',{'value':''}).text('- - - -'))
+                                    .append($('<optgroup/>',{'label':'Text'})
+                                        .append($('<option/>')
+                                                    .attr('value','field')
+                                                    .text("<?= /* @noEscape */ __(' Field ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"area")
+                                                    .text("<?= /* @noEscape */ __(' Area ') ?>")))
+                                    .append($('<optgroup/>',{'label':'Select'})
+                                        .append($('<option/>')
+                                                    .attr('value',"drop_down")
+                                                    .text("<?= /* @noEscape */ __('Drop Down') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"radio")
+                                                    .text("<?= /* @noEscape */ __(' Radio Buttons ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"checkbox")
+                                                    .text("<?= /* @noEscape */ __(' Checkbox ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"multiple")
+                                                    .text("<?= /* @noEscape */ __(' Multi Select ') ?>")))
+                                    .append($('<optgroup/>',{'label':'Date'})
+                                        .append($('<option/>')
+                                                    .attr('value',"date")
+                                                    .text("<?= /* @noEscape */ __(' Date ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"date_time")
+                                                    .text("<?= /* @noEscape */ __(' Date & Time ') ?>"))
+                                        .append($('<option/>')
+                                                    .attr('value',"time")
+                                                    .text("<?= /* @noEscape */ __(' Time ') ?>")));
+            var isrequired=$('<select/>',
+                                {'name':'options['+ct+'][is_require]'})
+                                .append($('<option/>').attr('value',"1").text("<?= /* @noEscape */ __(' Yes ') ?>"))
+                                .append($('<option/>').attr('value',"0").text("<?= /* @noEscape */ __(' No ') ?>"));
+                                                            
+            var customoption=$('<div/>')
+                                .addClass('customoption')
+                                .append($('<div/>')
+                                        .addClass('head')
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Title ')?>')
+                                                    .append($('<em/>').text('*')))
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Input Type ')?>')
+                                                    .append($('<em/>').text('*')))
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Is Required ')?>'))
+                                        .append($('<span/>')
+                                                    .addClass('label')
+                                                    .text('<?= /* @noEscape */ __(' Sort Order ')?>'))
+                                        .append(deletebutton)
+                                        )
+                                .append($('<input/>',{'type':'text','name':'options['+ct+'][title]'})
+                                            .addClass('required-entry validate-no-html-tags'))
+                                .append(inputtype)
+                                .append(isrequired)
+                                .append($('<input/>',{'type':'text','name':'options['+ct+'][sort_order]'}))
+                                .append($('<input/>',{
+                                    'type':'hidden',
+                                    'name':'options['+ct+'][customoptindex]',
+                                    'value':ct}));
+                                
+            $('#othercustomoption').append(customoption);
+            ct++;                                        
+                                              
+        });
+
+        // $('#othercustomoption').delegate('.customoption_type','change',function() {
+
+        //     var text=['field','area','date','date_time','time'];
+        //     var select=['drop_down','radio','checkbox','multiple'];
+        //     var thisobj=$(this);
+        //     var optindex=thisobj.attr('data_option_index');
+
+        //     var pricetype=$('<select/>',{'name':'options['+optindex+'][price_type]'})
+        //                         .addClass('required-entry')
+        //                         .append($('<option/>',{'value':'fixed'})
+        //                                     .text('<?= /* @noEscape */ __(' Fixed ')?>'))
+        //                         .append($('<option/>',{'value':'percent'})
+        //                                 .text('<?= /* @noEscape */ __(' Percent ')?>'));
+
+        //     if($.inArray(thisobj.val(),text)>=0){
+        //         var optionvalue=$('<div/>')
+        //                     .addClass('customoption')
+        //                     .append($('<div/>')
+        //                             .addClass('head')
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Price ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Price Type ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Qty ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' SKU ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Max Characters ')?>'))
+        //                             )
+        //                     .append($('<div/>',{'class':'wk_row'})
+        //                     .append($('<input/>',{'type':'text','name':'options['+optindex+'][price]'})
+        //                     .addClass('required-entry validate-number validate-zero-or-greater'))
+        //                     .append(pricetype)
+        //                     .append($('<input/>',{'type':'text','name':'options['+optindex+'][qty]'})
+        //                     .addClass('required-entry validate-number validate-zero-or-greater'))
+        //                     .append($('<input/>',{'type':'text','name':'options['+optindex+'][sku]'})
+        //                                             .addClass('validate-no-html-tags'))
+        //                     .append($('<input/>',{'type':'text','name':'options['+optindex+'][max_characters]'})
+        //                     .addClass('required-entry validate-number validate-zero-or-greater')));
+                        
+        //             if(thisobj.val()=='date'||thisobj.val()=='date_time'||thisobj.val()=='time'){
+        //                 optionvalue.find('.label:last').remove();
+        //                 optionvalue.find('input:last').remove();
+        //             }
+
+        //             thisobj.parents('.customoption').find('.customoption').remove();
+        //             thisobj.parents('.customoption').append(optionvalue);
+
+        //             thisobj.parents('.customoption ')
+        //.find('.customoption .wk_row input').addClass('importantWidth');
+        //             thisobj.parents('.customoption ')
+        //.find('.customoption .wk_row select').addClass('importantWidth');
+
+        //     }else if($.inArray(thisobj.val(),select)>=0){
+
+        //         var deletebutton=$('#add_new_defined_option').clone();
+        //             deletebutton.removeAttr('id')
+        //                         .removeClass('addcusop')
+        //                         .attr('title','<?= /* @noEscape */ __(' Delete Option ') ?>')
+        //                         .removeClass('removeCustomOption')
+        //                         .addClass('removeOption')
+        //                         .addClass('delete')
+        //                         .find('span span span').text('<?= /* @noEscape */ ''?>');
+
+        //         var addoptbutton=$('#add_new_defined_option').clone();
+        //             addoptbutton.removeAttr('id')
+        //                         .removeClass('addcusop')
+        //                         .attr('title','<?= /* @noEscape */ __(' Add Option ') ?>')
+        //                         .removeClass('removeCustomOption')
+        //                         .addClass('addOption')
+        //                         .find('span span span').text('<?= /* @noEscape */ __(' Add Option ')?>');
+
+        //         var optionvalue=$('<div/>')
+        //                     .addClass('customoption')
+        //                     .append($('<div/>')
+        //                             .addClass('head')
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Title ')?>')
+        //                                         .append($('<em/>').text('*')))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Price ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Price Type ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Qty ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' SKU ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ __(' Sort Order ')?>'))
+        //                             .append($('<span/>')
+        //                                         .addClass('label')
+        //                                         .text('<?= /* @noEscape */ ''?>'))
+        //                             )
+        //                     .append(addoptbutton);
+        //             thisobj.parents('.customoption').find('.customoption').remove();
+        //             thisobj.parents('.customoption').append(optionvalue);
+        //             thisobj.parents('.customoption').find('.addOption').trigger('click');
+        //     }    
+        // });
+
+        $('#othercustomoption').delegate('.removeCustomOption','click',function(){
+            $(this).parents('.customoption').remove();
+        });
+
+        $('#othercustomoption').delegate('.removeOption','click',function(){
+            $(this).parents('.wk_row').remove();
+        });
+
+        $('#othercustomoption').delegate('.addOption','click',function(){
+
+            var selectoptindx=$(this).parent('.customoption').parents('.customoption')
+            .find('.customoption_type').attr('data_option_index');
+
+            var deletebutton=$("<button/>").addClass('button').append('<span/>')
+            .append('<span/>').append('<span/>').html('<?= /* @noEscape */ '';  ?>');
+                    deletebutton.attr('title','<?= /* @noEscape */ __(' Delete Options ') ?>')
+                                .addClass('removeOption')
+                                .addClass('delete');
+
+            var optindex=0;
+            var tempdata=$(this).parent('.customoption').find('.wk_row:last input:first').attr('name');
+
+            if(tempdata!=undefined){
+                optindex=parseFloat(tempdata.split('[')[4].split(']')[0])+1;    
+            }
+
+            var pricetype=$('<select/>',{
+                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][price_type]',
+                'id': 'price_type1'})
+                .addClass('required-entry')
+                .append($('<option/>',{'value':''})
+                .text('<?= /* @noEscape */ __('--select--')?>'))
+                .append($('<option/>',{'value':'fixed'})
+                .text('<?= /* @noEscape */ __(' Fixed ')?>'))
+                .append($('<option/>',{'value':'percent'})
+                .text('<?= /* @noEscape */ __(' Percent ')?>'));    
+
+            var $wk_row=$('<div/>',{'class':'wk_row'})
+                            .append($('<input/>',{
+                                'type':'text',
+                                'placeholder':'<?= /* @noEscape */ __(' Title ')?>',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][title]'
+                            })
+                            .addClass('required-entry validate-no-html-tags'))
+                            .append('<span id="price_icon1"></span>')
+                            .append($('<input/>',{
+                                'type':'text',
+                                'placeholder':'<?= /* @noEscape */ __(' Price ')?>',
+                                'style':'padding-left:17px',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][price],'
+                            })
+                            .addClass('required-entry validate-number validate-zero-or-greater'))
+                            .append(pricetype)
+                            .append($('<input/>',{
+                                'type':'text',
+                                'placeholder':'<?= /* @noEscape */ __(' Qty ')?>',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][qty]'
+                            })
+                            .addClass('required-entry validate-number validate-zero-or-greater'))
+                            .append($('<input/>',{
+                                'type':'text',
+                                'placeholder':'<?= /* @noEscape */ __(' SKU ')?>',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][sku]'})
+                            .addClass('validate-no-html-tags'))
+                            .append($('<input/>',{
+                                'type':'text',
+                                'placeholder':'<?= /* @noEscape */ __(' Sort Order ')?>',
+                                'name':'product[options]['+selectoptindx+'][values]['+optindex+'][sort_order]'
+                            }));
+
+                $wk_row.find('select').addClass('importantWidth');
+
+                if($(this).parent('.customoption').find('.wk_row').length > 0){
+                    $wk_row.append(deletebutton);
+                }    
+                $(this).before($wk_row);
+            });
+            $('#price_type').on('change', function() {
+                if ($(this).val() == 'fixed') {
+                    $('#price_icon').text('$')
+                } else if ($(this).val() == 'percent') {
+                    $('#price_icon').text('%')
+                } else {
+                    $('#price_icon').text('')
+                }
+            })
+            $(document).on('change', '#price_type1', function(e) {
+                if ($(this).val() == 'fixed') {
+                    $(this).closest('.wk_row').find('#price_icon1').text('$')
+                } else if ($(this).val() == 'percent') {
+                    $(this).closest('.wk_row').find('#price_icon1').text('%')
+                } else {
+                    $(this).closest('.wk_row').find('#price_icon1').text('')
+                }
+            })
+        });
+</script>

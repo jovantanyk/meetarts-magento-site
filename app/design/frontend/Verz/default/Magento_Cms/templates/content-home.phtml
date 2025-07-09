@@ -1,0 +1,207 @@
+
+<div class="banner">
+	<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home-slider')->toHtml();?>
+</div>
+
+
+<section class="furniture-section pd-space">
+	<div class="container">
+		<div class="row">
+			<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home-block-1')->toHtml();?>
+		</div>
+		<div class="row furniture-sell">
+			<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home-block-2')->toHtml();?>
+		</div>
+		<div class="locker">
+			<div class="row">
+				<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home-block-3')->toHtml();?>
+			</div>
+		</div>
+		
+	</div>
+</section>
+
+<section class="locker-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4 who-are">
+				<div class="high-quality">
+					<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home-block-4-left')->toHtml();?>
+				</div>
+			</div>
+			<div class="col-sm-8">
+				<div class="company">
+					<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home-block-4-right')->toHtml();?>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="featured-products pd-space">
+	<div class="container">
+		<div class="title-name center">
+			<h3 class="heading-h3 title-br blue">FEATURED PRODUCTS</h3>
+		</div>
+		<?php
+			$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+			$abstractProductBlock = $block->getLayout()->createBlock('\Magento\Catalog\Block\Product\AbstractProduct');
+			$listBlock = $objectManager->get('\Magento\Catalog\Block\Product\ListProduct');
+			$FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+			$categoryCollection = $objectManager->create('Magento\Catalog\Model\CategoryFactory')->create()->load(4);
+			$subCategory	= $categoryCollection->getChildrenCategories();
+			$sublist	= "";
+			$suball	= "";
+			foreach($subCategory as $sub)
+			{
+				$sublist	.= '<li><a href="#'.$sub->getUrlKey().'" aria-controls="'.$sub->getUrlKey().'" data-toggle="tab">'.$sub->getName().'</a></li>';
+			}
+		?>	 
+		<div class="tab-section">
+			<ul id="filters" class="clearfix">
+				<li class="active"><a href="#all" aria-controls="all" data-toggle="tab">ALL</a></li>
+				<?php echo $sublist; ?>
+			</ul>
+			<div class="tab-content">
+				<?php
+					$catid = $objectManager->create('Magento\Catalog\Model\CategoryFactory')->create()->load(4);
+					$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory')->create();
+					$productCollection->addAttributeToSelect('*');
+					$productCollection->addCategoryFilter($catid);
+					$productCollection->addAttributeToFilter('visibility', \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
+					$productCollection->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+					$productCollection->setPageSize(15);
+					if($productCollection->count()>0)
+					{
+						?>
+					<div role="tabpanel" class="tab-pane active" id="all">
+						<div class="category-products" id="owl-carousel">
+							<div class="products-grid owl-carousel owl-theme">
+						<?php
+						foreach($productCollection as $_product)
+						{
+							$productImageAttr = $_product->getCustomAttribute( 'small_image' );
+								$imageurl	= "";
+								if($productImageAttr)
+								{
+									$productImage = $this->helper('Magento\Catalog\Helper\Image')
+										->init($_product, 'category_page_grid')
+										->setImageFile($productImageAttr->getValue());	
+										$imageurl	= $productImage->getUrl();
+								}
+								else 
+								{
+									$imageurl	= \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Catalog\Helper\Image::class)->getDefaultPlaceholderUrl('image');
+								}
+									?>
+									<div class="item">
+										<div class="product-wrapper">
+											<div class="img-view">
+												<a href="#" class="product-image">
+													<img src="<?php echo $imageurl; ?>" alt="">
+												</a>
+												<ul class="add-to-links">
+													<li class="wishlist"><a href="#" data-post='<?php  echo $this->helper('Magento\Wishlist\Helper\Data')->getAddParams($_product) ?>' class="action towishlist whisit-bg-style link-wishlist" data-action="add-to-wishlist"></a></li>
+													<li class="compare"><a href="#" data-post='<?php  echo $this->helper('Magento\Catalog\Helper\Product\Compare')->getPostDataParams($_product) ?>' class="whisit-bg-style link-compare" data-action="add-to-wishlist"></a></li>
+													<?php if ($_product->isSaleable()): ?>
+													<li class="cart"><form data-role="tocart-form" action="<?php echo $listBlock->getAddToCartUrl($_product); ?>" method="post">
+													<input name="form_key" type="hidden" value="<?php echo $FormKey->getFormKey();?>">
+													<button type="submit" class="whisit-bg-style link-cart"></button>
+													</form></li>
+													<?php endif; ?>
+												</ul>
+											</div>
+											<!-- product-info -->
+											<div class="product-info e-height-element">
+												<h5 class="product-name"><a href="<?php echo $_product->getProductUrl(); ?>"><?php echo $_product->getName(); ?></a></h5>
+												<div class="sub-title">
+													<span>1000mm H x 900mm W x 460mm D</span>
+												</div>
+												<?php echo $abstractProductBlock->getProductPrice($_product); ?>
+											</div>
+										</div>
+									</div>
+							<?php 
+								}
+							?>
+								</div>
+							</div>
+						</div>
+							<?php
+							}
+						?>
+						<?php
+					foreach($subCategory as $sub)
+					{
+						$catid = $objectManager->create('Magento\Catalog\Model\CategoryFactory')->create()->load($sub->getId());
+						$productCollection = $objectManager->create('Magento\Catalog\Model\ResourceModel\Product\CollectionFactory')->create();
+						$productCollection->addAttributeToSelect('*');
+						$productCollection->addCategoryFilter($catid);
+						$productCollection->addAttributeToFilter('visibility', \Magento\Catalog\Model\Product\Visibility::VISIBILITY_BOTH);
+						$productCollection->addAttributeToFilter('status',\Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
+						$productCollection->setPageSize(15);
+						if($productCollection->count()>0)
+						{
+						?>
+					<div role="tabpanel" class="tab-pane fade" id="<?php echo $sub->getUrlKey(); ?>">
+						<div class="category-products" id="owl-carousel">
+							<div class="products-grid owl-carousel owl-theme">
+						<?php
+							foreach($productCollection as $_product)
+							{
+								$productImageAttr = $_product->getCustomAttribute( 'small_image' );
+								$imageurl	= "";
+								if($productImageAttr)
+								{
+									$productImage = $this->helper('Magento\Catalog\Helper\Image')
+										->init($_product, 'category_page_grid')
+										->setImageFile($productImageAttr->getValue());	
+										$imageurl	= $productImage->getUrl();
+								}
+								else
+								{
+									$imageurl	= \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Catalog\Helper\Image::class)->getDefaultPlaceholderUrl('image');
+								}
+							?>
+							<div class="item">
+								<div class="product-wrapper">
+									<div class="img-view">
+										<a href="#" class="product-image">
+											<img src="<?php echo $imageurl; ?>" alt="">
+										</a>
+										<ul class="add-to-links">
+											<li class="wishlist"><a href="#" class="whisit-bg-style link-wishlist"></a></li>
+											<li class="compare"><a href="#" class="whisit-bg-style link-compare"></a></li>
+											<li class="cart"><a href="#" class="whisit-bg-style link-cart"></a></li>
+										</ul>
+									</div>
+									<!-- product-info -->
+									<div class="product-info e-height-element">
+										<h5 class="product-name"><a href="#">FT93</a></h5>
+										<div class="sub-title">
+											<span>1000mm H x 900mm W x 460mm D</span>
+										</div>
+										<div class="price-box">
+											<span class="regular-price">
+												<span class="price">S$33.00</span>
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php 
+							}
+							?>
+							</div>
+						</div>
+					</div>
+							<?php
+						}
+					}
+				?>
+							
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+	

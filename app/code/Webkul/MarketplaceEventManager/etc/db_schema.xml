@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="marketplace_mpevent" resource="default" engine="innodb" comment="SellerStorePickup Quantity Table">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" padding="10" identity="true" comment="Event ID"/>
+        <column xsi:type="text" name="qrcode" comment="qrcode"/>
+        <column xsi:type="int" name="item_id" unsigned="true" nullable="false" default="0" comment="Item Id"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" default="0" comment="Order Id"/>
+        <column xsi:type="int" name="option_id" nullable="false" comment="Option Id"/>
+        <column xsi:type="int" name="option_type_id" comment="Option Type Id"/>
+        <column xsi:type="text" name="option_title" comment="Option Title"/>
+        <column xsi:type="int" name="option_qty" nullable="false" default="0" comment="option quantity"/>
+        <column xsi:type="int" name="seller_id" nullable="false" default="0" comment="Seller Id"/>
+        <column xsi:type="int" name="status" nullable="false" default="1" comment="Status"/>
+        <column xsi:type="timestamp" name="created_at" comment="Create Time"/>
+        <column xsi:type="timestamp" name="updated_at" comment="Update Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+    <table name="marketplace_saleslist" resource="default" engine="innodb">
+      <column xsi:type="text" name="qrcode" nullable="true" comment="QR Code" />
+   </table>
+   <table name="catalog_product_option_type_value" resource="default" engine="innodb">
+      <column xsi:type="int" name="qty" nullable="false" default="0" comment="Option Qty"/>
+   </table>
+   <table name="quote_item" resource="checkout" comment="Sales Flat Quote Item">
+        <column xsi:type="text" name="wkmp_event_start" nullable="true" comment="Event Start"/>
+        <column xsi:type="text" name="wkmp_event_end" nullable="true" comment="Event End"/>
+        <column xsi:type="text" name="wkmp_event_location" nullable="true" comment="Event Location"/>
+        <column xsi:type="text" name="wkmp_event_qrprefix" nullable="true" comment="Event QRPrefix"/>
+    </table>
+    <table name="order_item" resource="sales" comment="Sales Flat Order Item">
+        <column xsi:type="text" name="wkmp_event_start" nullable="true" comment="Event Start"/>
+        <column xsi:type="text" name="wkmp_event_end" nullable="true" comment="Event End"/>
+        <column xsi:type="text" name="wkmp_event_location" nullable="true" comment="Event Location"/>
+        <column xsi:type="text" name="wkmp_event_qrprefix" nullable="true" comment="Event QRPrefix"/>
+    </table>
+    <table name="catalog_product_index_price" resource="default" engine="innodb">
+      <column xsi:type="int" name="id" unsigned="true" nullable="false" comment="ID" />
+   </table>
+</schema>

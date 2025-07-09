@@ -1,0 +1,165 @@
+<?php
+
+/**
+
+ * @package   Verz_Design
+
+ * @copyright Copyright (c) 2022 VerzDesign (https://www.verzdesign.com/)
+
+ * @contacts  enquiry@verzdesign.com
+
+ */
+
+
+
+use Magento\Framework\App\Action\Action;
+
+
+
+/** @var \Verz\Design\Block\Widget\Category\Products $block */
+
+$blockProduct = $block->getLayout()->createBlock('Magento\CatalogWidget\Block\Product\ProductsList');
+
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+
+?>
+
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())) : ?>
+
+    <?php
+
+    $type = 'widget-product-grid';
+
+
+
+    $mode = 'grid';
+
+
+
+    $image = 'new_products_content_widget_grid';
+
+    $items = $block->getProductCollection()->getItems();
+
+
+
+    $showWishlist = true;
+
+    $showCompare = true;
+
+    $showCart = true;
+
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+
+    $description = false;
+
+    ?>
+
+    <?php if ($block->getTitle()) : ?>
+
+        <div class="block-title">
+
+            <strong><?= $block->escapeHtml(__($block->getTitle())) ?></strong>
+
+        </div>
+
+    <?php endif ?>
+
+    <div class="owl-carousel owl-theme featured_slider">
+
+    	<?php foreach ($items as $_item) : ?>
+
+            <div class="item">
+
+                <div class="product-item">
+
+                    <div class="product-item-info">
+
+                        <div class="product-item-photo">
+
+                            <div class="product-image-container">
+
+                                <div class="product-img-view">
+
+                                    <div class="wishlist-container">
+
+                                        <?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow()): ?>
+
+                                            <a href="#"
+
+                                               data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_item) ?>' class="wishlistbtn towishlist action" data-action="add-to-wishlist" title="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>">
+
+                                                  <img alt="" class="img1" src="<?php echo $block->getViewFileUrl('images/hearth_icon.png'); ?>">
+
+                                                  <img alt="" class="img2" src="<?php echo $block->getViewFileUrl('images/hearth_icon_red.png'); ?>">
+
+                                            </a>
+
+                                        <?php endif; ?>
+
+                                    </div>
+
+                                    <a href="<?= $block->escapeUrl($_item->getProductUrl()) ?>">
+
+                                        <?= $blockProduct->getImage($_item, $image)->toHtml() ?>
+
+                                    </a>
+
+                                </div>
+
+                                <?php if (!$_item->isSaleable()) : ?>
+
+                                    <div class="product-label"><div class="label-container"><span class="sold-out-icon"> OUT-OF-STOCK </span></div></div>
+
+                                <?php elseif ($verz_helper->isSaleProduct($_item)) : ?>
+
+                                    <div class="product-label"><div class="label-container"><span class="sele-product-icon"> SAVE </span></div></div>
+
+                                <?php elseif ($verz_helper->isNewProduct($_item)) : ?>
+
+                                    <div class="product-label"><div class="label-container"><span class="new-icon"> NEW </span></div></div>
+
+                                <?php endif; ?>
+
+                            </div>
+
+                        </div>
+
+                        <div class="product-item-details">
+
+                            <div class="review-img">
+
+                            </div>
+
+                            <div class="prd-title">
+
+                                <span class="sub-title"> <?= $block->escapeHtml($_item->getSubHeading()) ?> </span>
+
+                                <a class="product-name-warpper" href="<?= $block->escapeUrl($_item->getProductUrl()) ?>">
+
+                                    <span class="product-name"> <?= $block->escapeHtml($_item->getName()) ?> </span>
+
+                                </a>
+
+                          </div>
+
+                            <?= $blockProduct->getProductPriceHtml($_item, $type) ?>
+
+                        </div>
+
+                        <div class="category-hover-link">
+
+                            <a class="" href="<?= $block->escapeUrl($_item->getProductUrl()) ?>"> BUY NOW </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+    	<?php endforeach; ?>
+
+    </div>
+
+<?php endif; ?>

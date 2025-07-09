@@ -1,0 +1,47 @@
+{
+    "marketplace_mpevent": {
+        "column": {
+            "id": true,
+            "qrcode": true,
+            "item_id": true,
+            "order_id": true,
+            "option_id": true,
+            "option_type_id": true,
+            "option_title": true,
+            "option_qty": true,
+            "seller_id": true,
+            "status": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_saleslist": {
+        "column": {
+            "qrcode": true
+        }
+    },
+    "catalog_product_option_type_value": {
+        "column": {
+            "qty": true
+        }
+    },
+    "quote_item": {
+        "column": {
+            "wkmp_event_start": true,
+            "wkmp_event_end": true,
+            "wkmp_event_location": true,
+            "wkmp_event_qrprefix": true
+        }
+    },
+    "order_item": {
+        "column": {
+            "wkmp_event_start": true,
+            "wkmp_event_end": true,
+            "wkmp_event_location": true,
+            "wkmp_event_qrprefix": true
+        }
+    }
+}

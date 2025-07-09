@@ -1,0 +1,23 @@
+<?php $_product = $block->getProduct(); ?>
+<?php
+
+	$product_title 	= urlencode($_product->getName());
+	$product_url	= urlencode($_product->getProductUrl());
+	$product_img	= urlencode($this->getUrl('pub/media/catalog').'product'.$_product->getImage());
+	$facebook_url 	= 'https://www.facebook.com/sharer/sharer.php?u=' . $product_url;
+	$twitter_url	= 'https://twitter.com/intent/tweet?text=' . $product_title . '+' . $product_url;
+	$pinterest_url	= 'https://pinterest.com/pin/create/bookmarklet/?media=' . $product_img . '&url=' . $product_url . '&is_video=false&description=' . $product_title;
+	$email_url		= 'mailto:?subject=' .  $product_title . '&body=' . $product_url;
+	$linkedin_url	= 'http://www.linkedin.com/shareArticle?mini=true&url='.$product_url.'&title='.$product_title.'&source='.$product_url;
+	$whatsapp_url	= 'https://wa.me/?text='.$product_url;
+	$telegram_url	= 'https://telegram.me/share/url?url='.$product_url;
+?>
+<div class="detail_shareing">
+	<span class="label"><?= __('Share this to'); ?>:</span>
+	<div class="sharing-div">                                                            
+		<a class="facebook-icon" href="<?= $facebook_url; ?>" target="_blank"><i class="fab fa-facebook"></i></a>
+		<a class="twitter-icon" href="<?= $twitter_url; ?>" target="_blank"><i class="fab fa-twitter"></i></a>
+		<a class="pintrest-icon" href="<?= $pinterest_url; ?>" target="_blank"><i class="fab fa-pinterest"></i></a>
+		<a class="email-icon" href="<?= $email_url; ?>" target="_blank"><i class="fas fa-envelope"></i></a>
+	</div>
+</div>

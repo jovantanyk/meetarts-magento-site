@@ -1,0 +1,106 @@
+<!-- /**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ -->
+ <div class="chat-loading-mask" data-role="chat-loader" data-bind="visible: showLoader">
+	<div class="chat-loader">
+		<img alt="Loading..." data-bind="attr: {'src': window.chatboxCoreConfig.loaderImage}">
+	</div>
+</div>
+<section class="chat-module" data-bind="attr: {id: 'chat-box-'+ window.mpChatboxConfig.sellerData.receiverUniqueId}">
+	<header class="top-bar" data-bind="click: showHideCustomerChatWindow", event:{load: refreshData()}">
+		<div class="left">
+			<span data-bind="attr: {class: 'chat_status '+sellerChatStatus()}"></span>
+			<h1 data-bind="text: window.chatboxCoreConfig.chatName"></h1>
+		</div>
+		<div class="right">
+			<!-- ko if: isChatStarted() === true -->
+			<!-- <span class="icon typicons-down" title="controls"></span> -->
+			<i class="fa fa-ellipsis-h menu-container" style="width:10px;" aria-hidden="true" data-bind="click: showHideControls"></i>
+			<div class="chat-controls" outerClick="hideChatControls" data-bind="clickBubble:false">
+				<div class="profile-controls" data-bind="click:showHideProfileBox, clickBubble:false">
+					<span data-bind="attr: {class: 'chat_status actual_status '+customerCurrentStatus()}"></span>
+					<span class="profile-image">
+						<img data-bind="attr: {src: customerProfileImage()}" width="35" height="35"></img>
+					</span>
+				</div>
+				<div class="controls">
+					<i class="fa fa-volume-up wk_chat_sound" data-bind="click: enableDisableSound">
+						<audio controls="controls" class="wk_sound_play hide" id="myAudio">
+							<source data-bind="attr: {'src': getSoundUrl}" type="audio/ogg"></source>
+						</audio>
+					</i>
+					<i class="fa fa-clock-o load_history" data-bind="click: showControlList">
+						<div class="wk_chat_history_options list-group">
+							<span class="status_point"></span>
+							<div class="list-group-item">
+								<span id="1" class="customer" data-bind="i18n: 'Last 24 Hours', click: loadChatHistory.bind('customer')"></span>
+							</div>
+							<div class="list-group-item">
+								<span id="2" class="customer" data-bind="i18n: 'Last 7 Days', click: loadChatHistory.bind('customer')"></span>
+							</div>
+							<div class="list-group-item">
+								<span id="3" class="customer" data-bind="i18n: 'Forever', click: loadChatHistory.bind('customer')"></span>
+							</div>
+						</div>
+					</i>
+					<i class="fa fa-cog wk_chat_setting" data-bind="click: showControlList">
+						<div class="wk_chat_setting_options list-group">
+							<span class="status_point"></span>
+							<!-- <div class="list-group-item" id="wk_report_manager">Report To Manager</div> -->
+							<div class="list-group-item" id="wk_profile_setting" data-bind="i18n: 'Profile Setting', click: showHideProfileBox"></div>
+						</div>
+					</i>
+					<i class="fa fa-angle-down wk_control_status" data-bind="click: showControlList">
+						<div class="wk_chat_status_options list-group">
+							<span class="status_point"></span>
+							<div class="list-group-item chatStatus" id="1" data-bind="click: changeChatStatus">
+								<span class="chat_status online" data-bind="i18n: 'Online'"></span>
+							</div>
+							<div class="list-group-item chatStatus" id="2" data-bind="click: changeChatStatus">
+								<span class="chat_status busy" data-bind="i18n: 'Busy'"></span>
+							</div>
+							<div class="list-group-item chatStatus" id="0" data-bind="click: changeChatStatus">
+								<span class="chat_status offline" data-bind="i18n: 'Offline'"></span>
+							</div>
+						</div>
+					</i>
+				</div>
+			</div>
+			<!-- /ko -->
+			<!--ko if: minimized()=== false -->
+			<span class="icon typicons-minus" data-bind="click: minimizeChatWindow"></span>
+			<!-- /ko -->
+			<!--ko if: minimized()=== true -->
+			<span class="icon typicons-plus" data-bind="click: maxmizeChatWindow"></span>
+			<!-- /ko -->
+		</div>
+	</header>
+	<div class="profile-setting-box" data-bind="visible: showProfileBox">
+		<form id="profile-form" data-bind="submit:uploadProfileImage" method="post" enctype="multipart/form-data">
+			<div class="image_block">
+				<img id="user-profile-image" data-bind="attr: {'src': customerProfileImage()}">
+			</div>
+			<input id="profile_image" type="file" name="profile_image" class="profile_image" data-bind="event:{ change: showSelectedImage}">
+			<div class="actions-toolbar">
+				<div class="primary">
+					<button type="button" class="action action-login secondary">
+						<span data-bind="i18n: 'Cancel', click: showHideProfileBox"></span>
+					</button>
+					<button type="submit" class="action action-login primary">
+						<span data-bind="i18n: 'Upload'"></span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- ko foreach: getRegion('mpchat-reply-management') -->
+	<!-- ko template: getTemplate() -->
+	<!-- /ko -->
+	<!--/ko-->
+</section>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <update handle="empty"/>
+	<referenceContainer name="columns">
+		<container name="custom.page.content" htmlTag="div" htmlClass="container" htmlId="custom_main_container" after="-">
+            <container name="div.sidebar.main" htmlTag="div" htmlClass="sidebar sidebar-main" before="main">
+                <container name="sidebar.main" as="sidebar_main" label="Sidebar Main"/>
+            </container>
+            <container name="div.sidebar.additional" htmlTag="div" htmlClass="sidebar sidebar-additional" after="div.sidebar.main">
+                <container name="sidebar.additional" as="sidebar_additional" label="Sidebar Additional"/>
+            </container>
+		</container>
+	</referenceContainer> 
+	<move element="main" destination="custom.page.content" before="-" />
+	<move element="page.main.title" destination="custom.page.content" before="-" />
+	<referenceContainer name="sidebar.additional" remove="1"/> 
+</layout>

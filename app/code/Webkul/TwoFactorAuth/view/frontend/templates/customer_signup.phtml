@@ -1,0 +1,59 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var \Magento\Customer\Block\Form\Register $block */
+?>
+<?php /* Extensions placeholder */
+
+/** @var $viewModel \Webkul\TwoFactorAuth\ViewModel\HelperViewModel */
+$viewModel = $block->getViewModel();
+$jsonHelper = $viewModel->helper(\Magento\Framework\Json\Helper\Data::class);
+$twoFactorHelper = $viewModel->helper(\Webkul\TwoFactorAuth\Helper\Data::class);
+
+$countries = $twoFactorHelper->getCountries();
+$isMobileVerificationEnabled = $twoFactorHelper->isTwilioAuthEnabled();
+$isMobileOtpEnable = $twoFactorHelper->isModuleEnable();
+?>
+<?php if ($isMobileVerificationEnabled && $isMobileOtpEnable) { ?>
+<div class="field required" id="two-factor-div">
+    <input type="hidden" name="mobile_verification_enabled" id="config"
+    value="<?= /* @noEscape */ $isMobileVerificationEnabled; ?>">
+    <label for="country" class="label"><span><?= $block->escapeHtml(__('Dialing Code')) ?></span></label>
+    <div class="control">
+        <select id="country_codes" name="region">
+            <?php foreach ($countries as $country): ?>
+                <?php $callingCode = '+' . $country['callingCode'] ?>
+                <option value="<?= $block->escapeHtmlAttr($callingCode) ?>">
+                    <?= $block->escapeHtml(__($country['name']) . ' (' . $callingCode . ')') ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div><br>
+    <label for="mobile" type="number" class="label">
+        <span><?= $block->escapeHtml(__('Phone Number')) ?></span>
+    </label>
+    <div class="control">
+        <input type="text" name="mobile_number" id="mobile_number" 
+               value="<?= $block->escapeHtmlAttr($block->getFormData()->getEmail()) ?>"
+               title="<?= $block->escapeHtmlAttr(__('Mobile')) ?>" class="input-text"
+               data-mage-init='{"mage/trim-input":{}}' data-validate="{required:true, 'validate-number': true}">
+    </div>
+</div>
+<p id="demo"></p>
+<?php } ?>
+
+<script>
+require(['jquery'], function ($){
+    $(document).ready(function () {
+        $('#email_address').parents('div.field').after($('#two-factor-div'));
+    });
+});
+</script>

@@ -1,0 +1,129 @@
+<?php
+$pid = $block->getRequest()->getParam('pid');
+$oid = $block->getRequest()->getParam('oid');
+$helper = $block->getMpEventManagerHelper();
+$realOrderId = $block->getRealOrderIdVal();
+$productadata = $block->getTicketDetails();
+if (!empty($productadata) && $productadata) {
+    $product = $block->getProductDetails($productadata->getProductId(), $productadata);
+    $optionid = 0;
+    $ticketData = $productadata['product_options'];
+    $optionid = 0;
+    $optiontpe = '';
+    foreach ($ticketData as $tds) {
+        if (!empty($tds)) {
+            foreach ($tds as $td) {
+                if (isset($td['option_id']) && isset($td['value'])) {
+                    $optionid = $td['option_id'];
+                    $optiontpe = $td['value'];
+                }
+            }
+        }
+    }
+            $qrprefix = $product->getEventTicketPrefix();
+    if (!$qrprefix) {
+        $qrprefix = $helper->getGlobalEventPrefix();
+    }
+            $qrprefix = strtoupper($qrprefix);
+            $collection  = $block->getTicketDetailsCollection(
+                $productadata->getOrderId(),
+                $productadata->getId(),
+                $optionid
+            );
+    if ($collection->getSize()) {
+        ?>
+         <div class="wk-mp-design" id="wk-bodymain">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend">
+                <span><?= /* @noEscape */ __('Your Ticket Details') ?></span>
+                <a target="blank" 
+                href="<?=
+                /* @noEscape */
+                $block->getUrl('marketplaceeventmanager/customer/printorder', ['oid'=>$oid,'pid'=>$pid]);
+                ?>">
+                    <button class="button wk-mp-btn" title="<?= /* @noEscape */ __('Print') ?>"
+                    type="submit" id="save-btn">
+                    <span><span><?= /* @noEscape */ __('Print') ?></span></span>
+                </button>
+                </a>
+            </legend>
+        </fieldset>
+        <div class="event-ticket-view">
+            <table>
+                <tr>
+                     <td><?= /* @noEscape */ __('Qr Code'); ?></td>
+                     <td><p>
+                 <?php
+                    $qrimage = '';
+                    foreach ($collection as $col) {
+                        $qrimage = $helper->getQrImageUrl($col->getQrcode());
+                    }
+
+                    ?>
+                          <img src="<?= /* @noEscape */ $qrimage; ?>" />
+                    </p></td>
+                </tr>
+                
+                    <tr>
+                        <td><?= /* @noEscape */ __('Ticket Code'); ?></td>
+                        <td><p>
+                            <?= /* @noEscape */ $qrprefix.$col->getQrcode(); ?>
+                        </p></td>
+                    </tr>
+                    <tr>
+                        <td><?= /* @noEscape */ __('Ticket Quantity'); ?></td>
+                        <td><p>
+                            <?= /* @noEscape */ $col->getOptionQty(); ?>
+                        </p></td>
+                    </tr>
+                    <tr>
+                        <td><?= /* @noEscape */ __('Ticket Status'); ?></td>
+                        <td><p>
+                            <?php
+                            if ($col->getStatus() == 1) {
+                               /* @noEscape */ echo __("Valid Ticket");
+                            } else {
+                               /* @noEscape */ echo __("Used Ticket");
+                            }
+                            ?></p>
+                        </p></td>
+                    </tr>
+                    <tr>
+                        <td><?= /* @noEscape */ __('Order Id'); ?></td>
+                        <td><p>
+                            <a href="<?= /* @noEscape */ $block->getUrl('sales/order/view', ['order_id'=>$oid]); ?>">
+                            <?= /* @noEscape */ $realOrderId; ?></a>
+                        </p></td>
+                    </tr>
+                    <tr>
+                         <td><?= /* @noEscape */ __('Event Venue'); ?></td>
+                         <td><p>
+                        <?= /* @noEscape */ $product->getEventVenue(); ?>
+                         </p></td>
+                     </tr>
+                     <tr>
+                         <td><?= /* @noEscape */ __('Event Ticket Type'); ?></td>
+                         <td><p>
+                        <?= /* @noEscape */ $optiontpe; ?>
+                         </p></td>
+                     </tr>
+                     <tr>
+                         <td><?= /* @noEscape */ __('Event Start Time'); ?></td>
+                         <td><p>
+                        <?= /* @noEscape */ date('g:ia \o\n l jS F Y', strtotime($product->getEventStartDate())); ?>
+                         </p></td>
+                     </tr>
+                     <tr>
+                         <td><?= /* @noEscape */ __('Event End Time'); ?></td>
+                         <td><p>
+                        <?= /* @noEscape */ date('g:ia \o\n l jS F Y', strtotime($product->getEventEndDate())); ?>
+                         </p></td>
+                     </tr>
+                </table>
+             </div>
+        </div>
+            <?php }
+} else {
+   /* @noEscape */ echo '<h3 style="color:red">'.__('invalid Request').'</h3>';
+}
+?>

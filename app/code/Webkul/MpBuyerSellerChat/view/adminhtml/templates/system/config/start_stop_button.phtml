@@ -1,0 +1,46 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+?>
+<?php if ($block->getConfigData('host_name') !== null &&
+         $block->getConfigData('port_number') !== null
+    ) {
+    $helper = $block->getHelperObject();
+    ?>
+<div class="pp-buttons-container">
+    <?php if (!$helper->isServerRunning()): ?>
+    <button id="start_server" onclick="return false;">
+        <span><span><span><?= /* @noEscape */ $block->escapeHtml($block->getStartButtonLabel()); ?></span></span></span>
+    </button>
+    <?php else: ?>
+    <button id="stop_server" onclick="return false;">
+        <span><span><span><?= /* @noEscape */ $block->escapeHtml($block->getStopButtonLabel()); ?></span></span></span>
+    </button>
+    <?php endif; ?>
+</div>
+    <?php
+    $customData =
+        [
+            "startUrl"      => $block->getAjaxStartUrl(),
+            "stopUrl"       => $block->getAjaxStopUrl(),
+            "startButton"   => '#start_server',
+            "stopButton"    => '#stop_server',
+            'configForm'    => '#config-edit-form'
+        ];
+    $data = $block->jsonFormat($customData);
+    ?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Webkul_MpBuyerSellerChat/js/action/start-stop-server": <?= /* @noEscape */ $data ?>
+        }
+    }
+</script>
+<?php } ?>

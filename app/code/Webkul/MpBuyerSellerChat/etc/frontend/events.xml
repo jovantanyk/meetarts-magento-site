@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="customer_logout">
+        <observer name="mpchat_system_customer_logout" instance="Webkul\MpBuyerSellerChat\Observer\CustomerLogOutObserver" />
+    </event>
+    <event name="customer_login">
+        <observer name="mpchat_system_customer_login" instance="Webkul\MpBuyerSellerChat\Observer\CustomerLoginObserver" />
+    </event>
+    <event name="layout_generate_blocks_after">
+        <observer name="remove_block" instance="Webkul\MpBuyerSellerChat\Observer\Model\RemoveBlock" />
+    </event>
+</config>

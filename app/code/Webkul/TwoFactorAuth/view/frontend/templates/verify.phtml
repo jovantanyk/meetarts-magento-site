@@ -1,0 +1,70 @@
+<?php
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$source = $block->getOtpSource();
+?>
+<form class="form form-edit-account"
+      action="<?= $block->escapeUrl($block->getUrl('twofactorauth/account/validate')) ?>"
+      method="post" id="form-validate"
+      enctype="multipart/form-data"
+      data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+      autocomplete="off">
+      <input type="hidden" name="email" id="email" autocomplete="email" class="input-text"
+                       value="<?= $block->escapeHtmlAttr($block->getCustomer()->getEmail()) ?>"  />
+      <input type="hidden" name="customer_reg_verification" id="customer_reg_verification" class="input-text"
+                       value="1"  />
+   <?php if ($source != 'emaillink') { ?>                    
+    <fieldset class="fieldset info" style="float: left;">
+        <?= $block->getBlockHtml('formkey') ?>
+        <legend class="legend"><span><?= $block->escapeHtml(__('Verify Auth Code')) ?></span></legend><br>
+        <?php if ($source == 'totp') { ?> 
+            <?php if (strpos($block->getQrcode(), 'svg') !== false) { ?>
+                <div><?= /* @noEscape */ $block->getQrcode() ?></div>
+            <?php } else { ?>
+                <img src="<?= $block->escapeHtml($block->getQrcode()) ?>" alt="Qrcode"> <br><br>
+            <?php }  ?>
+       
+        <?php } ?>
+        <div class="field password current required">
+            <label class="label" for="current-password">
+                <span><?= $block->escapeHtml(__('Enter The Auth Code')) ?></span>
+            </label>
+            <div >
+           
+            </div>
+            <div class="control">
+                <input type="password" class="input-text" name="user_otp" id="user_otp"
+                       data-input="current-password"
+                       autocomplete="off" />
+            </div>
+        </div>
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action save primary" title="<?= $block->escapeHtmlAttr(__('Save')) ?>">
+                <span><?= $block->escapeHtml(__('Save')) ?></span>
+            </button>
+            <?php if ($source != 'totp') { ?>   
+            <button type="button" class="action resendCode primary" 
+                    title="<?= $block->escapeHtmlAttr(__('Resend Code')) ?>">
+                <span><?= $block->escapeHtml(__('Resend Code')) ?></span>
+            </button>
+            <?php } ?>
+        </div>
+    </div>
+    </fieldset>
+    <?php  } else { ?> 
+        <fieldset class="fieldset info">
+        <legend class="legend" style="width: 185% !important;font-family: cursive;"><b>
+            <?= $block->escapeHtml(__('Verification Link successfully 
+            send your email id please verify your account.')) ?>
+        </b></legend>
+        </fieldset>
+    <?php  }  ?> 
+</form>

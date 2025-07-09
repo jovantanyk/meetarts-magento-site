@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="controller_action_predispatch_customer_account_createpost">
+        <observer name="validate_phonenumber_createpost_observer" instance="Webkul\TwoFactorAuth\Observer\ValidatePhonenumberCreatePostObserver" />
+    </event>
+    <event name="controller_action_predispatch_customer_account_loginpost">
+        <observer name="validate_phonenumber_customer_account_loginpost_observer" instance="Webkul\TwoFactorAuth\Observer\ValidatePhonenumberLoginPostObserver" />
+    </event>
+    <event name="customer_save_before">
+        <observer name="before_cust_save_observer" instance="Webkul\TwoFactorAuth\Observer\BeforeCustSaveObserver" />
+    </event>
+    <event name="controller_action_predispatch">
+        <observer name="redirect_to_auth_verification" instance="Webkul\TwoFactorAuth\Observer\RedirectToTwoFactorAuth" />
+    </event>
+    <event name="customer_delete_before">
+        <observer name="before_cust_delete_observer" instance="Webkul\TwoFactorAuth\Observer\BeforeCustDeleteObserver" />
+    </event>
+    <event name="admin_system_config_changed_section_twofactorauth">
+        <observer name="Webkul_TwoFactorAuth_admin_system_config_changed_section_twofactorauth" instance="Webkul\TwoFactorAuth\Observer\AdminSystemConfigChangedObserver" shared="false" />
+    </event>
+</config>

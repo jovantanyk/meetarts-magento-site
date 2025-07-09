@@ -1,0 +1,97 @@
+"Start Server","Start Server"
+"Stop Server","Stop Server"
+"Blocked Customer Lists","Blocked Customer Lists"
+"Chat History Grid","Chat History Grid"
+"Page not found.","Page not found."
+"Server Running.","Server Running."
+"Server has been started.","Server has been started."
+"Nodejs Path not found.","Nodejs Path not found."
+"Server has been stopped.","Server has been stopped."
+"Something went wrong.","Something went wrong."
+"Login successful.","Login successful."
+"Registered successful.","Registered successful."
+"You must confirm your account. Please check your email for the confirmation link.","You must confirm your account. Please check your email for the confirmation link."
+"There is already an account with this email address.","There is already an account with this email address."
+"Image updated successfully.","Image updated successfully."
+"seller status changed.","seller status changed."
+"Not Blocked.","Not Blocked."
+"User blocked.","User blocked."
+"User un-blocked.","User un-blocked."
+"Customer with id ""%1"" does not exist.","Customer with id ""%1"" does not exist."
+"chat enabled","chat enabled"
+"Click to download file","Click to download file"
+Blocked,Blocked
+"Download File","Download File"
+"Last 24 Hours","Last 24 Hours"
+"Last 7 Days","Last 7 Days"
+Forever,Forever
+"End Chat","End Chat"
+"Profile Setting","Profile Setting"
+Online,Online
+Busy,Busy
+Offline,Offline
+Cancel,Cancel
+Upload,Upload
+"Chat server is not working.","Chat server is not working."
+"Start Chat","Start Chat"
+"Email Address","Email Address"
+Password,Password
+Login,Login
+"New User?","New User?"
+"First Name","First Name"
+"Last Name","Last Name"
+Submit,Submit
+"You have been blocked by this seller.","You have been blocked by this seller."
+"Enable Chat","Enable Chat"
+Block,Block
+"Server Status","Server Status"
+"File type not supported","File type not supported"
+"Maximum allowed size is ","Maximum allowed size is "
+"Receiver is offline.","Receiver is offline."
+"Seller is not available for chat.","Seller is not available for chat."
+"You have received an image.","You have received an image."
+"You have received a file.","You have received a file."
+"Seller is offline.","Seller is offline."
+"Buyer Seller Chat","Buyer Seller Chat"
+"Blocked Customers List","Blocked Customers List"
+"Chat History","Chat History"
+Webkul,Webkul
+"Server Settings","Server Settings"
+"Host Name","Host Name"
+"E.g. 'example.com' or 'localhost' for local sever.","E.g. 'example.com' or 'localhost' for local sever."
+"Port Number","Port Number"
+"Chat Name","Chat Name"
+"Storefront name for the Buyer-Seller Chat.","Storefront name for the Buyer-Seller Chat."
+"Maximum Allowed Size for Attachment","Maximum Allowed Size for Attachment"
+"enter the numeric value in MB ex: 5.","enter the numeric value in MB ex: 5."
+"HTTPS Enabled","HTTPS Enabled"
+"Upload Server Private Key File","Upload Server Private Key File"
+"You can get this file from your host provider, file name must be as: server.key","You can get this file from your host provider, file name must be as: server.key"
+"Upload Server Certificate File","Upload Server Certificate File"
+"You can get this file from your host provider, file name must be as: server.crt","You can get this file from your host provider, file name must be as: server.crt"
+"Upload Server CA Bundle File","Upload Server CA Bundle File"
+"You can get this 'server.ca-bundle' file from your host provider, file name must be as: server.cabundle","You can get this 'server.ca-bundle' file from your host provider, file name must be as: server.cabundle"
+"Blocked By(Seller)","Blocked By(Seller)"
+"Customer Name","Customer Name"
+"Customer Email","Customer Email"
+"Reason of Block","Reason of Block"
+Sender,Sender
+Receiver,Receiver
+Message,Message
+"Dated on","Dated on"
+"Enter Reason to Block","Enter Reason to Block"
+"Type your message...","Type your message..."
+"Enter Reason to Block","Enter Reason to Block"
+"Support Information","Support Information"
+"<p>Author: <a target=""_blank"" title=""Webkul Software Private Limited"" href=""https://webkul.com/"">Webkul</a></p>
+                        <p>Version: 5.0.2</p>
+                        <p>User Guide: <a target=""_blank"" href=""https://webkul.com/blog/magento2-marketplace-seller-chat/"">Click Here</a></p>
+                        <p>Store Extension: <a target=""_blank"" href=""https://store.webkul.com/magento2-multi-seller-marketplace-chat.html"">Click Here</a></p>
+                        <p>Ticket/Customisations: <a target=""_blank"" href=""https://webkul.uvdesk.com/en/customer/create-ticket/"">Click Here</a></p>
+                        <p>Services: <a target=""_blank"" href=""https://webkul.com/magento-development/"">Click Here</a></p>","<p>Author: <a target=""_blank"" title=""Webkul Software Private Limited"" href=""https://webkul.com/"">Webkul</a></p>
+                        <p>Version: 5.0.2</p>
+                        <p>User Guide: <a target=""_blank"" href=""https://webkul.com/blog/magento2-marketplace-seller-chat/"">Click Here</a></p>
+                        <p>Store Extension: <a target=""_blank"" href=""https://store.webkul.com/magento2-multi-seller-marketplace-chat.html"">Click Here</a></p>
+                        <p>Ticket/Customisations: <a target=""_blank"" href=""https://webkul.uvdesk.com/en/customer/create-ticket/"">Click Here</a></p>
+                        <p>Services: <a target=""_blank"" href=""https://webkul.com/magento-development/"">Click Here</a></p>"
+

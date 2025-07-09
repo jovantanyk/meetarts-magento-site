@@ -1,0 +1,29 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<p>You have signed out and will go to our homepage in <span id="logout-count">5</span> seconds.</p>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Customer/js/logout-redirect": {
+                "url": "<?= $block->escapeJs($block->escapeUrl($block->getUrl())) ?>"
+            }
+        }
+    }
+</script>
+<script type="text/javascript">
+require(["jquery"],function(e){
+    jQuery(window).on('load',function() {
+		setInterval(function() {
+			var t = jQuery("#logout-count").html();
+			if(t>0)
+				jQuery("#logout-count").html(--t);
+		}, 1000);
+	});
+});
+</script>

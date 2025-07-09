@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+		<referenceContainer name="page.wrapper">
+            <container name="banner_wrapper" htmlClass="home_custom_banner" htmlTag="div" before="main.content">
+                <block class="Magento\Cms\Block\Block" name="homepage.banner" >
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">home-slider</argument>
+                    </arguments>
+                </block>
+            </container>
+		 </referenceContainer>
+		<referenceContainer name="content">
+            <block class="Magento\Cms\Block\Block" name="homepage.category-section">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">home-category-section</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Cms\Block\Block" name="homepage.featured-artworks">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">home-featured-artworks</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Cms\Block\Block" name="homepage.featured-collections">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">home-featured-collections</argument>
+                </arguments>
+            </block>
+            <block class="Magento\Cms\Block\Block" name="homepage.artists">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">home-artists</argument>
+                </arguments>
+            </block>
+		 </referenceContainer>
+         <move element="page.messages" destination="banner_wrapper" before="homepage.banner" />
+    </body>
+</page>

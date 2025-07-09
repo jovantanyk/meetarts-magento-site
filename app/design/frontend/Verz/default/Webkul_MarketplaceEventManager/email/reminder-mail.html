@@ -1,0 +1,83 @@
+<!-- /**
+ * Mail template of send reminder
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */ -->
+<!--@subject {{var myvar5}} @-->
+<!--@vars
+{"var store.getFrontendName()": "Front Name",
+"var myvar5": "My var 5",
+"var myvar10": "My var 10",
+"var myvar9 | raw": "My var 9",
+"var myvar1 | raw": "My var 1",
+"var myvar2 | raw": "My var 2",
+"var myvar4 | raw": "My var 4",
+"var myvar6 | raw": "My var 6",
+"var myvar7 | raw": "My var 7",
+"var myvar8 | raw": "My var 8",
+"var comment": "Comment"}
+@-->
+{{template config_path="design/email/header_template"}}
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<tr>
+    <td align="center" valign="top" style="padding:20px 0 20px 0">
+        <!-- [ header starts here] -->
+        <table bgcolor="#FFFFFF" cellspacing="0" cellpadding="10" border="0" width="650" style="border:1px solid #E0E0E0;">
+             <tr>
+                <td valign="top"><a href="{{var myvar10}}"><img width="150" height="150" src="{{var myvar9}}" alt="{{var myvar1}}"  style="margin-bottom:10px;" border="0"/></a></td>    
+            </tr>
+        <!-- [ middle starts here] -->
+            <tr>
+                <td valign="top">
+                    <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;">Dear {{var myvar2}}</h1>
+                    <p>
+                        {{var myvar4}}
+                    </p>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <h2 style="font-size:18px; font-weight:normal; margin:0;">Event Details:</h2>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table cellspacing="0" cellpadding="0" border="0" width="650">
+                      <tbody>
+                        <tr>
+                            <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;"><strong>Event Name:</strong></td>
+                             <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">{{var myvar1}}</td>
+                         </tr>
+                         <tr>
+                            <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;"><strong>Event Start Time:</strong></td>
+                            <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;"><strong>{{var myvar6}}</strong></td>
+                            </tr>
+                        <tr>
+                            <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;"><strong>Event End Time:</strong></td>
+                             <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;"><strong>{{var myvar7}}</strong></td>
+                        </tr>
+
+                         </tr>
+                            <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;"><strong>Event Venue:</strong></td>
+                             <td align="left" width="325" bgcolor="#EAEAEA" style="font-size:13px; padding:5px 9px 6px 9px; line-height:1em;">{{var myvar8}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                    
+                    <br/>
+                    <p style="font-size:12px; margin:0 10px 10px 0">{{var comment}}</p>
+                </td>
+            </tr>
+            <tr>
+                <td bgcolor="#EAEAEA" align="center" style="background:#EAEAEA; text-align:center;"><center><p style="font-size:12px; margin:0;">Thank you, <strong>{{var store.getFrontendName()}}</strong></p></center></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+    {{template config_path="design/email/footer_template"}}

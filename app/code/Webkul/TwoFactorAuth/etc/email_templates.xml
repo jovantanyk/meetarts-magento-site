@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software
+ *
+ * @category  Webkul
+ * @package   Webkul_TwoFactorAuth
+ * @author    Webkul Software Private Limited
+ * @copyright Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="twofactorauth_emailsettings_otp_checkout_notification" label="OTP Email at the time of Checkout" file="twofactorauth_checkout_notification.html" type="html" module="Webkul_TwoFactorAuth" area="frontend"/>
+</config>

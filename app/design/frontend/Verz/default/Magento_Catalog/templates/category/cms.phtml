@@ -1,0 +1,28 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @var $block \Magento\Catalog\Block\Category\View
+ */
+?>
+<?php if ($block->isContentMode() || $block->isMixedMode()) :?>
+    <?php if($block->getCmsBlockHtml()): ?>
+        <?= $block->getCmsBlockHtml() ?>
+    <?php else: ?>
+    <section class="page-banner custom-banner">
+        <div class="container">
+            <div class="banner-img">
+                
+            </div>
+        </div>	
+    </section>
+    <?php endif; ?>
+<?php else: ?>
+    <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('products-slider')->toHtml(); ?>
+<?php endif; ?>

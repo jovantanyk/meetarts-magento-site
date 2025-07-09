@@ -1,0 +1,129 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+
+/** @var \Verz\Design\Block\Widget\Category\Products $block */
+$blockProduct = $block->getLayout()->createBlock('Magento\CatalogWidget\Block\Product\ProductsList');
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+?>
+<?php if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())) : ?>
+    <?php
+    $type = 'widget-product-grid';
+
+    $mode = 'grid';
+
+    $image = 'new_products_content_widget_grid';
+    $image2 = 'category_page_grid-1';
+    $items = $block->getProductCollection()->getItems();
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
+    $description = false;
+    ?>
+    <?php if ($block->getTitle()) : ?>
+        <div class="block-title">
+            <strong><?= $block->escapeHtml(__($block->getTitle())) ?></strong>
+        </div>
+    <?php endif ?>
+    <div class="row">
+    	<?php $i=0; foreach ($items as $_item) : $i++; ?>
+            <?php if($i==1): ?>
+            <div class="col-sm-7">
+                <div class="product-item-info ">
+                    <div class="product-item-photo">
+                        <div class="product-image-container">
+                            <div class="product-img-view">
+                                <a href="<?= $block->escapeUrl($blockProduct->getProductUrl($_item)) ?>" class="product-image-wrapper">
+                                    <?= $blockProduct->getImage($_item, $image)->toHtml() ?>
+                                </a>
+                            </div>		
+                        </div>	
+                    </div>
+                    <div class="product-item-details">
+                        <h2 class="size28"> 
+                            <a href="<?= $block->escapeUrl($blockProduct->getProductUrl($_item)) ?>"> <?= $block->escapeHtml($_item->getName()) ?> </a>
+                            <?php 
+                                $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_item->getId());
+                                $sellerName = "";
+                                foreach ($marketplaceProduct as $value) {
+                                    $sellerName = $value['name'];
+                                }
+                            ?>
+                            <?php if($sellerName): ?><span class="sub-title"><?= $sellerName; ?></span><?php endif; ?>
+                        </h2>
+                        <?php if ($_item->isSaleable()): ?>
+                            <?php $postParams = $blockProduct->getAddToCartPostParams($_item); ?>
+                            <form data-role="tocart-form" data-product-sku="<?= $block->escapeHtml($_item->getSku()) ?>" action="<?= $block->escapeUrl($postParams['action']) ?>" method="post">
+                                <input type="hidden" name="product" value="<?= $block->escapeHtmlAttr($postParams['data']['product']) ?>">
+                                <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>" value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <button type="submit"
+                                        title="<?= $block->escapeHtml(__('Add to Cart')) ?>"
+                                        class="action tocart">
+                                    <img src="<?php echo $block->getViewFileUrl('images/car2.png'); ?>" alt="">
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php else: ?>
+                <?php if($i==2): ?>
+                    <div class="col-sm-5">
+                    <div class="prd-3wrp">
+                <?php endif; ?>
+                        <div class="product-item-info ">
+                            <div class="product-item-photo">
+                                <div class="product-image-container">
+                                    <div class="product-img-view">
+                                        <a href="<?= $block->escapeUrl($blockProduct->getProductUrl($_item)) ?>" class="product-image-wrapper">
+                                            <?= $blockProduct->getImage($_item, $image2)->toHtml() ?>
+                                        </a>
+                                    </div>		
+                                </div>	
+                            </div>
+                            <div class="product-item-details">
+                                <h2 class="size28"> 
+                                    <a href="<?= $block->escapeUrl($blockProduct->getProductUrl($_item)) ?>">
+                                        <?= $block->escapeHtml($_item->getName()) ?>
+                                    </a>
+                                    <?php 
+                                        $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_item->getId());
+                                        $sellerName = "";
+                                        foreach ($marketplaceProduct as $value) {
+                                           $sellerName = $value['name'];
+                                        }
+                                    ?>
+                                    <?php if($sellerName): ?>
+                                        <span class="sub-title"><?= $sellerName; ?></span>
+                                    <?php endif; ?>
+                                </h2>
+                                <?php if ($_item->isSaleable()): ?>
+                                    <?php $postParams = $blockProduct->getAddToCartPostParams($_item); ?>
+                                    <form data-role="tocart-form" data-product-sku="<?= $block->escapeHtml($_item->getSku()) ?>" action="<?= $block->escapeUrl($postParams['action']) ?>" method="post">
+                                        <input type="hidden" name="product" value="<?= $block->escapeHtmlAttr($postParams['data']['product']) ?>">
+                                        <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>" value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
+                                        <?= $block->getBlockHtml('formkey') ?>
+                                        <button type="submit"
+                                                title="<?= $block->escapeHtml(__('Add to Cart')) ?>"
+                                                class="action tocart">
+                                            <img src="<?php echo $block->getViewFileUrl('images/car2.png'); ?>" alt="">
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                <?php if($i==count($items)): ?>
+                    </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+    	<?php endforeach; ?>
+    </div>
+<?php endif; ?>

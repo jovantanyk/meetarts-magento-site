@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c)  Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="webkul" translate="label comment" sortOrder="10">
+            <label>Webkul</label>
+        </tab>
+        <section id="buyer_seller_chat" translate="label comment" type="text" sortOrder="305" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Buyer Seller Chat</label>
+            <tab>webkul</tab>
+            <resource>Webkul_MpBuyerSellerChat::config_chatsystem</resource>
+            <group id="general_settings" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+            	<label>Server Settings</label>
+            	<field id="host_name" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Host Name</label>
+                    <comment>E.g. 'example.com' or 'localhost' for local sever.</comment>
+                </field>
+                <field id="port_number" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="0" >
+                    <label>Port Number</label>
+                    <validate>validate-number</validate>
+                </field>
+                <field id="start_button" translate="label comment" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Webkul\MpBuyerSellerChat\Block\System\Config\Form\StartButton</frontend_model>
+                </field>
+
+                <field id="chat_name" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Chat Name</label>
+                    <comment>Storefront name for the Buyer-Seller Chat.</comment>
+                </field>
+
+                <field id="max_size" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum Allowed Size for Attachment</label>
+                    <comment>enter the numeric value in MB ex: 5.</comment>
+                    <validate>validate-number validate-not-negative-number</validate>
+                </field>
+
+                <field id="is_https" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>HTTPS Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="key_file_upload" translate="label comment" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="81" showInDefault="1" showInWebsite="1" >
+                    <label>Upload Server Private Key File</label>
+                    <backend_model>Webkul\MpBuyerSellerChat\Model\Config\Backend\Key</backend_model>
+                    <upload_dir config="system" scope_info="1">server_files</upload_dir>
+                    <comment>You can get this file from your host provider, file name must be as: server.key</comment>
+                    <depends>
+                        <field id="is_https">1</field>
+                    </depends>
+                </field>
+                <field id="crt_file_upload" translate="label comment" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="82" showInDefault="1" showInWebsite="1" >
+                    <label>Upload Server Certificate File</label>
+                    <backend_model>Webkul\MpBuyerSellerChat\Model\Config\Backend\Crt</backend_model>
+                    <upload_dir config="system" scope_info="1">server_files</upload_dir>
+                    <comment>You can get this file from your host provider, file name must be as: server.crt</comment>
+                    <depends>
+                        <field id="is_https">1</field>
+                    </depends>
+                </field>
+                <field id="ca_file_upload" translate="label comment" type="Magento\Config\Block\System\Config\Form\Field\File" sortOrder="83" showInDefault="1" showInWebsite="1" >
+                    <label>Upload Server CA Bundle File</label>
+                    <backend_model>Webkul\MpBuyerSellerChat\Model\Config\Backend\Cabundle</backend_model>
+                    <upload_dir config="system" scope_info="1">server_files</upload_dir>
+                    <comment>You can get this 'server.ca-bundle' file from your host provider, file name must be as: server.cabundle</comment>
+                    <depends>
+                        <field id="is_https">1</field>
+                    </depends>
+                </field>
+        	</group>
+
+            <group id="customerprofile_information" translate="label" type="text" sortOrder="700" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Support Information</label>
+                <field id="author" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label><![CDATA[<p>Author: <a target="_blank" title="Webkul Software Private Limited" href="https://webkul.com/">Webkul</a></p>
+                        <p>Version: 5.0.2</p>
+                        <p>User Guide: <a target="_blank" href="https://webkul.com/blog/magento2-marketplace-seller-chat/">Click Here</a></p>
+                        <p>Store Extension: <a target="_blank" href="https://store.webkul.com/magento2-multi-seller-marketplace-chat.html">Click Here</a></p>
+                        <p>Ticket/Customisations: <a target="_blank" href="https://webkul.uvdesk.com/en/customer/create-ticket/">Click Here</a></p>
+                        <p>Services: <a target="_blank" href="https://webkul.com/magento-development/">Click Here</a></p>]]></label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                </field>
+            </group>
+    	</section>
+	</system>
+</config>

@@ -1,0 +1,42 @@
+Legend
+
++ Features
+- Bugs
+-------------------------------- Version 5.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.x CE
+
+-------------------------------- Version 4.0.0 --------------------------------------
+	+ Compatible with Magento 2.4.x EE
+
+-------------------------------- Version 3.0.0 --------------------------------------
+	+ Version Upgraded
+
+-------------------------------- Version 2.1.0 --------------------------------------
+	+ Compatible with Magento 2.3
+
+-------------------------------- Version 2.0.2 --------------------------------------
+
+	+ Updated composer.json as per magento 2.2.x version.
+	+ Updated according to magento 2.2.x and marketplace 2.1.x version
+
+-------------------------------- Version 2.0.1 --------------------------------------
+
+	- Fixed other minor bugs.
+
+-------------------------------- Version 2.0.0 --------------------------------------
+	
+	+ A new product type is added in magento for event products 
+	+ seperate form for seller to add event products form marketplace
+	+ seller can create ,delete, and update event products
+	+ one product can have multiple types of tickets 
+	+ each type of ticket will have its own quantity
+	+ product quantity will depend on ticket quantity 
+	+ if in the event product one type of ticket quantity is out of stock that ticket type will not be added in the cart
+	+ after placing the order customer will recieve the tickets through mail 
+	+ Qr code validation for tickets 
+	+ seller can send reminder to his customers who have purchased the tickets .
+	+ seller can set terms and conditions for ticket product ,so the customer can only add product to the cart if he is agreeing to the    terms and services
+	+ customer can view tickets details in his account 
+	+ customer can take printout of the tickets
+	+ admin can create event product too ,since a new event product type is added to magento products types
+	+ admin can see and send reminders to all the buyers of the event product .

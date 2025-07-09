@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="css/styles-l.css" />
+        <remove src="css/styles-m.css" />        
+        <remove src="Magento_Swatches::css/swatches.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+        <css src="css/bootstrap.min.css" media='all' />
+        <css src="css/all.min.css" media='all' />
+        <css src="css/owl.carousel.min.css" media='all' />
+        <css src="css/owl.theme.default.min.css" media='all' />
+        <css src="css/bootstrap.min.css" media='all' />
+        <css src="css/styles-ms.css" media='all' />
+        <css src="css/styles-ls.css" media='all' />
+        <css src="css/styles.css" media='all' />
+        <css src="css/responsive.css" media='all' />
+        <css src="css/styles_mega.css" media='all' />
+        <css src="css/developer.css" media='all' />
+
+        <!-- <link src="js/jquery.min.js"/> -->
+        <link src="js/owl.carousel.min.js"/>
+        <link src="js/custom.js"/>
+    </head>
+</page>

@@ -1,0 +1,52 @@
+{
+    "marketplace_chat_customer_info": {
+        "column": {
+            "entity_id": true,
+            "customer_id": true,
+            "unique_id": true,
+            "image": true,
+            "chat_status": true,
+            "registered_as": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MARKETPLACE_CHAT_CUSTOMER_INFO_CUSTOMER_ID": true
+        }
+    },
+    "marketplace_customer_online": {
+        "column": {
+            "entity_id": true,
+            "sender_unique_id": true,
+            "reciever_unique_id": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_customer_blocked": {
+        "column": {
+            "entity_id": true,
+            "customer_unique_id": true,
+            "seller_unique_id": true,
+            "block_reason": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "marketplace_chat_history": {
+        "column": {
+            "entity_id": true,
+            "sender_unique_id": true,
+            "receiver_unique_id": true,
+            "message": true,
+            "date": true,
+            "sender_name": true,
+            "receiver_name": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+  }
+  

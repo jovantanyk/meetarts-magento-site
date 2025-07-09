@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @package   Verz_Design
+ * @copyright Copyright (c) 2022 VerzDesign (https://www.verzdesign.com/)
+ * @contacts  enquiry@verzdesign.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Verz_MenuOverride" setup_version="1.0.0">
+    </module>
+</config>

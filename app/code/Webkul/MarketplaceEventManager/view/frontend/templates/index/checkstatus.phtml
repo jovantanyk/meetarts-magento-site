@@ -1,0 +1,155 @@
+<?php
+$customer_id = $block->getCustomerId();
+?>
+<?php if ($customer_id) { ?>
+    <?php
+    $helper = $block->getMpEventManagerHelper();
+    $productid = 0;
+    $params = $block->getRequest()->getParams();
+    $oid = $block->getRequest()->getParam('order_id');
+    $itemId = $block->getRequest()->getParam('item_id');
+    $realOrderId = $block->getRealOrderIdVal();
+    $qrcode = '';
+    ?>
+    <div class="page-title">
+        <h2><?= /* @noEscape */ __('Ticket Validity'); ?></h2>
+    </div>
+    <div class="fieldset">
+        <?php
+        if (count($params) === 3) {
+            $qrcode = trim($params['unique_code'].'_'.$params['order_id']);
+            $product  = $block->getEventProduct($params['order_id'], $qrcode, $itemId);
+
+            $qrprefix = $product->getEventTicketPrefix();
+            if (!$qrprefix) {
+                $qrprefix = $helper->getGlobalEventPrefix();
+            }
+            $qrprefix = strtoupper($qrprefix);
+        
+            $qrcollection = $block->getQrCollection($qrcode);
+            $isValidSeller = $block->isValidSeller($qrcode);
+            ?>
+            <div class="wk-mp-design" id="wk-bodymain">
+                <div class="event-ticket-view">
+                    <table>
+                        <?php foreach ($qrcollection as $qrcol) { ?>
+                            <?php if ($qrcol->getStatus()) { ?>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Ticket'); ?></h4></td>
+                                    <td>
+                                        <p>
+                                            <a href="<?= /* @noEscape */ $product->getProductUrl(); ?>">
+                                                <img title="<?= /* @noEscape */ $product->getName(); ?>" 
+                                                src="<?= /* @noEscape */ $block->getImageUrl($product->getImage())?>" 
+                                                class="" height="250px" width="250px" style="width:250px!important"/>
+                                            </a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr><td><h4><?= /* @noEscape */ __('Ticket Code'); ?></h4></td>
+                                <td>
+                                    <p><?= /* @noEscape */ $qrprefix.$qrcode; ?></p>
+                                </td></tr>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Order Id'); ?></h4></td>
+                                    <td>
+                                        <p>
+                                            <a href="<?= /* @noEscape */ $block
+                                            ->getUrl('marketplace/order/view', ['id'=>$oid]); ?>">
+                                            <?= /* @noEscape */ $realOrderId; ?></a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Event Venue'); ?></h4></td>
+                                    <td><p>
+                                        <?= /* @noEscape */ $product->getEventVenue(); ?>
+                                    </p></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Event Type'); ?></h4></td>
+                                    <td>
+                                        <p><?= /* @noEscape */ $qrcol->getOptionTitle(); ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Event Tickets Quantity'); ?></h4></td>
+                                    <td><p>
+                                        <?= /* @noEscape */  $qrcol->getOptionQty(); ?>
+                                    </p></td>
+                                </tr>                            
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Event Start Time'); ?></h4></td>
+                                    <td><p>
+                                        <?= /* @noEscape */ date('g:ia \o\n l jS F Y', strtotime($product
+                                        ->getEventStartDate())); ?>
+                                    </p></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Event End Time'); ?></h4></td>
+                                    <td><p>
+                                        <?= /* @noEscape */ date('g:ia \o\n l jS F Y', strtotime($product
+                                        ->getEventEndDate())); ?>
+                                    </p></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Validity'); ?></h4></td>
+                                    <td><p>
+                                    <span><?= /* @noEscape */ __("Valid"); ?></span>
+                                    <?php if ($isValidSeller) { ?>
+                                        <span>
+                                            <button style="margin-left:10px" 
+                                            type="button" class="button btn invalidate" 
+                                            name="invalidate"><?= /* @noEscape */ __('Set Used'); ?></button>
+                                        </span>
+                                    <?php } ?>
+                                    </p></td>
+                                </tr>
+                            <?php } else { ?>
+                                <tr>
+                                    <td><h4><?= /* @noEscape */ __('Validity'); ?></h4></td>
+                                    <td>
+                                        <p><?= /* @noEscape */ __("Used Ticket"); ?></p>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php } ?>
+                    </table>
+                </div>
+            </div>
+            <?php if ($isValidSeller) { ?>
+                <script>
+                    require([
+                        "jquery",
+                        "mage/mage"
+                    ], function($){
+                            $('.invalidate').on('click',function(){
+                                this_this = $(this);
+                                $(this).text('Validating');
+                                $.ajax({
+                                    url:'<?= /* @noEscape */ $block
+                                    ->getUrl("marketplaceeventmanager/index/invalidate") ?>',
+                                    data:{
+                                        qrcode: '<?= /* @noEscape */ $qrcode; ?>',
+                                    },
+                                    type:'post',
+                                    dataType:'text',
+                                    success:function(data){
+                                        if(data['msg'] = 'success'){
+                                            this_this.text('Validated');
+                                            $('.invalidate').parent().prev().text('Invalid Ticket');
+                                            location.reload();
+                                        }
+                                    }
+                                });
+                            });    
+                    })
+                </script>
+            <?php } ?>
+        <?php } else { ?>
+            <h4 style="color:red"><?= /* @noEscape */ __('Invalid Request'); ?></h4>
+        <?php } ?>
+    </div>
+<?php } else { ?>
+    <h4><?= /* @noEscape */ __('Please Login to Validate customer ticket.'); ?></h4>
+<?php } ?>

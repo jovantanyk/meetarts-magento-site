@@ -1,0 +1,169 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MpBuyerSellerChat
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+$helper = $block->getHelperObject();
+$sellerExist= $helper->isSellerExist();
+$charWindowDisplay = $block->checkChatWindowView();
+$mediaUrl = $block->getUrl('mpchatsystem/index/viewfile?image=');
+$mediaUrl = str_replace("image=/", "image=", $mediaUrl);
+?>
+ 
+<?php if ($sellerExist && $charWindowDisplay): ?>
+    <script>
+        window.sellerChatboxConfig = <?= /* @noEscape */ \Zend_Json::encode($block->getChatBoxConfig()); ?>;
+        window.baseUrl = <?= /* @noEscape */ $block->jsonFormat($block->getBaseUrl()); ?>
+    </script>
+    <div id="active-users" data-bind="scope:'active-users'">
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <script type="text/x-magento-init">
+        {
+            "#active-users": {
+                "Magento_Ui/js/core/app":  <?= /* @noEscape */ $block->getJsLayout();?>
+            }
+        }
+        </script>
+        <div id="chat_window_container"></div>
+        <script id="customer_chat_window" type="text/x-magento-template">
+            <div id="chat-window-<%- data.customerUniqueId %>">
+                <section class="chat-module">
+                    <div class="chat-loading-mask" data-role="chat-loader" data-bind="visible: showLoader">
+                        <div class="chat-loader">
+                            <img alt="Loading..." data-bind="attr: {'src': window.chatboxCoreConfig.loaderImage}">
+                        </div>
+                    </div>
+                    <header class="top-bar seller-side" data-bind="click: showHideSellerChatWindow">
+                        <div class="left">
+                            <span id="status-<%- data.customerUniqueId %>" 
+                            class="chat_status <%- data.statusClass %>"></span>
+                            <h1><%- data.customerName %></h1>
+                        </div>
+                        <div class="right">
+                            <span class="icon typicons-minus" ></span>
+                            <span class="icon typicons-plus" style="display:none"></span>
+                            <span class="icon typicons-times" data-bind="click: closeSellerChatWindow"></span>
+                            <i class="fa fa-clock-o load_history" data-bind="click: showControlList, clickBubble:false">
+                            <div class="wk_chat_history_options list-group">
+                                <span class="status_point"></span>
+                                <div class="list-group-item">
+                                    <span id="1" class="" data-value="<%- data.customerUniqueId %>" 
+                                    data-image="<%- data.customerImage %>" 
+                                    data-bind="i18n: 'Last 24 Hours', click: loadSellerChatHistory.bind()"></span>
+                                </div>
+                                <div class="list-group-item">
+                                    <span id="2" class="" data-value="<%- data.customerUniqueId %>" 
+                                    data-image="<%- data.customerImage %>" 
+                                    data-bind="i18n: 'Last 7 Days', click: loadSellerChatHistory.bind()"></span>
+                                </div>
+                                <div class="list-group-item">
+                                    <span id="3" class="" data-value="<%- data.customerUniqueId %>" 
+                                    data-image="<%- data.customerImage %>" 
+                                    data-bind="i18n: 'Forever', click: loadSellerChatHistory.bind()"></span>
+                                </div>
+                            </div>
+                        </i>
+                        </div>
+                    </header>
+                    <div class="reply-container">
+                    <!-- ko if: isSellerChatError() === "form-reply-<%- data.customerUniqueId %>" -->
+                    <span class="chat-error" data-bind="text: chatSellerError()"></span>
+                    <!-- /ko -->
+                        <ol class="discussion">
+                        </ol>
+                        <div class="file-uploader">
+                            <!-- ko if: <%- data.customerUniqueId %>() == true -->
+                            <div class="chat-loading-mask" data-role="chat-loader">
+                                <div class="chat-loader">
+                                   <img alt="Loading..." 
+                                   data-bind="attr: {'src': window.chatboxCoreConfig.loaderImage}">
+                                   <span class="upload-info" 
+                                   data-bind="text: upload<%- data.customerUniqueId %>"></span>
+                                </div>
+                            </div>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                    <div id="bottom-controls">
+                        <form method="post" data-bind="submit: sendSellerMessage" 
+                        id="form-reply-<%- data.customerUniqueId %>">
+                            <input type="hidden" name="class" value="other"/>
+                            <input type="hidden" name="receiverUniqueId" value="<%- data.customerUniqueId %>"/>
+                            <input type="hidden" name="senderUniqueId" value="<%- data.senderUniqueId %>"/>
+                            <input type="hidden" name="customerId" value="<%- data.customerId %>"/>
+                            <div class="left message-box">
+                                <div class="blocked"><span><?= /* @noEscape */ __('Blocked') ?></span></div>
+                                <textarea name="message" id="" rows="1" data-bind="event:{keypress: replyByEnter}" 
+                                data-emojiable="true"></textarea>
+                                <div class="dropup" data-bind="click:openEmojiBox">
+                                <img class="attachment-img" width="23" height="23" 
+                                data-bind="attr: {src: attachmentImg, 'id': 'upload_btn'}, 
+                                click: addAttachment, clickBubble:false"/>
+                                    <span class="emoticons_div" title="Emojis" 
+                                    data-toggle="dropdown" role="button" aria-expanded="false"></span>
+                                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <div class="smiley_pad">
+                                         :smiley: :smile: :wink: :blush: :angry:                                        
+                                        </div>
+                                        <div class="smiley_pad">
+                                            :laughing: :smirk: :disappointed: :sleeping: :coffee:          
+                                        </div>
+                                        <div class="smiley_pad">
+                                            :astonished: :stuck_out_tongue_winking_eye: :sob: :flushed: :mask:          
+                                        </div>
+                                        <div class="smiley_pad">
+                                            :rage: :cry: :yum: :neutral_face: :sunglasses:
+                                        </div>
+                                        <div class="smiley_pad">
+                                            :smiling_imp: :confused: :scream: :stuck_out_tongue: :fearful:
+                                        </div>
+                                        <div class="smiley_pad">
+                                            :punch: :ok_hand: :clap: :thumbsup: :thumbsdown:
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="added-attachment" style="display: none" 
+                            id="attachment-file-<%- data.customerUniqueId %>"><div class="wk-attachment">
+                            <input data-bind="event:{ change: selectFile.bind()}" 
+                            type="file" name="attachments" class="msg-attachment" 
+                            data-form="form-reply-<%- data.customerUniqueId %>"></div></div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </script>
+        <script id="reply_template" type="text/x-magento-template">
+            <li class="<%- data.class %> seller">
+                <div class="avatar">
+                    <img src="<%- data.image %>" />
+                </div>
+                <div class="messages">
+                    <% if(data.message_type == 'image') { %>
+                        <p><a target="_blank" href="<?= /* @noEscape */
+                        $mediaUrl ?><%- data.message %>">
+                        <img
+                        src="<?=/* @noEscape */ $mediaUrl?><%-data.message%>"
+                        style="widht:100%;" class="message-image"></a></p>
+                    <% } if(data.message_type == 'file'){ %>
+                        <p><a href="<?= /* @noEscape */ $mediaUrl ?><%- data.message %>" >
+                        <img width="30" height="20" src="">
+                        <span><?= /* @noEscape */ __('Download File'); ?></span></a></p>
+                        <% } if(data.message_type != 'file' && data.message_type != 'image') { %>    
+                        <p><%- data.message %></p>
+                    <% } %>
+                    <time datetime="2009-11-13T20:14"><%- data.dateTime %></time>
+                </div>
+            </li>
+            <% if (data.error !== '' && data.error !== 'undefined') { %>
+                <span class="chat-error-seller"><%- data.error %></span>
+            <% } %>
+        </script>
+    </div>
+<?php endif; ?>

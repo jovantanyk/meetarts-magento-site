@@ -1,0 +1,24 @@
+<?php
+/** @var MageMe\WebForms\Block\Form\Element\Fieldset $block */
+
+use MageMe\WebForms\Api\Data\FieldInterface;
+use MageMe\WebForms\Api\Data\FieldsetInterface;
+use MageMe\WebForms\Model\Logic;
+
+$_uid          = $block->getUid();
+$fieldsetId    = $block->getFieldsetId();
+$fieldset      = $block->getFieldset();
+$isLabelHidden = $block->isLabelHidden();
+?>
+
+    <?php if (!empty($fieldset[FieldsetInterface::NAME]) && !$isLabelHidden) { ?>
+        <h3 class="legend" id="legend_<?= $_uid . $fieldsetId ?>">
+            <span><?= $block->applyTranslation($fieldset[FieldsetInterface::NAME]); ?></span>
+        </h3>
+    <?php } ?>
+
+    <?php
+    /** @var FieldInterface $field */
+    foreach ($fieldset['fields'] as $field) {
+        echo $block->getFieldBlock()->setField($field)->toHtml();
+    } ?>

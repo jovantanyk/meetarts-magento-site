@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="customer_account_navigation"><!--ifconfig="wishlist/general/active"-->
+			<block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-logout-link" after="-">
+				<arguments>
+					<argument name="path" xsi:type="string">customer/account/logout</argument>
+					<argument name="label" xsi:type="string">Logout</argument>
+				</arguments>
+			</block>
+		</referenceBlock>
+		
+		<referenceBlock name="customer-account-navigation-delimiter-1" remove="true"/>
+		<referenceBlock name="customer-account-navigation-delimiter-2" remove="true"/>
+        <!-- Billing agreement link -->
+        <referenceBlock name="customer-account-navigation-billing-agreements-link" remove="true"/>
+		<referenceBlock name="customer-account-navigation-my-credit-cards-link" remove="true"/>
+		<referenceBlock name="stripe-payments-subscriptions" remove="true"/>
+		<referenceBlock name="stripe-payments-customer-cards" remove="true"/>
+		<!-- Remove My Product Reviews-->
+		<!-- <referenceBlock name="customer-account-navigation-product-reviews-link" remove="true"/> -->
+	</body>
+</page>

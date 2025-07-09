@@ -1,0 +1,130 @@
+.mp_event_list .products-list li.item{
+    background:#e2e2e2;
+    padding:10px;
+    display: inline-block;
+    width:97%;
+}
+.mp_event_list .products-list li.item:hover{
+    background:#F2F2F2;
+    
+}
+.mpevent-terms-cont {
+    background: rgba(255, 255, 255, 0.7) none repeat scroll 0 0;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    text-align: center;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+.event-terms-inner {
+    background: #ffffff none repeat scroll 0 0;
+    border-radius: 15px;
+    box-shadow: 2px 2px 8px #333;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 100;
+    min-height:100px;
+    max-height:400px;
+    min-width:300px;
+    margin:30px auto;
+    padding: 10px;
+    position: relative;
+    text-align: left;
+    max-width: 60%;
+    overflow-y:auto;
+    -webkit-overflow-y:auto;
+    -o-overflow-y:auto;
+}
+.close-terms{
+    
+    cursor: pointer;
+     font-size: 14px;
+    font-weight: 600;
+    height: 25px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 2px;
+    width: 25px;
+}
+.event-model-header h2{
+border-bottom: 1px solid #e2e2e2;
+}
+.wk_pro_divide{
+    width:40%;
+    overflow: hidden;
+}
+.wk_mp_list_container_table .event-venue{
+    width:24%;
+}
+ul.event-ticket-view li{
+    margin:5px 0;
+    padding:5px;
+}
+.products-list > li .product-image {
+    float: left;
+    width: 33.33333%;
+}
+.products-list .product-shop {
+    float: right;
+    width: 62%;
+    padding-left: 20px;
+}
+.products-list > li {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ededed;
+}
+.products-list {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.products-list > li .product-image img {
+    width: 100%;
+    max-width: 262px;
+    max-height: 262px;
+}
+.products-list .product-shop .product-primary, .products-list .product-shop .desc {
+    float: left;
+    width: 71%;
+    overflow: hidden;
+}
+.products-list .product-shop .product-secondary {
+    float: right;
+    width: 27%;
+    text-align: right;
+    clear: right;
+}
+.marketplaceeventmanager-upcoming-events .toolbar .modes {
+    display: none;
+}
+.wkmp-event-form {
+    text-align: right;
+}
+.wkmp-event-form input {
+    display: inline-block;
+    max-width: 250px;
+    vertical-align: middle;
+}
+.wkmp-event-form button {
+    vertical-align: middle;
+}
+.wkmp-event-form-container {
+    padding: 5px;
+}
+@media only screen and (max-width: 767px) and (min-width: 0px) {
+    .products-list > li .product-image{
+        width:100%;
+    }
+    .products-list .product-shop {
+        width: 100%;
+        padding-top:10px;
+    }
+}
+.wk_mp_design.mp_event_list .product-social-links.add-to-links {
+    text-align: right;
+    font-size: 11px;
+    padding-top: 10px;
+}

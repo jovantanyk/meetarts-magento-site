@@ -1,0 +1,23 @@
+{
+    "name": "webkul/2fa",
+    "description": "TwoFactorAuth Module For Magento2",
+    "require": {
+        "twilio/sdk": "^7.9",
+        "sendgrid/sendgrid": "8.0.1",
+        "pragmarx/google2fa": "8.0.1",
+        "pragmarx/google2fa-qrcode": "3.0.0"
+    },
+    "type": "magento2-module",
+    "version": "5.0.1",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\TwoFactorAuth\\": ""
+        }
+    }
+}

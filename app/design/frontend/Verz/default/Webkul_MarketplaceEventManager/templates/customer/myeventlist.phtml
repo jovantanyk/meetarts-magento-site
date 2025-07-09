@@ -1,0 +1,229 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $block \Webkul\Marketplace\Block\Product\Productlist */
+$productData = $block->getData('view_model');
+$helper = $productData->getMpHelper();
+$_products_coll = $block->getAllTickets($block->getCustomerId());
+$paramData = $block->getRequest()->getParams();
+$filter = '';
+$filterStatus = '';
+$filterDateFrom = '';
+$filterDateTo = '';
+if (isset($paramData['q'])) {
+    $filter = $paramData['q'] != '' ? $paramData['q'] : '';
+}
+?>    
+<div class="wk-mp-design">
+    <fieldset class="fieldset info wk-mp-fieldset">
+        <legend class="legend">
+            <span><?= /* @noEscape */ __('TICKETS') ?></span>
+        </legend>
+        <div class="grid">
+            <div class="hor-scroll">
+                <form action="<?= /* @noEscape */ $block
+                ->getUrl('marketplaceeventmanager/customer/eventlist', ['_secure' => $block
+                ->getRequest()->isSecure()])?>"
+                    method="get" id="form-productlist-filter"
+                    name="formProductlistFilter"
+                    data-mage-init='{"validation":{}}'>
+                    <div class="table-wrapper">
+                        <table cellspacing="0" class="data table border wk-mp-list-table">
+                            <thead>
+                                <tr id="wk-mp-tr-heading">
+                                    <th><span><?= /* @noEscape */ __('Event Name') ?></span></th>
+                                    <th><span>&nbsp;</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="wk-mp-body">
+                                <tr>
+                                    <td data-th="<?= /* @noEscape */ __('Event Name') ?>" scope="col" class="col">
+                                        <input type="text" class="input-text" 
+                                        name="q" 
+                                        placeholder='<?= /* @noEscape */ __('Search by Event name') ?>' 
+                                        value="<?= /* @noEscape */ $filter?>"/>
+                                    </td>
+                                    <td data-th="<?= /* @noEscape */ __('Action') ?>" scope="col" class="col">
+                                        <button class="button" title="Save" type="submit">
+                                            <span><span><span><?= /* @noEscape */ __('Submit') ?></span></span></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+
+                <?php if ($_products_coll && count($_products_coll)): ?>
+                        <table cellspacing="0" class="border wk-mp-list-table wk-mp-list-container-table">
+                            <thead>
+                                <tr class="wk-content">
+                                    <th class="wk-first-td">
+                                        <span class="label name">
+                                            <?= /* @noEscape */ __('Event Name')?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label pro-status">
+                                            <?= /* @noEscape */ __('Event Timing')?>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <span class="label pro-status">
+                                            <?= /* @noEscape */ __('Event Venue')?>
+                                        </span>
+                                    </th>
+                                    <th class="wk-list-th-display">
+                                        <span class="label qty">
+                                            <?= /* @noEscape */ __('Action')?>
+                                        </span>
+                                    </th>         
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $i = 0;
+                                foreach ($block->getAllTickets($block->getCustomerId()) as $products) {
+                                    $product = $block->getProductData($products->getProductId(), $products);
+                                    $i++;
+                                    $image_url = $block->imageHelperObj()->init($product, 'product_page_image_small')
+                                                ->setImageFile($product->getImage())
+                                                ->getUrl();
+                                    ?>
+                                    <tr class="wk-row-view 
+                                    <?= /* @noEscape */ $class = ($i == count($block
+                                    ->getAllTickets($block
+                                    ->getCustomerId()))
+                                        )? 'wk-last_tr':''?>">
+                                        <td class="wk-first_td">
+                                            <input type="hidden" class="hidden-id" 
+                                            value="<?= /* @noEscape */ $products->getId(); ?>" />
+                                            <div class="label name" 
+                                            title="<?= /* @noEscape */ $product->getProductName(); ?>">
+                                                <div class="wk-pro-divide1">
+                                                    <img src="<?= /* @noEscape */ $image_url?>" class="image" />
+                                                </div>
+                                                <div class="wk-pro-divide2">
+                                                    <div style="width:100%;">
+                                                        <?php
+                                                        $orderId = $products->getOrderId();
+                                                        $incrementId = $block->getOrderIncrementId($orderId);
+                                                        $orderUrl = $block->getUrl(
+                                                            'sales/order/view',
+                                                            ['order_id'=>$orderId]
+                                                        );
+                                                        ?>
+                                                        <a href="<?= /* @noEscape */ $orderUrl?>" target="blank">
+                                                            #<?= /* @noEscape */ $incrementId;?>
+                                                        </a>
+                                                    </div>
+                                                    <div style="width:100%;">
+                                                        <?php if ($product->getStatus()==1
+                                                        && $product->getVisibility()!=1
+                                                        && $product->getId()) { ?>
+                                                            <a href="<?= /* @noEscape */ $product->getProductUrl()?>"
+                                                            target="blank">
+                                                        <?php }?>
+                                                            <?= /* @noEscape */ $product->getProductName();?>
+                                                        <?php if ($product->getStatus()==1 &&
+                                                            $product->getVisibility()!=1 &&
+                                                            $product->getId()) { ?>
+                                                            </a>
+                                                        <?php }?>
+                                                    </div>
+                                                    <div style="width:100%;float:left;">
+                                                <?php
+                                                if ($products->getBaseOriginalPrice()*1) {/* @noEscape */ echo $block
+                                                    ->getFormatedPrice($products
+                                                    ->getBaseOriginalPrice(), $helper
+                                                    ->getCurrencySymbol());
+                                                } else {
+                                                    /* @noEscape */ echo $helper->getCurrencySymbol().'0.00';
+                                                }
+                                                ?>
+                                                    </div>
+                                                    <div style="width:100%;float:left;">
+                                                        <?php if (isset($products['product_options']['options'])) {
+                                                            foreach ($products['product_options']
+                                                            ['options'] as $key => $value) { ?>
+                                                            <p><span><?= /* @noEscape */ $value['label']; ?>
+                                                                </span>:<span><?= /* @noEscape */ $value['value']?>
+                                                            </span></p>
+                                                        <?php }}
+                                                        ?>
+                                                    </div>
+                                                    <div >
+                                                        <p><span>
+                                                            <?= /* @noEscape */ __('Total Price') ?>
+                                                        </span>:<span><?= /* @noEscape */ $block
+                                                            ->getFormatedPrice($products
+                                                            ->getPrice(), $helper->getCurrencySymbol())?>
+                                                            </span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>        
+                                            <div>
+                                                <strong>    
+                                                    <?= /* @noEscape */ __('Event Start Time:'); ?>
+                                                </strong>
+                                                <div>
+                                                <?= /* @noEscape */ date('g:ia \o\n l jS F Y', strtotime($product
+                                                ->getEventStartDate())); ?>
+                                                </div>
+                                            
+                                                <strong>    
+                                                    <?= /* @noEscape */ __('Event End Time:'); ?>
+                                                </strong>
+                                                <div>
+                                                <?= /* @noEscape */ date('g:ia \o\n l jS F Y', strtotime($product
+                                                ->getEventEndDate())); ?>
+                                                </div>
+                                                </div>
+                                        </td>
+                                        <td class="wk-list-th-display1">
+                                            <div>
+                                                <?= /* @noEscape */ __($product->getEventVenue()); ?>
+                                            </div>
+                                        </td>
+                                        <td>
+<a href="<?= /* @noEscape */ $block
+->getUrl('marketplaceeventmanager/customer/viewticket', ['oid'=>$products
+->getOrderId(), 'pid'=>$product
+->getProductId(), '_secure' => $block->getRequest()->isSecure()])?>">
+                                                <?= /* @noEscape */ __('View Ticket Details');?></a>
+                                        </td>                    
+                                    </tr>
+                                    <?php
+                                }?>
+                            </tbody>
+                        </table>
+                    </form>                        
+                <?php else: ?>
+                    <div class="wk-emptymsg">
+                        <?= /* @noEscape */ __('No Tickets Available') ?>
+                    </div>
+                <?php endif ?>                    
+            </div>
+        </div>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="order-products-toolbar toolbar bottom"><?= /* @noEscape */ $block->getPagerHtml(); ?></div>
+        <?php endif ?>    
+    </fieldset>    
+    <div class="actions-toolbar">
+        <div class="secondary">
+            <a href="javascript:;" 
+            onclick="javascript: window.history.back();" 
+            class="action back"><?= /* @noEscape */ __('Back') ?></a>
+        </div>
+    </div>
+</div>

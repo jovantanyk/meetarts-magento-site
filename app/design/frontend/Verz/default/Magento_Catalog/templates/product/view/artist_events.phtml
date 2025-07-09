@@ -1,0 +1,81 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+ use Magento\Framework\App\Action\Action;
+
+/**
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Description
+ */
+$_product = $block->getProduct();
+$webkul_helper    = $this->helper(Webkul\Marketplace\Helper\Data::class);
+$verz_helper    = $this->helper(Verz\Design\Helper\Data::class);
+$type = 'widget-product-grid';
+$image = 'new_products_content_widget_grid';
+$blockProduct = $block->getLayout()->createBlock('Magento\CatalogWidget\Block\Product\ProductsList');
+?>
+<?php 
+    $marketplaceProduct = $webkul_helper->getSellerProductDataByProductId($_product->getId());
+    $sellerId = "";
+    $sellerName = "";
+    foreach ($marketplaceProduct as $value) {
+        $sellerId = $value['seller_id'];
+        $sellerName = $value['name'];
+    }
+?>
+<?php if($sellerId): ?>
+    <?php 
+        $sellerProductsCollection = $verz_helper->getSellerEventsCollection($sellerId, $_product->getId(),3);
+        $sellerInfo = $webkul_helper->getSellerInfo($sellerId);
+        $shopUrl = @$sellerInfo['shop_url'];
+    ?>
+    <?php if(count($sellerProductsCollection)>0): ?>
+    <section class="event-list-wrapper psame50 events-organizer pt40">
+        <div class="title">
+            <h1 class="size45 themetext mb40"> More Events From This Organizer </h1>
+        </div>
+        <div class="row">
+            <?php $i=0; foreach ($sellerProductsCollection as $_item): $i++; if($i>4)continue; ?>
+                <div class="col-sm-6 col-md-4">
+                    <div class="event-list-holder">
+                        <div class="img-holder img-cover">
+                            <div class="whisli-wrp">
+                                <?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow()) : ?>
+                                    <a data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_item); ?>' data-action="add-to-wishlist" class="button custome-btn"><img alt="" class="img1" src="<?php echo $block->getViewFileUrl('images/whislist_icon.png'); ?>"> Add to wishlist</a>
+                                <?php endif; ?>
+                            </div>
+                            <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="imgArea">
+                                <?= $block->getImage($_item, $image)->toHtml() ?>
+                            </a>
+                        </div>
+                        <div class="event-list-info-holder">
+                            <div class="event-info ">
+                                <a class="title-event" href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"><?= $block->escapeHtml($_item->getName()) ?> </a>
+                            </div>
+                            <div class="entry-fees">
+                                <?= /* @noEscape */ $block->getProductPrice($_item) ?>
+                            </div>
+                        </div>
+                        <label class="event-date">
+                            <img src="<?php echo $block->getViewFileUrl('images/event-date-time.svg'); ?>" alt="">
+                            <span>Start: <?= $block->escapeHtml(date("F d, Y",strtotime($_item->getData('event_start_date')))); ?> | End: <?= $block->escapeHtml(date("F d, Y",strtotime($_item->getData('event_end_date')))); ?></span>
+                        </label>
+                        <label class="event-address">
+                            <?php if($_item->getData('event_venue')): ?>
+                            <img src="<?php echo $block->getViewFileUrl('images/event-address.svg'); ?>" alt="">
+                            <span><?= $block->escapeHtml($_item->getData('event_venue')); ?></span>
+                            <?php endif; ?>
+                        </label>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="center mt15 btn-ctm">
+            <a href="<?= $block->escapeUrl($block->getUrl('')) ?>marketplace/seller/profile/shop/<?= $shopUrl;?>" class="button custome-btn"> Browse More </a>
+        </div>
+    </section>
+    <?php endif; ?>
+<?php endif; ?>

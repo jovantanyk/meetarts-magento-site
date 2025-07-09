@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\CustomOptions">
+        <plugin name="Webkul_MarketplaceEventManager::afterCustomOptions" type="Webkul\MarketplaceEventManager\Plugin\Ui\DataProvider\Product\Form\Modifier\CustomOptions" sortOrder="1" />
+    </type>
+    <type name="Magento\Catalog\Model\Layer">
+        <plugin name="LayerPlugin" type="Webkul\MarketplaceEventManager\Model\Plugin\Layer"/>
+    </type>
+    <type name="Magento\CatalogInventory\Model\Stock\Item">
+        <plugin name="Webkul_MarketplaceEventManager::afterGetQty" type="Webkul\MarketplaceEventManager\Plugin\Model\CatalogInventory\Stock\Item" sortOrder="1" />
+    </type>
+    <type name="Webkul\Marketplace\Block\Product\Productlist">
+        <plugin name="Webkul_MarketplaceEventManager::aftergetAllProducts" type="Webkul\MarketplaceEventManager\Plugin\Productlist" sortOrder="1" />
+    </type>
+    <type name="Webkul\Marketplace\Controller\Product\Edit">
+        <plugin name="Webkul_MarketplaceEventManager::aroundExecute" type="Webkul\MarketplaceEventManager\Plugin\Controller\Product\Edit" sortOrder="1" />
+    </type>
+    <type name="Webkul\Marketplace\Block\Order\View">
+        <plugin name="Webkul_MarketplaceEventManager::aroundisOrderCanShip" type="Webkul\MarketplaceEventManager\Plugin\Block\Order\View" sortOrder="1" />
+    </type>
+    <type name="Magento\Review\Observer\CatalogBlockProductCollectionBeforeToHtmlObserver">
+        <plugin name="Webkul_MarketplaceEventManager::aroundExecute"
+                type="Webkul\MarketplaceEventManager\Plugin\CatalogBlockProductCollectionBeforeToHtmlObserver"
+                sortOrder="10" />
+    </type>
+    <type name="Webkul\Marketplace\Helper\Data">
+        <plugin name="Webkul_MarketplaceEventManager::aftergetAllowedProductType" type="Webkul\MarketplaceEventManager\Plugin\Helper\Data" sortOrder="1" />
+    </type>
+    <type name="Magento\Catalog\Helper\Product">
+        <plugin name="Webkul_MarketplaceEventManager::afterinitProduct" type="Webkul\MarketplaceEventManager\Plugin\Catalog\Helper\Product" sortOrder="1" />
+    </type>
+    <type name="Webkul\Marketplace\Model\Product\Source\Producttype">
+        <plugin name="Webkul_MarketplaceEventManager::afterToOptionArray" type="Webkul\MarketplaceEventManager\Plugin\Model\Product\Source\Producttype" sortOrder="1" />
+    </type>
+    <preference for="Magento\Catalog\Controller\Adminhtml\Product\Validate" type="Webkul\MarketplaceEventManager\Controller\Rewrite\ValidateProduct"/>
+</config>

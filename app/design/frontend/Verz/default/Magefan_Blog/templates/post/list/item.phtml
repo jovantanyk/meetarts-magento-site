@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ *
+ * Glory to Ukraine! Glory to the heroes!
+ */
+?>
+<?php
+/**
+ * Blog post list item template
+ *
+ * @var $block \Magefan\Blog\Block\Post\PostList\Item
+ */
+?>
+<?php
+$_post = $block->getPost();
+$_postUrl = $block->escapeUrl($_post->getPostUrl());
+$_postName = $block->escapeHtml($_post->getTitle());
+?>
+<div class="col-sm-4">
+    <div class="event-drop">
+        <?php $featuredImage = $_post->getFeaturedListImage() ?: $_post->getFeaturedImage(); ?>
+        <?php if ($featuredImage) { ?>
+            <?php
+            $featuredImgAlt = $_post->getData('featured_list_img_alt') ?: $_post->getData('featured_img_alt');
+            if (!$featuredImgAlt) {
+                $featuredImgAlt = $_postName;
+            }
+            ?>
+            <a class="blg-img-view" href="<?= /*@noEscape*/ $_postUrl ?>">
+                <img src="<?= $block->escapeUrl($featuredImage) ?>" alt="<?= $block->escapeHtml($featuredImgAlt) ?>" />
+            </a>
+        <?php } ?>
+		<div class="blog-info-wrp">
+			<span class="blg-cat"> 
+				<?= $block->escapeHtml($_post->getPublishDate("F d, Y")) ?> | 
+				<?php if ($_categoriesCount = $_post->getCategoriesCount()) { ?> 
+					<?php $n = 0; ?>
+					<?php foreach ($_post->getParentCategories() as $ct) { ?>
+						<?php $n++; ?>
+						<?= $block->escapeHtml($ct->getTitle()) ?></a><?= /*@noEscape*/ ($n != $_categoriesCount) ? ',' : '' ?>
+					<?php } ?>
+				<?php } ?>
+			</span>
+			<h3 class="size24"> <a href="<?= /*@noEscape*/ $_postUrl ?>"> <?= /*@noEscape*/ $_postName ?> </a> </h3>
+			<div class="dsk-text ellipsis2-line">
+				<?= /*@noEscape*/ $block->getShorContent() ?>
+			</div>
+			<a href="<?= /*@noEscape*/ $_postUrl ?>" class="link"> READ MORE </a>
+		</div>
+    </div>
+</div>

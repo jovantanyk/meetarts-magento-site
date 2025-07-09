@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_cart_save_before">
+        <observer name="mp_eventmanager_checkout_cart_save_before_observer" instance="Webkul\MarketplaceEventManager\Observer\CheckoutCartSaveBeforeObserver" />
+    </event>
+    <event name="checkout_submit_all_after">
+        <observer name="mp_eventmanager_order_place_after_observer" instance="Webkul\MarketplaceEventManager\Observer\SalesOrderPlaceAfter" />
+    </event>
+    <event name="controller_action_predispatch_checkout_cart_add">
+        <observer name="mp_eventmanager_checkout_cart_add_observer" instance="Webkul\MarketplaceEventManager\Observer\PreDispatchCheckoutCartAddObserver" />
+    </event>
+    <event name="controller_action_predispatch_checkout_cart_index">
+        <observer name="event_beforeviewcart" instance="Webkul\MarketplaceEventManager\Observer\BeforeViewCart" />
+    </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="webkul_marketplace_event_manager_sales_order_creditmemo_save_after_observer" instance="Webkul\MarketplaceEventManager\Observer\SalesOrderCreditmemoSaveAfterObserver" />
+    </event>
+    <event name="controller_action_predispatch_wishlist_index_cart">
+        <observer name="webkul_cart_product_add_before" instance="Webkul\MarketplaceEventManager\Observer\PreDispatchCheckoutCartAddObserver" />
+    </event>
+    <event name="controller_action_predispatch_wishlist_index_allcart">
+        <observer name="webkul_cart_product_add_before" instance="Webkul\MarketplaceEventManager\Observer\PreDispatchCheckoutCartAddObserver" />
+    </event>
+    <event name="catalog_product_save_before">
+    	<observer name="webkul_event_product_save_before" instance="Webkul\MarketplaceEventManager\Observer\CatalogProductSaveBefore" />
+    </event>
+</config>

@@ -1,0 +1,20 @@
+{
+    "name": "webkul/module-marketplace-event-manager",
+    "description": "Marketplace Event Manager For Magento2",
+    "require": {
+        "webkul/module-marketplace": "5.0.*"
+    },
+    "type": "magento2-module",
+    "version": "5.0.0",
+    "license": [
+        "proprietary"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Webkul\\MarketplaceEventManager\\": ""
+        }
+    }
+}

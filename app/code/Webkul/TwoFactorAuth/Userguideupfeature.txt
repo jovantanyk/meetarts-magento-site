@@ -1,0 +1,22 @@
+#User Guide on the Update Features:
+
+1) Sending OTP via Email :
+     Using Twilio SendGrid to sending OTP in mail 
+
+     Installation Process:
+      >> After uploading the module folder, you need to run the command to install sendGrid
+         composer require sendgrid/sendgrid.
+
+2)    Sending verification link on the Email : 
+       >> select the option Email Link in the configuration. at the time of login/registration verification
+            The link will send to on customer's email id and then the customer clicks it and the account is verified.
+
+3)  Backup Codes :
+
+      Customer can create the backups code on your account
+
+ 4)   TOTP/Authenticator : 
+ 
+      Commands need to install: 
+        >> composer require pragmarx/google2fa
+        >> composer require pragmarx/google2fa-qrcode              

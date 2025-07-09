@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<referenceBlock name="seller_account_navigation">
+            <block class="Webkul\MarketplaceEventManager\Block\Account\Navigation"  name="eventmanager_account_navigation" before="-" template="Webkul_MarketplaceEventManager::account/navigation.phtml" />
+		</referenceBlock>
+		<referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="mpeventmanager-customer-events" ifconfig="marketplaceeventmanager/settings/enable">
+                <arguments>
+                    <argument name="path" xsi:type="string">marketplaceeventmanager/customer/eventlist</argument>
+                    <argument name="label" xsi:type="string">My Tickets</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+	</body>
+</page>
